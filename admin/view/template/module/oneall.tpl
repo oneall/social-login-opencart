@@ -215,58 +215,66 @@
     <div class="content">
       <form action="<?php echo $action ?>" method="post" enctype="multipart/form-data" id="form">
           <table><tr>
-            <td style="vertical-align: top; padding-right:40px;">
+            <td style="vertical-align:top; padding-right:40px;">
+            	<strong><?php echo $text_account ?></strong>
                 <div style="min-width: 150px">
-
-                <a onclick="$(this).hide(); $('#haccount').show(500);"><?php echo $text_setup ?></a>
-                <div style="display:none; border: 5px solid #DDDDDD; padding:5px; " id="haccount">
-                    <strong><?php echo $text_account ?></strong><br/><br/>
+                <div style="border: 5px solid #DDDDDD; padding:5px; height:300px" id="haccount">
+                    
                     <?php echo $text_oneall_subdomain ?><br/><input name="oneall_subdomain" value="<?php echo $oneall_subdomain ?>" /><br/><br/>
                     <?php echo $text_oneall_public ?><br/><input style="width: 250px;" name="oneall_public" value="<?php echo $oneall_public ?>" /><br/><br/>
                     <?php echo $text_oneall_private ?><br/><input style="width: 250px;" name="oneall_private" value="<?php echo $oneall_private ?>" /><br/><br/>
                     <a onclick="$('#form').submit();" class="button"><?php echo $button_save ?></a>
                 </div>
-                <br/><br/>
-                <select style="margin-bottom: 8px;" onchange="
-                    if (this.value) {
-                     s=$('#socials').val();
-                     if (s) s+=',';
-                     s+= this.value;
-                     $('#socials').val(s);
-                     this.value='';
-                     Preview(-1);
-                    }
-                ">
-                  <option value=""><?php echo $text_add_social ?></option>
-                    <?php foreach ($all_socials as $social) { ?>
-                    <option value="<?php echo preg_replace('/[^a-z]/i', '',strtolower($social)) ?>"><?php echo $social ?></option>
-                    <?php } ?>
-                </select><br/>
-                <a class="button" onclick="
-                     s=$('#socials').val();
-                     p=s.lastIndexOf(',');
-                     s=s.substr(0,p);
-                     $('#socials').val(s);
-                     Preview(-1);
-                "><?php echo $text_remove_social ?></a>
-                <input type="hidden" name="oneall_socials" id="socials" value="<?php echo $oneall_socials ?>" />
-                    <div style="margin-top:20px; color: grey"><?php echo $text_request ?></div>
-                    <input type="checkbox" <?php if ($oneall_ask_email) echo "checked='1'" ?> name="oneall_ask_email" /><?php echo $text_ask_email ?><br/>
-                    <input type="checkbox" <?php if ($oneall_ask_phone) echo "checked='1'" ?> name="oneall_ask_phone" /><?php echo $text_ask_phone ?><br/><br/>
+            </td>
+            
+            <td style="vertical-align: top; padding-right:40px;">
+            	<strong><?php echo $text_social_networks ?></strong>
+                <div style="min-width: 200px">
+                <div style="border: 5px solid #DDDDDD; padding:5px; height:300px" id="haccount">
+	                <select style="margin-bottom: 8px;" onchange="
+	                    if (this.value) {
+	                     s=$('#socials').val();
+	                     if (s) s+=',';
+	                     s+= this.value;
+	                     $('#socials').val(s);
+	                     this.value='';
+	                     Preview(-1);
+	                    }
+	                ">
+	                  <option value=""><?php echo $text_add_social ?></option>
+	                    <?php foreach ($all_socials as $social) { ?>
+	                    <option value="<?php echo preg_replace('/[^a-z]/i', '',strtolower($social)) ?>"><?php echo $social ?></option>
+	                    <?php } ?>
+	                </select><br/>
+	                <a class="button" onclick="
+	                     s=$('#socials').val();
+	                     p=s.lastIndexOf(',');
+	                     s=s.substr(0,p);
+	                     $('#socials').val(s);
+	                     Preview(-1);
+	                "><?php echo $text_remove_social ?></a>
+	                <input type="hidden" name="oneall_socials" id="socials" value="<?php echo $oneall_socials ?>" />
+	                    <div style="margin-top:20px; color: grey"><?php echo $text_request ?></div>
+	                    	<input type="checkbox" <?php if ($oneall_ask_email) echo "checked='1'" ?> name="oneall_ask_email" /><?php echo $text_ask_email ?><br/>
+	                    	<input type="checkbox" <?php if ($oneall_ask_phone) echo "checked='1'" ?> name="oneall_ask_phone" /><?php echo $text_ask_phone ?><br/><br/>
+	                    </div>
+	          	</div>
                 </div>
             </td>
-            <td style="width:100%;">
-                <?php echo $text_preview ?>
+            
+            <td style="width:100%; padding-right:40px;">
+                <strong><?php echo $text_preview ?></strong>
                 <!--ONEALL-->
                 <script type="text/javascript" src="<?php echo ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://' ?><?php echo $oneall_subdomain ?>.api.oneall.com/socialize/library.js">
                 </script>
                 <script type="text/javascript">$(document).ready(function(){Preview(-1)})</script>
                 <!-- The plugin will be embedded into this div //-->
-                <div id="social_login_container" style="vertical-align: top; border: 5px solid #EEEEEE; padding: 10px; width:auto;"></div>
+                <div id="social_login_container" style="vertical-align: top; border: 5px solid #EEEEEE; padding: 10px; width:auto; ; height:300px;"></div>
 
                 <br />
             </td>
           </tr></table>
+          <br/>
         <table id="module" class="list">
           <thead>
             <tr>
@@ -283,7 +291,7 @@
           <tbody id="module-row<?php echo $module_row ?>">
           <?php if (!empty($module['module_id'])) { ?>
               <input type="hidden" name="oneall_module[<?php echo $module_row; ?>][module_id]" value="<?php echo $module['module_id']; ?>" />
-          <? } ?>
+          <?php } ?>
             <tr>
               <td class="left"><select name="oneall_module[<?php echo $module_row ?>][layout_id]">
                   <?php foreach ($layouts as $layout) { ?>
@@ -388,6 +396,7 @@
         </table>
       </form>
       <input type="hidden" id="row_save" value="0"/>
+      <br/>
     </div>
   </div>
 </div>

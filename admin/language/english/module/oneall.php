@@ -40,6 +40,7 @@ $_ ['text_account'] = 'Specify <a target="_blank" href="http://app.oneall.com">o
 $_ ['text_oneall_subdomain'] = 'Subdomain:';
 $_ ['text_oneall_public'] = 'Public Key:';
 $_ ['text_oneall_private'] = 'Private Key:';
+$_ ['text_social_networks'] = 'Social Networks:';
 $_ ['text_add_social'] = 'Add...';
 $_ ['text_remove_social'] = 'Remove last one';
 

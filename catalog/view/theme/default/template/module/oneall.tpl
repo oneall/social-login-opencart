@@ -10,24 +10,24 @@
             <h3><?php echo $heading_title; ?></h3>
                     <?php if ($css=='modal') { ?>
                         <a id="social_login_container" class="button"><?php echo $login_button; ?></a>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <div id="social_login_container"></div>
-                    <? } ?>
+                    <?php } ?>
 
-        <? } else { ?>
+        <?php } else { ?>
 
             <div class="box">
                 <div class="box-heading"><?php echo $heading_title; ?></div>
                 <div class="box-content">
                     <?php if ($css=='modal') { ?>
                        <a id="social_login_container" class="button"><?php echo $login_button; ?></a>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <div id="social_login_container"></div>
-                    <? } ?>
+                    <?php } ?>
                 </div>
             </div>
 
-        <? } ?>
+        <?php } ?>
 
 <?php } else if ($css != 'modal' && $type == 'floating') { ?>
 <div style="position:relative;">
