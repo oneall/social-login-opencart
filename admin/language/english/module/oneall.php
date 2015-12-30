@@ -40,9 +40,11 @@ $_ ['text_account'] = 'Specify <a target="_blank" href="http://app.oneall.com">o
 $_ ['text_oneall_subdomain'] = 'Subdomain:';
 $_ ['text_oneall_public'] = 'Public Key:';
 $_ ['text_oneall_private'] = 'Private Key:';
-$_ ['text_social_networks'] = 'Social Networks:';
+$_ ['text_social_settings'] = 'Settings:';
+$_ ['text_social_networks'] = 'Social networks:';
 $_ ['text_add_social'] = 'Add...';
 $_ ['text_remove_social'] = 'Remove last one';
+$_ ['text_social_lang'] = 'Icon language:';
 
 // Entry
 $_ ['entry_layout'] = 'Layout:';
@@ -66,6 +68,8 @@ $_ ['add_module'] = 'Add Module';
 $_ ['text_request'] = 'On missing social info:';
 $_ ['text_ask_email'] = 'Ask for email';
 $_ ['text_ask_phone'] = 'Ask for phone number';
+$_ ['text_lang'] = 'By default, set at app.oneall.com';
+$_ ['text_ask_lang'] = 'Override with store language';
 
 // Error
 $_ ['error_permission'] = 'Warning: You do not have permission to modify module ONEALL!';

@@ -228,9 +228,10 @@
             </td>
             
             <td style="vertical-align: top; padding-right:40px;">
-            	<strong><?php echo $text_social_networks ?></strong>
+            	<strong><?php echo $text_social_settings ?></strong>
                 <div style="min-width: 200px">
                 <div style="border: 5px solid #DDDDDD; padding:5px; height:300px" id="haccount">
+                	<?php echo $text_social_networks ?><br/>
 	                <select style="margin-bottom: 8px;" onchange="
 	                    if (this.value) {
 	                     s=$('#socials').val();
@@ -254,10 +255,12 @@
 	                     Preview(-1);
 	                "><?php echo $text_remove_social ?></a>
 	                <input type="hidden" name="oneall_socials" id="socials" value="<?php echo $oneall_socials ?>" />
-	                    <div style="margin-top:20px; color: grey"><?php echo $text_request ?></div>
-	                    	<input type="checkbox" <?php if ($oneall_ask_email) echo "checked='1'" ?> name="oneall_ask_email" /><?php echo $text_ask_email ?><br/>
-	                    	<input type="checkbox" <?php if ($oneall_ask_phone) echo "checked='1'" ?> name="oneall_ask_phone" /><?php echo $text_ask_phone ?><br/><br/>
-	                    </div>
+	                <div style="margin-top:20px; color: grey"><?php echo $text_request ?></div>
+	                <input type="checkbox" <?php if ($oneall_ask_email) echo "checked='1'" ?> name="oneall_ask_email" /><?php echo $text_ask_email ?><br/>
+	                <input type="checkbox" <?php if ($oneall_ask_phone) echo "checked='1'" ?> name="oneall_ask_phone" /><?php echo $text_ask_phone ?><br/><br/>
+	                <?php echo $text_social_lang ?>
+	                <div style="color: grey"><?php echo $text_lang ?></div>
+	                <input type="checkbox" <?php if ($oneall_store_lang) echo "checked='1'" ?> name="oneall_store_lang" /><?php echo $text_ask_lang ?><br/><br/>
 	          	</div>
                 </div>
             </td>
@@ -265,7 +268,7 @@
             <td style="width:100%; padding-right:40px;">
                 <strong><?php echo $text_preview ?></strong>
                 <!--ONEALL-->
-                <script type="text/javascript" src="<?php echo ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://' ?><?php echo $oneall_subdomain ?>.api.oneall.com/socialize/library.js">
+                <script type="text/javascript" src="<?php echo ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://' ?><?php echo $oneall_subdomain ?>.api.oneall.com/socialize/library.js<?php if ($oneall_store_lang) echo '?lang='.$oneall_lib_lang ?>">
                 </script>
                 <script type="text/javascript">$(document).ready(function(){Preview(-1)})</script>
                 <!-- The plugin will be embedded into this div //-->

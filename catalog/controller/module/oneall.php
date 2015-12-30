@@ -36,6 +36,9 @@ class ControllerModuleOneall extends Controller {
 
         $data['logged'] = $this->customer->isLogged();
         
+       	$data ['oneall_lib_lang'] = $this->config->get('config_language');
+       	$data['oneall_store_lang'] = $this->config->get('oneall_store_lang');
+               
         $data['heading_title'] = $this->language->get('heading_title');
         $data['login_button'] = $this->language->get('login_button');
 

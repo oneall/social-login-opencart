@@ -89,6 +89,8 @@ class ControllerModuleOneall extends Controller
 				$this->request->post ['oneall_ask_email'] = false;
 			if (empty ($this->request->post ['oneall_ask_phone']))
 				$this->request->post ['oneall_ask_phone'] = false;
+			if (empty ($this->request->post ['oneall_store_lang']))
+				$this->request->post ['oneall_store_lang'] = false;
 			
 			$this->model_setting_setting->editSetting ('oneall', $this->request->post);
 			
@@ -177,6 +179,11 @@ class ControllerModuleOneall extends Controller
 			$data ['oneall_ask_email'] = true;
 		if (!isset ($data ['oneall_ask_phone']))
 			$data ['oneall_ask_phone'] = false;
+		
+		// Always set the lib lang, but we may not use it:
+		$data ['oneall_lib_lang'] = $this->config->get('config_language');
+		if (!isset ($data ['oneall_store_lang']))
+			$data ['oneall_store_lang'] = false;
 		
 		$data ['layouts'] = $this->model_design_layout->getLayouts ();
 		

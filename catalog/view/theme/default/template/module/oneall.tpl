@@ -1,7 +1,7 @@
 <?php if (!$logged) { ?>
 
 <script type="text/javascript"
-        src="<?php echo ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://' ?><?php echo $subdomain ?>.api.oneall.com/socialize/library.js">
+        src="<?php echo ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://' ?><?php echo $subdomain ?>.api.oneall.com/socialize/library.js<?php if ($oneall_store_lang) echo '?lang='.$oneall_lib_lang ?>">
 </script>
 <?php if ($type == 'module') { ?>
 
