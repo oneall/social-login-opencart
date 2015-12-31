@@ -25,7 +25,7 @@
 class ControllerAccountOneall extends Controller
 {
 	// Build User Agent
-	public static function get_user_agent ()
+	private static function get_user_agent ()
 	{
 		// System Versions
 		$social_login = 'SocialLogin/1.0';
@@ -33,6 +33,25 @@ class ControllerAccountOneall extends Controller
 				
 		// Build User Agent
 		return ($social_login.' '.$opencart.' (+http://www.oneall.com/)');
+	}
+	
+	// Generates a random hash of the given length
+	private static function generate_hash ($length)
+	{
+		$hash = '';
+	
+		for ($i = 0; $i < $length; $i++)
+		{
+		do
+			{
+			$char = chr (mt_rand (48, 122));
+			}
+			while (! preg_match ('/[a-zA-Z0-9]/', $char));
+			$hash .= $char;
+		}
+	
+		// Done
+		return $hash;
 	}
 		
 	// Callback Handler
@@ -237,145 +256,8 @@ class ControllerAccountOneall extends Controller
 				// Everything OK
 				if (!$this->customer->login ($_POST ['email'], '', true))
 				{
-					// Create Account
-					$passwords = array(
-						"qwerty",
-						"letmein",
-						"test",
-						"love",
-						"hello",
-						"monkey",
-						"dragon",
-						"iloveyou",
-						"shadow",
-						"sunshine",
-						"master",
-						"computer",
-						"princess",
-						"tiger",
-						"football",
-						"angel",
-						"whatever",
-						"freedom",
-						"soccer",
-						"superman",
-						"michael",
-						"cheese",
-						"internet",
-						"blessed",
-						"baseball",
-						"starwars",
-						"purple",
-						"jordan",
-						"faith",
-						"summer",
-						"ashley",
-						"buster",
-						"heaven",
-						"pepper",
-						"hunter",
-						"lovely",
-						"angels",
-						"charlie",
-						"daniel",
-						"jennifer",
-						"single",
-						"happy",
-						"matrix",
-						"amanda",
-						"nothing",
-						"ginger",
-						"mother",
-						"snoopy",
-						"jessica",
-						"welcome",
-						"pokemon",
-						"mustang",
-						"jasmine",
-						"orange",
-						"apple",
-						"michelle",
-						"peace",
-						"secret",
-						"grace",
-						"nicole",
-						"muffin",
-						"gateway",
-						"blessing",
-						"canada",
-						"silver",
-						"forever",
-						"rainbow",
-						"guitar",
-						"peanut",
-						"batman",
-						"cookie",
-						"bailey",
-						"mickey",
-						"dakota",
-						"compaq",
-						"diamond",
-						"taylor",
-						"forum",
-						"cool",
-						"flower",
-						"scooter",
-						"banana",
-						"victory",
-						"london",
-						"startrek",
-						"winner",
-						"maggie",
-						"trinity",
-						"online",
-						"chicken",
-						"junior",
-						"sparky",
-						"merlin",
-						"google",
-						"friends",
-						"hope",
-						"nintendo",
-						"harley",
-						"smokey",
-						"lucky",
-						"digital",
-						"thunder",
-						"spirit",
-						"enter",
-						"corvette",
-						"hockey",
-						"power",
-						"viper",
-						"genesis",
-						"knight",
-						"creative",
-						"adidas",
-						"slayer",
-						"wisdom",
-						"praise",
-						"dallas",
-						"green",
-						"maverick",
-						"mylove",
-						"friend",
-						"destiny",
-						"bubbles",
-						"cocacola",
-						"loving",
-						"emmanuel",
-						"scooby",
-						"maxwell",
-						"baby",
-						"prince",
-						"chelsea",
-						"dexter",
-						"kitten",
-						"stella",
-						"prayer",
-						"hotdog" 
-					);
-					$password = $passwords [array_rand ($passwords)];
+					// Generate a random Password					
+					$password = self::generate_hash(8);
 					
 					if (substr (VERSION, 4, 1) > 3)
 						$this->db->query ("INSERT INTO " . DB_PREFIX . "customer SET store_id = '" . (int) $this->config->get ('config_store_id') . "', firstname = '$_POST[firstname]', lastname = '$_POST[lastname]', email = '$_POST[email]', telephone = '$_POST[phone]', oneall_profile = '$_POST[_profile]', salt = '" . $this->db->escape ($salt = substr (md5 (uniqid (rand (), true)), 0, 9)) . "', password = '" . $this->db->escape (sha1 ($salt . sha1 ($salt . sha1 ($password)))) . "', newsletter = '1', customer_group_id = '1', ip = '" . $this->db->escape ($this->request->server ['REMOTE_ADDR']) . "', status = '1', approved = '1', date_added = NOW()");
