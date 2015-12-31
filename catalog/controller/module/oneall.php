@@ -22,6 +22,8 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  *
  */
+
+// OpenCart2 ?
 if (!defined ('OC2'))
 {
 	define ('OC2', VERSION >= '2');
@@ -39,7 +41,7 @@ class ControllerModuleOneall extends Controller
 				return 'https';
 			}
 		}
-	
+		
 		if (!empty ($_SERVER ['HTTP_X_FORWARDED_PROTO']))
 		{
 			if (strtolower (trim ($_SERVER ['HTTP_X_FORWARDED_PROTO'])) == 'https')
@@ -47,7 +49,7 @@ class ControllerModuleOneall extends Controller
 				return 'https';
 			}
 		}
-	
+		
 		if (!empty ($_SERVER ['HTTPS']))
 		{
 			if (strtolower (trim ($_SERVER ['HTTPS'])) == 'on' or trim ($_SERVER ['HTTPS']) == '1')
@@ -55,13 +57,13 @@ class ControllerModuleOneall extends Controller
 				return 'https';
 			}
 		}
-	
+		
 		return 'http';
 	}
 	
 	// Social Login Administration
 	public function index ($setting)
-	{		
+	{
 		if (OC2)
 		{
 			$this->load->language ('module/oneall');
@@ -78,86 +80,70 @@ class ControllerModuleOneall extends Controller
 		$data ['oasl_heading_title'] = trim ($this->language->get ('heading_title'));
 		$data ['oasl_login_button'] = trim ($this->language->get ('login_button'));
 		$data ['oasl_login_button'] = (empty ($data ['oasl_login_button']) ? 'Social Login' : $data ['oasl_login_button']);
-		
+		$data ['oasl_type'] = $setting ['type'];
+		$data ['oasl_pos_x'] = $setting ['x'];
+		$data ['oasl_pos_y'] = $setting ['y'];
+		$data ['oasl_custom_css_uri'] = ($setting ['css'] == 'modal' ? '' : $setting ['css']);
+		$data ['oasl_display_modal'] = ($setting ['css'] == 'modal' ? 1 : 0);
 		
 		// Language Settings
 		$data ['oasl_lib_lang'] = $this->config->get ('config_language');
 		$data ['oasl_store_lang'] = $this->config->get ('oneall_store_lang');
 		
 		// Selected Subdomain
-		$data['oasl_subdomain'] = $this->config->get('oneall_subdomain');
+		$data ['oasl_subdomain'] = $this->config->get ('oneall_subdomain');
 		
 		// Add Library
-		if ( ! empty ($data ['oasl_subdomain']))
+		if (!empty ($data ['oasl_subdomain']))
 		{
-			$this->document->addScript(self::get_request_protocol() .'://' . $data ['oasl_subdomain'].'.api.oneall.com/socialize/library.js'. ($data ['oasl_store_lang'] ? ('?lang='.$data ['oasl_lib_lang']) : ''));
-		}		
-				
+			$this->document->addScript (self::get_request_protocol () . '://' . $data ['oasl_subdomain'] . '.api.oneall.com/socialize/library.js' . ($data ['oasl_store_lang'] ? ('?lang=' . $data ['oasl_lib_lang']) : ''));
+		}
+		
 		// Selected Providers
-		$data['oasl_providers'] = '';
+		$data ['oasl_providers'] = '';
 		
 		// Read Providers Config
 		$providers_config = trim ($this->config->get ('oneall_socials'));
-		if ( ! empty ($providers_config))
+		if (!empty ($providers_config))
 		{
 			$providers_list = explode (',', $providers_config);
 			if (is_array ($providers_list))
 			{
-				$data['oasl_providers'] = implode ("','", $providers_list);
+				$data ['oasl_providers'] = implode ("','", $providers_list);
 			}
 		}
 		
-		// Griz Size X
+		// Griz Sizes
 		$data ['oasl_grid_size_x'] = (is_numeric ($setting ['gridh']) ? $setting ['gridh'] : 99);
 		$data ['oasl_grid_size_y'] = (is_numeric ($setting ['gridw']) ? $setting ['gridw'] : 99);
 		
 		// Callback URI
 		$data ['oasl_callback_uri'] = HTTPS_SERVER . 'index.php?route=account/oneall&go=' . urlencode ($_SERVER ['REQUEST_URI']);
-		
-		// Custom CSS URI
-		$data ['oasl_custom_css_uri'] = ($setting ['css'] == 'modal' ? '' : $setting ['css']);
-		$data ['oasl_display_modal'] = ($setting ['css'] == 'modal' ? 1 : 0);
-		
-
-		
-
-		
+					
+		// Display Wiget
+		return $this->display_widget_template ($data);
+	}
 	
-		
-	
-	
+	// Display Widget
+	protected function display_widget_template ($data)
+	{
+		// Widget Template
+		$template = '/template/module/oneall.tpl';
+		$template_folder = $this->config->get ('config_template');
 
-		$data ['type'] = $setting ['type'];
-		$data ['x'] = $setting ['x'];
-		$data ['y'] = $setting ['y'];
+		// Get Template Folder
+		$template_folder = (file_exists (DIR_TEMPLATE . $template_folder . $template) ? $template_folder : 'default');
 		
-
-
-		
+		// OpenCart2
 		if (OC2)
 		{
-			
-			if (file_exists (DIR_TEMPLATE . $this->config->get ('config_template') . '/template/module/oneall.tpl'))
-			{
-				return $this->load->view ($this->config->get ('config_template') . '/template/module/oneall.tpl', $data);
-			}
-			else
-			{
-				return $this->load->view ('default/template/module/oneall.tpl', $data);
-			}
+			return $this->load->view (($template_folder .$template) , $data);			
 		}
+		// OpenCart1
 		else
-		{
-			
+		{		
 			$this->data = $data;
-			if (file_exists (DIR_TEMPLATE . $this->config->get ('config_template') . '/template/module/oneall.tpl'))
-			{
-				$this->template = $this->config->get ('config_template') . '/template/module/oneall.tpl';
-			}
-			else
-			{
-				$this->template = 'default/template/module/oneall.tpl';
-			}
+			$this->template = ($template_folder . $template);
 			$this->render ();
 		}
 	}
