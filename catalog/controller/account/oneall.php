@@ -65,15 +65,9 @@ class ControllerAccountOneall extends Controller
 		if (!empty ($_POST ['connection_token']))
 		{
 			// Get connection_token
-			$token = $_POST ['connection_token'];
-			
-			// DB
-			// require_once('../../../config.php');
-			// require_once('../../../system/library/db.php');
-			// require_once(DIR_SYSTEM . 'startup.php');
-			// $db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
-			
-			// Your Site Settings
+			$token = trim ($_POST ['connection_token']);
+
+			// OneAll Site Settings
 			$site_subdomain = $this->config->get ('oneall_subdomain');
 			$site_public_key = $this->config->get ('oneall_public');
 			$site_private_key = $this->config->get ('oneall_private');
@@ -105,7 +99,8 @@ class ControllerAccountOneall extends Controller
 				// You may want to implement your custom error handling here
 				$error = 'Curl error: ' . curl_error ($curl) . '<br />' . 'Curl info: ' . curl_getinfo ($curl) . '';
 				curl_close ($curl);
-			} // Success
+			} 
+			// Success
 			else
 			{
 				// Close connection
@@ -117,15 +112,12 @@ class ControllerAccountOneall extends Controller
 				// Extract data
 				$data = $json->response->result->data;
 				
-				// print_r($data);
-				
 				// Check for plugin
 				if ($data->plugin->key == 'social_login')
 				{
 					// Operation successfull
 					if ($data->plugin->data->status == 'success')
 					{
-						$UserToken = $data->user->user_token;
 						$lastname = '';
 						$firstname = '';
 						
