@@ -56,8 +56,7 @@ class ControllerAccountOneall extends Controller
 		
 	// Callback Handler
 	public function index ()
-	{
-		
+	{		
 		// ONEALL Callback handler
 		$error = '';
 		

@@ -1,75 +1,91 @@
-<?php if (!$logged) { ?>
+<?php 
 
-<script type="text/javascript"
-        src="<?php echo ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://' ?><?php echo $subdomain ?>.api.oneall.com/socialize/library.js<?php if ($oneall_store_lang) echo '?lang='.$oneall_lib_lang ?>">
-</script>
-<?php if ($type == 'module') { ?>
+$oasl_container = 'oneall_social_login_'.mt_rand(99999, 9999999); 
 
-        <?php if (OC2) { ?>
+// Do not display for guests
+if ( ! $oasl_user_is_logged  && ! empty ($oasl_subdomain)) 
+{
 
-            <h3><?php echo $heading_title; ?></h3>
-                    <?php if ($css=='modal') { ?>
-                        <a id="social_login_container" class="button"><?php echo $login_button; ?></a>
-                    <?php } else { ?>
-                        <div id="social_login_container"></div>
-                    <?php } ?>
+	if ($type == 'module')
+	{ 
+		if (OC2)
+	    {
+	    	if (! empty ($oasl_heading_title))
+	    	{
+				echo '<h3>'.$oasl_heading_title.'</h3>';
+			}                    
+	 
+			if ($oasl_display_modal) 
+			{ 
+				echo '<a id="'.$oasl_container.'" class="button">'.$oasl_login_button.'</a>';
+			}
+			else
+			{
+				echo '<div id="'.$oasl_container.'"></div>';
+			}
+		}
+		else        
+		{ 
+			?>
+				<div class="box">
+					<?php
+						if ( ! empty ($oasl_heading_title))
+						{
+							?>
+								<div class="box-heading"><?php echo $oasl_heading_title; ?></div>
+							<?php
+						}
+					?>
+					<div class="box-content">
+						<?php 
+							if ($oasl_display_modal) 
+							{
+	                    		echo '<a id="'.$oasl_container.'" class="button">'.$login_button.'</a>';
+							}
+	                    	else
+	                    	{
+	                    		echo '<div id="'.$oasl_container.'"></div>';
+	                    	}
+	                    ?>
+					</div>
+				</div>
+			<?php
+		}
+	} 
+	elseif ( ! $oasl_display_modal && $type == 'floating')
+	{
+		?>
+			<div style="position:relative;">
+	    		<div id="<?php echo $oasl_container; ?>" style="-webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -o-user-select: none; z-index:1000000; width:800px; position:absolute; left: <?php echo $x ?>px; top: <?php echo $y ?>px;"></div>
+	    	</div>
+		<?php
+	}
 
-        <?php } else { ?>
-
-            <div class="box">
-                <div class="box-heading"><?php echo $heading_title; ?></div>
-                <div class="box-content">
-                    <?php if ($css=='modal') { ?>
-                       <a id="social_login_container" class="button"><?php echo $login_button; ?></a>
-                    <?php } else { ?>
-                        <div id="social_login_container"></div>
-                    <?php } ?>
-                </div>
-            </div>
-
-        <?php } ?>
-
-<?php } else if ($css != 'modal' && $type == 'floating') { ?>
-<div style="position:relative;">
-    <div id="social_login_container" style="
--webkit-user-select: none;
--khtml-user-select: none;
--moz-user-select: none;
--o-user-select: none;
-z-index:1000000; 
-width:800px; 
-position:absolute; 
-left: <?php echo $x ?>px; 
-top: <?php echo $y ?>px;"></div>
-</div>
-<?php } ?>
-<script type="text/javascript">
-
-    function LoadOneall() {
-    w=''; h=''; modal=false;
-    css='<?php echo $css ?>';
-    if (css) {
-        modal=(css=='modal');
-        if (css.substr(0,2)!='//') css='<?php echo substr(HTTP_SERVER,5) ?>'+css;
-        css=document.location.protocol+css;
-        if (modal) css='';
-        w='<?php echo $gridw ?>'; h='<?php echo $gridh ?>';
-    }
-    
-    socials='<?php echo $socials ?>';
-    socials=socials.split(',');
-    oneall.api.plugins.social_login.build("social_login_container", {
-        'providers' :  socials,
-        'css_theme_uri': css,
-        'grid_size_x': w,
-        'grid_size_y': h,
-        'modal': modal,
-        'callback_uri': '<?php echo $callback ?>'
-    });
-    
-    }
-
-    $(document).ready(function() { LoadOneall(); });
-</script>
-
-<?php } ?>
+	// Plugin
+	$oasl_widget = array();
+	$oasl_widget[] = "<script type='text/javascript'>";
+	$oasl_widget[] = "/* OneAll Social Login - http://www.oneall.com/ */";
+	$oasl_widget[] = "var _oneall = _oneall || [];";
+	$oasl_widget[] = "_oneall.push(['social_login', 'set_providers', ['" . $oasl_providers. "']]);";
+	$oasl_widget[] = "_oneall.push(['social_login', 'set_callback_uri', '" . $oasl_callback_uri . "']);";
+		
+	// Modal Popup	
+	if ($oasl_display_modal)
+	{
+		$oasl_widget[] = "_oneall.push(['social_login', 'attach_onclick_popup_ui', '" . $oasl_container . "']);";
+	}
+	// Inline Display
+	else
+	{
+		$oasl_widget[] = "_oneall.push(['social_login', 'set_grid_size', 'x', " . $oasl_grid_size_x . "]);";
+		$oasl_widget[] = "_oneall.push(['social_login', 'set_grid_size', 'y', " . $oasl_grid_size_y . "]);";
+	    $oasl_widget[] = "_oneall.push(['social_login', 'set_custom_css_uri', '" .  $oasl_custom_css_uri . "']);";
+	    $oasl_widget[] = "_oneall.push(['social_login', 'do_render_ui', '" . $oasl_container . "']);";
+	}
+	 $oasl_widget[] = "</script>";
+	
+	// Display Widget   	 
+	 echo "\n\t" . implode ("\n\t", $oasl_widget)."\n"; 
+   	
+}
+?>

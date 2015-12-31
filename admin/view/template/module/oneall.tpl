@@ -207,12 +207,29 @@
   <?php if ($error_warning) { ?>
   <div class="warning"><?php echo $error_warning ?></div>
   <?php } ?>
+  
+
+  
   <div class="box">
     <div class="heading">
       <h1><img src="http://secure.oneallcdn.com/img/oneall_header_logo.png" style="margin-top: -7px; width:auto; height:28px; vertical-align: center;" alt="" /> <?php echo $heading_title2 ?></h1>
       <div class="buttons"><a onclick="$('#form').submit();" class="button"><?php echo $button_save ?></a><a onclick="location = '<?php echo $cancel ?>';" class="button"><?php echo $button_cancel ?></a></div>
     </div>
     <div class="content">
+    <?php
+    	if (empty ($oneall_subdomain))
+    	{
+    		?>
+      		<div class="alert alert-info">
+  				<i class="fa fa-info-circle"></i>
+				To be able to use Social Login you first of all need to create a free account at <a href="https://app.oneall.com/signup/" target="_blank">http://www.oneall.com</a> and setup a Site.
+				After having created your account and setup your Site, please enter the Site settings in the form below.
+				Don't worry the setup takes only a couple of minutes!
+  			</div>
+  			<?php
+  		}
+  	?>
+    
       <form action="<?php echo $action ?>" method="post" enctype="multipart/form-data" id="form">
           <table><tr>
             <td style="vertical-align:top; padding-right:40px;">
@@ -220,9 +237,9 @@
                 <div style="min-width: 150px">
                 <div style="border: 5px solid #DDDDDD; padding:5px; height:300px" id="haccount">
                     
-                    <?php echo $text_oneall_subdomain ?><br/><input name="oneall_subdomain" value="<?php echo $oneall_subdomain ?>" /><br/><br/>
-                    <?php echo $text_oneall_public ?><br/><input style="width: 250px;" name="oneall_public" value="<?php echo $oneall_public ?>" /><br/><br/>
-                    <?php echo $text_oneall_private ?><br/><input style="width: 250px;" name="oneall_private" value="<?php echo $oneall_private ?>" /><br/><br/>
+                    <?php echo $text_oneall_subdomain ?><br/><input name="oneall_subdomain" value="<?php echo $oneall_subdomain; ?>" /><br/><br/>
+                    <?php echo $text_oneall_public ?><br/><input style="width: 250px;" name="oneall_public" value="<?php echo $oneall_public; ?>" /><br/><br/>
+                    <?php echo $text_oneall_private ?><br/><input style="width: 250px;" name="oneall_private" value="<?php echo $oneall_private; ?>" /><br/><br/>
                     <a onclick="$('#form').submit();" class="button"><?php echo $button_save ?></a>
                 </div>
             </td>
