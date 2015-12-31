@@ -100,7 +100,8 @@ class ControllerAccountOneall extends Controller
 						
 						if (isset ($data->user->identity->name))
 						{
-							$firstname = $data->user->identity->name->givenName;
+							if (isset($data->user->identity->name->givenName))
+								$firstname = $data->user->identity->name->givenName;
 							if (isset ($data->user->identity->name->familyName))
 								$lastname = $data->user->identity->name->familyName;
 						}
@@ -146,6 +147,10 @@ class ControllerAccountOneall extends Controller
 								$email = '';
 							if ($q ['telephone'])
 								$phone = $q ['telephone'];
+							if ($q['firstname'])
+								$firstname = $q['firstname'];
+							if ($q['lastname'])
+								$lastname = $q['lastname'];
 						}
 						
 						$_POST = array();

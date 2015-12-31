@@ -1,7 +1,7 @@
 <?php if (!$logged) { ?>
 
 <script type="text/javascript"
-        src="<?php echo ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://' ?><?php echo $subdomain ?>.api.oneall.com/socialize/library.js">
+        src="<?php echo ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://' ?><?php echo $subdomain ?>.api.oneall.com/socialize/library.js<?php if ($oneall_store_lang) echo '?lang='.$oneall_lib_lang ?>">
 </script>
 <?php if ($type == 'module') { ?>
 
@@ -10,24 +10,24 @@
             <h3><?php echo $heading_title; ?></h3>
                     <?php if ($css=='modal') { ?>
                         <a id="social_login_container" class="button"><?php echo $login_button; ?></a>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <div id="social_login_container"></div>
-                    <? } ?>
+                    <?php } ?>
 
-        <? } else { ?>
+        <?php } else { ?>
 
             <div class="box">
                 <div class="box-heading"><?php echo $heading_title; ?></div>
                 <div class="box-content">
                     <?php if ($css=='modal') { ?>
                        <a id="social_login_container" class="button"><?php echo $login_button; ?></a>
-                    <? } else { ?>
+                    <?php } else { ?>
                         <div id="social_login_container"></div>
-                    <? } ?>
+                    <?php } ?>
                 </div>
             </div>
 
-        <? } ?>
+        <?php } ?>
 
 <?php } else if ($css != 'modal' && $type == 'floating') { ?>
 <div style="position:relative;">

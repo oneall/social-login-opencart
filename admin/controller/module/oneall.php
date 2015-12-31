@@ -89,6 +89,8 @@ class ControllerModuleOneall extends Controller
 				$this->request->post ['oneall_ask_email'] = false;
 			if (empty ($this->request->post ['oneall_ask_phone']))
 				$this->request->post ['oneall_ask_phone'] = false;
+			if (empty ($this->request->post ['oneall_store_lang']))
+				$this->request->post ['oneall_store_lang'] = false;
 			
 			$this->model_setting_setting->editSetting ('oneall', $this->request->post);
 			
@@ -150,13 +152,13 @@ class ControllerModuleOneall extends Controller
 		
 		// Default data
 		if (!isset ($data ['oneall_subdomain']))
-			$data ['oneall_subdomain'] = 'openshop';
+			$data ['oneall_subdomain'] = '';
 		if (!isset ($data ['oneall_public']))
-			$data ['oneall_public'] = '96b9a245-a162-442d-8c8a-ec0c25febd53';
+			$data ['oneall_public'] = '';
 		if (!isset ($data ['oneall_private']))
-			$data ['oneall_private'] = '27521278-485f-4b45-bf6c-8f751fc46570';
+			$data ['oneall_private'] = '';
 		if (!isset ($data ['oneall_socials']))
-			$data ['oneall_socials'] = 'facebook,google,twitter,instagram';
+			$data ['oneall_socials'] = 'facebook,google,twitter';
 		if (!isset ($data ['oneall_module']))
 			$data ['oneall_module'] = array(
 				array(
@@ -177,6 +179,11 @@ class ControllerModuleOneall extends Controller
 			$data ['oneall_ask_email'] = true;
 		if (!isset ($data ['oneall_ask_phone']))
 			$data ['oneall_ask_phone'] = false;
+		
+		// Always set the lib lang, but we may not use it:
+		$data ['oneall_lib_lang'] = $this->config->get('config_language');
+		if (!isset ($data ['oneall_store_lang']))
+			$data ['oneall_store_lang'] = false;
 		
 		$data ['layouts'] = $this->model_design_layout->getLayouts ();
 		
