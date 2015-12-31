@@ -24,7 +24,18 @@
  */
 class ControllerAccountOneall extends Controller
 {
-
+	// Build User Agent
+	public static function get_user_agent ()
+	{
+		// System Versions
+		$social_login = 'SocialLogin/1.0';
+		$opencart = 'OpenCart'.(defined ('VERSION') ? ('/'.substr (VERSION, 0, 3)) : '');
+				
+		// Build User Agent
+		return ($social_login.' '.$opencart.' (+http://www.oneall.com/)');
+	}
+		
+	// Callback Handler
 	public function index ()
 	{
 		
@@ -64,6 +75,7 @@ class ControllerAccountOneall extends Controller
 			curl_setopt ($curl, CURLOPT_VERBOSE, 0);
 			curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt ($curl, CURLOPT_FAILONERROR, 0);
+			curl_setopt ($curl, CURLOPT_USERAGENT, self::get_user_agent());
 			
 			// Send request
 			$result_json = curl_exec ($curl);
