@@ -23,13 +23,74 @@
  *
  */
 
+//////////////////////////////////////////////////////////////////////
+// Admin Language Settings
+//////////////////////////////////////////////////////////////////////
+ 
 // Heading
-$_ ['heading_title'] = 'ONEALL Social Login';
+$_ ['heading_title'] = 'OneAll Social Login';
 $_ ['heading_title2'] = 'Social Login';
 
 // Text
+$_ ['oa_text_api_communication'] = 'API Communication';
+$_ ['oa_text_api_handler'] = 'API Communication Handler';
+$_ ['oa_text_api_protocol'] = 'API Communication Protocol';
+$_ ['oa_text_api_curl'] = 'PHP CURL';
+$_ ['oa_text_api_fsockopen'] = 'PHP FSOCKOPEN';
+$_ ['oa_text_api_autodetect'] = 'Autodetect Communication Settings';
+$_ ['oa_text_api_verify'] = 'Verify API Settings';
+$_ ['oa_text_api_port_443'] = 'Port 443/HTTPS';
+$_ ['oa_text_api_port_80'] = 'Port 80/HTTP';
+$_ ['oa_text_api_setup'] = '<p>To enable Social Login you first of all need to create a free account at <a href="https://app.oneall.com/signup/" target="_blank">http://www.oneall.com</a> and setup a Site.</p><p>After having created your account and setup your Site, please enter the API settings in the form below.</p><p><strong>Don\'t worry the setup is free and takes only a couple of minutes!</strong></p>';
+$_ ['oa_text_api_create_view'] = 'Click here to create and view your API Credentials';
+$_ ['oa_text_settings'] = 'Settings';
+$_ ['oa_text_positions'] = 'Positions';
+$_ ['oa_text_account_ask_email'] = 'User Email Address';
+$_ ['oa_text_account_ask_email_desc'] = 'Select how Social Login should behave if the social network does not provide the user\'s email address.';
+$_ ['oa_text_account_ask_email_user'] = 'Ask the user to enter his email address manually';
+$_ ['oa_text_account_ask_email_auto'] = 'Automatically create a placeholder email address that can be changed lateron.';
+$_ ['oa_text_account_ask_phone'] = 'User Phone Number';
+$_ ['oa_text_account_ask_phone_desc'] = 'Select how Social Login should behave if the social network does not provide the user\'s phone number.';
+$_ ['oa_text_account_ask_phone_user'] = 'Ask the user to enter his phone number manually';
+$_ ['oa_text_account_ask_phone_auto'] = 'Create the account and let the user change the phone number lateron.';
+$_ ['oa_text_plugin_language'] = 'Social Login Language';
+$_ ['oa_text_plugin_language_desc'] = 'Select which language should be used by Social Login.';
+$_ ['oa_text_plugin_language_app'] = 'Use the language selected in the Site Settings in the OneAll account';
+$_ ['oa_text_plugin_language_opc'] = 'Use the same language as selected in OpenCart';
+$_ ['oa_text_social_network_icons'] = 'You can change the icon theme in the <strong>Site Customisation</strong> panel in your <a href="https://app.oneall.com/" target="_blank">OneAll</a> account.';
+$_ ['oa_text_social_networks'] = 'Social Networks';
+$_ ['oa_text_enable'] = 'Enabled';
+$_ ['oa_text_save'] = 'Save Social Login Settings';
+$_ ['oa_text_api_settings'] = 'API Settings';
+$_ ['oa_text_api_subdomain'] = 'API Subdomain';
+$_ ['oa_text_api_public_key'] = 'API Public Key';
+$_ ['oa_text_api_private_key'] = 'API Private Key';
+
+
+
+$_ ['oa_text_ajax_working'] = 'Working';
+$_ ['oa_text_ajax_wait'] = 'Contacting API - please wait this may take a few minutes ...';
+$_ ['oa_text_ajax_settings_ok'] = 'The settings are correct - do not forget to save your changes!';
+$_ ['oa_text_ajax_fill_out'] = 'Please fill out each of the fields above.';
+$_ ['oa_text_ajax_missing_subdomain'] = 'The API subdomain does not seem to exist. Have you filled it out correctly?';
+$_ ['oa_text_ajax_wrong_subdomain'] = 'The subdomain has a wrong syntax!';
+$_ ['oa_text_ajax_blocked_port'] = 'Could not contact API. Are outbound requests on port 443 allowed?';
+$_ ['oa_text_ajax_wrong_key'] = 'The API subdomain is correct, but one or both of the keys are invalid.';
+$_ ['oa_text_ajax_no_handler'] = 'Could not detect connection handler. Please try to install PHP CURL';
+$_ ['oa_text_ajax_wrong_handler'] = 'Could not connect to API connection. Please try to use the autdetection first.';
+$_ ['oa_text_ajax_curl_ok_443'] = 'Detected CURL on Port 443 - do not forget to save your changes!';
+$_ ['oa_text_ajax_curl_ok_80'] = 'Detected CURL on Port 80 - do not forget to save your changes!';
+$_ ['oa_text_ajax_curl_no_ports'] = 'CURL is available but both ports (80, 443) are blocked for outbound requests';
+$_ ['oa_text_ajax_fsockopen_ok_443'] = 'Detected FSOCKOPEN on Port 443 - do not forget to save your changes!';
+$_ ['oa_text_ajax_fsockopen_ok_80'] = 'Detected FSOCKOPEN on Port 80 - do not forget to save your changes!';
+$_ ['oa_text_ajax_fsockopen_no_ports'] = 'FSOCKOPEN is available but both ports (80, 443) are blocked for outbound requests';
+		
+$_ ['oa_text_ajax_autodetect_error'] = 'Autodetection Error - our <a href="%s" target="_blank">documentation</a> helps you fix this issue.';
+
+
+
 $_ ['text_module'] = 'Modules';
-$_ ['text_success'] = 'Success: You have modified module ONEALL!';
+$_ ['oa_text_settings_saved'] = 'The Social Login settings have successfully been saved!';
 $_ ['text_content_top'] = 'Content Top';
 $_ ['text_content_bottom'] = 'Content Bottom';
 $_ ['text_column_left'] = 'Column Left';
@@ -37,14 +98,8 @@ $_ ['text_column_right'] = 'Column Right';
 $_ ['text_preview'] = 'Preview:';
 $_ ['text_setup'] = 'ONEALL Account Settings';
 $_ ['text_account'] = 'Specify <a target="_blank" href="http://app.oneall.com">oneall.com</a> parameters:';
-$_ ['text_oneall_subdomain'] = 'Subdomain:';
-$_ ['text_oneall_public'] = 'Public Key:';
-$_ ['text_oneall_private'] = 'Private Key:';
-$_ ['text_social_settings'] = 'Settings:';
-$_ ['text_social_networks'] = 'Social networks:';
-$_ ['text_add_social'] = 'Add...';
-$_ ['text_remove_social'] = 'Remove last one';
-$_ ['text_social_lang'] = 'Icon language:';
+
+
 
 // Entry
 $_ ['entry_layout'] = 'Layout:';

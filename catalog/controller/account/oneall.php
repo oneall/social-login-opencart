@@ -22,6 +22,16 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  *
  */
+
+// OpenCart2 ?
+if (!defined ('OC2'))
+{
+	define ('OC2', VERSION >= '2');
+}
+
+// ////////////////////////////////////////////////////////////////////
+// Callback
+// ////////////////////////////////////////////////////////////////////
 class ControllerAccountOneall extends Controller
 {
 	// Build User Agent
@@ -29,34 +39,34 @@ class ControllerAccountOneall extends Controller
 	{
 		// System Versions
 		$social_login = 'SocialLogin/1.0';
-		$opencart = 'OpenCart'.(defined ('VERSION') ? ('/'.substr (VERSION, 0, 3)) : '');
-				
+		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '');
+		
 		// Build User Agent
-		return ($social_login.' '.$opencart.' (+http://www.oneall.com/)');
+		return ($social_login . ' ' . $opencart . ' (+http://www.oneall.com/)');
 	}
 	
 	// Generates a random hash of the given length
 	private static function generate_hash ($length)
 	{
 		$hash = '';
-	
-		for ($i = 0; $i < $length; $i++)
+		
+		for($i = 0; $i < $length; $i ++)
 		{
-		do
+			do
 			{
-			$char = chr (mt_rand (48, 122));
+				$char = chr (mt_rand (48, 122));
 			}
-			while (! preg_match ('/[a-zA-Z0-9]/', $char));
+			while ( !preg_match ('/[a-zA-Z0-9]/', $char) );
 			$hash .= $char;
 		}
-	
+		
 		// Done
 		return $hash;
 	}
-		
+	
 	// Callback Handler
 	public function index ()
-	{		
+	{
 		// ONEALL Callback handler
 		$error = '';
 		
@@ -65,138 +75,150 @@ class ControllerAccountOneall extends Controller
 		{
 			// Get connection_token
 			$token = trim ($_POST ['connection_token']);
-
+			
 			// OneAll Site Settings
 			$site_subdomain = $this->config->get ('oneall_subdomain');
 			$site_public_key = $this->config->get ('oneall_public');
 			$site_private_key = $this->config->get ('oneall_private');
 			
-			// API Access domain
-			$site_domain = $site_subdomain . '.api.oneall.com';
-			
-			// Connection Resource
-			// http://docs.oneall.com/api/resources/connections/read-connection-details/
-			$resource_uri = 'http://' . $site_domain . '/connections/' . $token . '.json';
-			
-			// Setup connection
-			$curl = curl_init ();
-			curl_setopt ($curl, CURLOPT_URL, $resource_uri);
-			curl_setopt ($curl, CURLOPT_HEADER, 0);
-			curl_setopt ($curl, CURLOPT_USERPWD, $site_public_key . ":" . $site_private_key);
-			curl_setopt ($curl, CURLOPT_TIMEOUT, 15);
-			curl_setopt ($curl, CURLOPT_VERBOSE, 0);
-			curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt ($curl, CURLOPT_FAILONERROR, 0);
-			curl_setopt ($curl, CURLOPT_USERAGENT, self::get_user_agent());
-			
-			// Send request
-			$result_json = curl_exec ($curl);
-			
-			// Error
-			if ($result_json === false)
-			{
-				// You may want to implement your custom error handling here
-				$error = 'Curl error: ' . curl_error ($curl) . '<br />' . 'Curl info: ' . curl_getinfo ($curl) . '';
-				curl_close ($curl);
-			} 
-			// Success
-			else
-			{
-				// Close connection
-				curl_close ($curl);
+			// With the API Credentials it does not work
+			if (!empty ($site_subdomain))
+			{				
+				// API Access domain
+				$site_domain = $site_subdomain . '.api.oneall.com';
 				
-				// Decode
-				$json = json_decode ($result_json);
+				// Connection Resource
+				// http://docs.oneall.com/api/resources/connections/read-connection-details/
+				$resource_uri = 'http://' . $site_domain . '/connections/' . $token . '.json';
 				
-				// Extract data
-				$data = $json->response->result->data;
+				// Setup connection
+				$curl = curl_init ();
+				curl_setopt ($curl, CURLOPT_URL, $resource_uri);
+				curl_setopt ($curl, CURLOPT_HEADER, 0);
+				curl_setopt ($curl, CURLOPT_USERPWD, $site_public_key . ":" . $site_private_key);
+				curl_setopt ($curl, CURLOPT_TIMEOUT, 15);
+				curl_setopt ($curl, CURLOPT_VERBOSE, 0);
+				curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt ($curl, CURLOPT_FAILONERROR, 0);
+				curl_setopt ($curl, CURLOPT_USERAGENT, self::get_user_agent ());
 				
-				// Check for plugin
-				if ($data->plugin->key == 'social_login')
+				// Send request
+				$result_json = curl_exec ($curl);
+				
+				// Error
+				if ($result_json === false)
 				{
-					// Operation successfull
-					if ($data->plugin->data->status == 'success')
+					// You may want to implement your custom error handling here
+					$error = 'Curl error: ' . curl_error ($curl) . '<br />' . 'Curl info: ' . curl_getinfo ($curl) . '';
+					curl_close ($curl);
+				}
+				// Success
+				else
+				{
+					// Close connection
+					curl_close ($curl);
+					
+					// Decode
+					$json = json_decode ($result_json);
+					
+					// Extract data
+					$data = $json->response->result->data;
+					
+					// Check for plugin
+					if ($data->plugin->key == 'social_login')
 					{
-						$lastname = '';
-						$firstname = '';
-						
-						if (isset ($data->user->identity->name))
+						// Operation successfull
+						if ($data->plugin->data->status == 'success')
 						{
-							if (isset($data->user->identity->name->givenName))
-								$firstname = $data->user->identity->name->givenName;
-							if (isset ($data->user->identity->name->familyName))
-								$lastname = $data->user->identity->name->familyName;
-						}
-						else if (isset ($data->user->identity->displayName))
-							$firstname = $data->user->identity->displayName;
-						else if (isset ($data->user->identity->preferredUsername))
-							$firstname = $data->user->identity->preferredUsername;
-						
-						$email = '';
-						if (isset ($data->user->identity->emails))
-							$email = $data->user->identity->emails [0]->value;
-						
-						if (isset ($data->user->identity->profileUrl))
-							$profile = $data->user->identity->profileUrl;
-						else if (isset ($data->user->identity->identity_token))
-							$profile = $data->user->identity->id;
-						
-						$phone = '';
-						if (isset ($data->user->identity->phoneNumbers))
-							$phone = $data->user->identity->phoneNumbers [0]->value;
-						
-						$q = $this->db->query ("SHOW COLUMNS FROM " . DB_PREFIX . "customer LIKE 'oneall_profile'")->row;
-						if (!$q)
-						{
-							$this->db->query ("ALTER TABLE " . DB_PREFIX . "customer ADD `oneall_profile` varchar(128)");
-							$this->db->query ("ALTER TABLE " . DB_PREFIX . "customer ADD INDEX `oneall_profile` (`oneall_profile`)");
-						}
-						
-						// Check if customer already exists
-						$exists = '';
-						if ($email)
-							$q = $this->db->query ("SELECT * FROM " . DB_PREFIX . "customer WHERE email='" . $this->db->escape ($email) . "'")->row;
-						else
-							$q = $this->db->query ("SELECT * FROM " . DB_PREFIX . "customer WHERE oneall_profile='" . $this->db->escape ($profile) . "'")->row;
-						if ($q)
-						{
+							$lastname = '';
+							$firstname = '';
+							
+							if (isset ($data->user->identity->name))
+							{
+								if (isset ($data->user->identity->name->givenName))
+									$firstname = $data->user->identity->name->givenName;
+								if (isset ($data->user->identity->name->familyName))
+									$lastname = $data->user->identity->name->familyName;
+							}
+							else if (isset ($data->user->identity->displayName))
+								$firstname = $data->user->identity->displayName;
+							else if (isset ($data->user->identity->preferredUsername))
+								$firstname = $data->user->identity->preferredUsername;
+							
+							$email = '';
+							if (isset ($data->user->identity->emails))
+								$email = $data->user->identity->emails [0]->value;
+							
+							if (isset ($data->user->identity->profileUrl))
+								$profile = $data->user->identity->profileUrl;
+							else if (isset ($data->user->identity->identity_token))
+								$profile = $data->user->identity->id;
+							
+							$phone = '';
+							if (isset ($data->user->identity->phoneNumbers))
+								$phone = $data->user->identity->phoneNumbers [0]->value;
+							
+							// Support for older plugin versions
+							$column = $this->db->query ("SHOW COLUMNS FROM " . DB_PREFIX . "customer LIKE 'oneall_profile'")->row;	
+							if ($column)
+							{
+								$customer = $this->db->query ("SELECT * FROM `" . DB_PREFIX . "customer` WHERE oneall_profile='" . $this->db->escape ($profile) . "'")->row;	
+								if ($customer)
+								{
+									$sql = "INSERT "
+									
+								}
+								
+								$this->db->query ("ALTER TABLE " . DB_PREFIX . "customer ADD `oneall_profile` varchar(128)");
+								$this->db->query ("ALTER TABLE " . DB_PREFIX . "customer ADD INDEX `oneall_profile` (`oneall_profile`)");
+							}
+							
+							// Check if customer already exists
+							$exists = '';
 							if ($email)
-								$exists = 1;
+								$q = $this->db->query ("SELECT * FROM " . DB_PREFIX . "customer WHERE email='" . $this->db->escape ($email) . "'")->row;
 							else
-								$exists = 2;
-							$email = $q ['email'];
-							if (!strpos ($email, '@'))
-								$email = '';
-							if ($q ['telephone'])
-								$phone = $q ['telephone'];
-							if ($q['firstname'])
-								$firstname = $q['firstname'];
-							if ($q['lastname'])
-								$lastname = $q['lastname'];
+								$q = $this->db->query ("SELECT * FROM " . DB_PREFIX . "customer WHERE oneall_profile='" . $this->db->escape ($profile) . "'")->row;
+							if ($q)
+							{
+								if ($email)
+									$exists = 1;
+								else
+									$exists = 2;
+								$email = $q ['email'];
+								if (!strpos ($email, '@'))
+									$email = '';
+								if ($q ['telephone'])
+									$phone = $q ['telephone'];
+								if ($q ['firstname'])
+									$firstname = $q ['firstname'];
+								if ($q ['lastname'])
+									$lastname = $q ['lastname'];
+							}
+							
+							$_POST = array();
+							$_POST ['email'] = $email;
+							$_POST ['firstname'] = $firstname;
+							$_POST ['lastname'] = $lastname;
+							$_POST ['phone'] = $phone;
+							$_POST ['_profile'] = $profile;
+							$_POST ['_exists'] = $exists;
+							$_POST ['_go'] = $_GET ['go'];
+							
+							$this->ask ();
+							return;
 						}
-						
-						$_POST = array();
-						$_POST ['email'] = $email;
-						$_POST ['firstname'] = $firstname;
-						$_POST ['lastname'] = $lastname;
-						$_POST ['phone'] = $phone;
-						$_POST ['_profile'] = $profile;
-						$_POST ['_exists'] = $exists;
-						$_POST ['_go'] = $_GET ['go'];
-						
-						$this->ask ();
-						return;
 					}
 				}
+				
+				echo '<br/><br/><br/><b>Transferred data:</b><br/>';
+				print_r ($data);
+				echo '<br/><br/><br/><br/><h2 style="color:red">Social authenfication failed.</h2><br/>';
+				if ($error)
+					echo 'REASON: ' . $error . '<br/><br/>';
+				echo "<a href='" . $_GET ['go'] . "'>Press here</a> to continue.";
+				exit ();
 			}
-			
-			echo '<br/><br/><br/><b>Transferred data:</b><br/>';
-			print_r ($data);
-			echo '<br/><br/><br/><br/><h2 style="color:red">Social authenfication failed.</h2><br/>';
-			if ($error)
-				echo 'REASON: ' . $error . '<br/><br/>';
-			echo "<a href='" . $_GET ['go'] . "'>Press here</a> to continue.";
-			exit ();
 		}
 	}
 
@@ -247,8 +269,8 @@ class ControllerAccountOneall extends Controller
 				// Everything OK
 				if (!$this->customer->login ($_POST ['email'], '', true))
 				{
-					// Generate a random Password					
-					$password = self::generate_hash(8);
+					// Generate a random Password
+					$password = self::generate_hash (8);
 					
 					if (substr (VERSION, 4, 1) > 3)
 						$this->db->query ("INSERT INTO " . DB_PREFIX . "customer SET store_id = '" . (int) $this->config->get ('config_store_id') . "', firstname = '$_POST[firstname]', lastname = '$_POST[lastname]', email = '$_POST[email]', telephone = '$_POST[phone]', oneall_profile = '$_POST[_profile]', salt = '" . $this->db->escape ($salt = substr (md5 (uniqid (rand (), true)), 0, 9)) . "', password = '" . $this->db->escape (sha1 ($salt . sha1 ($salt . sha1 ($password)))) . "', newsletter = '1', customer_group_id = '1', ip = '" . $this->db->escape ($this->request->server ['REMOTE_ADDR']) . "', status = '1', approved = '1', date_added = NOW()");
@@ -302,6 +324,188 @@ class ControllerAccountOneall extends Controller
 			}
 			$this->response->setOutput ($this->render ());
 		}
+	}
+	
+	////////////////////////////////////////////////////////////////////
+	// User Link
+	////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Links the user/identity tokens to a customer
+	 */
+	public function link_tokens_to_customer_id ($customer_id, $user_token, $identity_token, $identity_provider)
+	{
+		// Make sure that that the user exists.
+		$sql = "SELECT customer_id FROM `" . DB_PREFIX . "customer` WHERE customer_id  = " . intval ($customer_id) . "";
+		$result = $this->db->query ($sql)->row;
+	
+		// We have found a customer_id.
+		if (is_array ($result) && !empty ($result ['customer_id']))
+		{
+			$customer_id = $result ['customer_id'];
+				
+			$oasl_user_id = null;
+			$oasl_identity_id = null;
+				
+			// Delete superfluous user_token.
+			$sql = "SELECT oasl_user_id	FROM `" . DB_PREFIX . "oasl_user` WHERE customer_id = '" . intval ($customer_id) . "' AND user_token <> '" . $this->db->escape ($user_token) . "'";
+			$query = $this->db->query ($sql);
+			if ($query->num_rows > 0)
+			{				
+				foreach ($query->rows as $row)
+				{		
+					// Delete the wrongly linked user_token.
+					$sql = "DELETE FROM `" . DB_PREFIX . "oasl_user` WHERE oasl_user_id = '" . $this->db->escape ($row ['oasl_user_id']) . "'";
+					$this->db->query ($sql);
+	
+					// Delete the wrongly linked identity_token.
+					$sql = "DELETE FROM `" . DB_PREFIX . "oasl_identity` WHERE oasl_user_id = '" . $this->db->escape ($row ['oasl_user_id']) . "'";
+					$this->db->query ($sql);
+				}
+			}
+	
+				
+			// Read the entry for the given user_token.
+			$sql = "SELECT oasl_user_id, customer_id FROM `" . DB_PREFIX . "oasl_user` WHERE user_token = '" . $this->db->escape ($user_token) . "'";
+			$result = $this->db->query ($sql)->row;
+				
+			// The user_token exists
+			if (is_array ($result) && !empty ($result ['oasl_user_id']))
+			{
+				$oasl_user_id = $result ['oasl_user_id'];
+			}
+				
+			// The user_token either does not exist or has been reset.
+			if (empty ($oasl_user_id))
+			{
+				$sql = "INSERT INTO `" . DB_PREFIX . "oasl_user` SET customer_id='".intval($customer_id)."', user_token='".$this->db->escape($user_token)."', date_added=NOW()";
+				$this->db->query ($sql);
+				
+				// Identifier of the newly created user_token entry.
+				$oasl_user_id = $this->db->getLastId();
+			}
+				
+			// Read the entry for the given identity_token.
+			$sql = "SELECT oasl_identity_id, oasl_user_id, identity_token FROM `" . DB_PREFIX . "oasl_identity` WHERE identity_token = '" . $this->db->escape ($identity_token) . "'";
+			$result = $this->db->query ($sql)->row;
+				
+			// The identity_token exists
+			if (is_array ($result) && !empty ($result ['oasl_identity_id']))
+			{
+				$oasl_identity_id = $result ['oasl_identity_id'];
+	
+				// The identity_token is linked to another user_token.
+				if (!empty ($result ['oasl_user_id']) && $result ['oasl_user_id'] != $oasl_user_id)
+				{
+					// Delete the wrongly linked identity_token.
+					$sql = "DELETE FROM `" . DB_PREFIX . "oasl_identity` WHERE oasl_identity_id = '" . intval ($oasl_identity_id)."'";
+					$this->db->query ($sql);
+						
+					// Reset the identifier
+					$oasl_identity_id = null;
+				}
+			}
+				
+			// The identity_token either does not exist or has been reset.
+			if (empty ($oasl_identity_id))
+			{
+				// Add new link.
+				$sql = "INSERT INTO `" . DB_PREFIX . "oasl_identity` SET oasl_user_id='".intval ($oasl_user_id)."', identity_token = '".$this->db->escape ($identity_token) ."', identity_provider = '".$this->db->escape ($identity_provider) ."', 'num_logins' => 1, 'date_added' => NOW (), 'date_updated' => NOW ()";						
+				$query = $db->sql_query ($sql);
+	
+				// Identifier of the newly created identity_token entry.
+				$oasl_identity_id = $this->db->getLastId();
+			}
+				
+			// Done.
+			return true;
+		}
+	
+		// An error occured.
+		return false;
+	}
+	
+	/**
+	 * Get the user_id for a given email address.
+	 */
+	protected function get_customer_id_by_email ($email)
+	{
+		// Read the customer_id for this email address.
+		$sql = "SELECT customer_id FROM `" . DB_PREFIX . "customer` WHERE user_email  = '" . $this->db->escape ($email) . "'";
+		$result = $this->db->query ($sql)->row;
+	
+		// We have found a customer_id.
+		if (is_array ($result) && !empty ($result ['customer_id']))
+		{
+			return $result ['customer_id'];
+		}
+	
+		// Not found.
+		return false;
+	}
+	
+	/**
+	 * Returns the user_id for a given token.
+	 */
+	protected function get_customer_id_for_user_token ($user_token)
+	{
+		// Make sure it is not empty.
+		$user_token = trim ($user_token);
+		if (strlen ($user_token) == 0)
+		{
+			return false;
+		}
+	
+		// Read the user_id for this user_token.
+		$sql = "SELECT oasl_user_id, customer_id FROM `" . DB_PREFIX . "oasl_user` WHERE user_token = '" .  $this->db->escape ($user_token) . "'";
+		$result = $this->db->query ($sql)->row;
+	
+		// The user_token exists
+		if (is_array ($result) && !empty ($result ['customer_id']))
+		{
+			$customer_id = intval ($result ['customer_id']);
+			$oasl_user_id = intval ($result ['oasl_user_id']);
+				
+			// Check if the user account exists.
+			$sql = "SELECT customer_id FROM `" . DB_PREFIX . "customer` WHERE customer_id = " . intval ($customer_id);
+			$result = $this->db->query ($sql)->row;
+				
+			// The user account exists, return it's identifier.
+			if (is_array ($result) && !empty ($result ['customer_id']))
+			{
+				return $result ['customer_id'];
+			}
+				
+			// Delete the wrongly linked user_token.
+			$sql = "DELETE FROM `" . DB_PREFIX . "oasl_user` WHERE user_token = '" . $this->db->escape ($user_token) . "'";
+			$query = $this->db->query ($sql);
+				
+			// Delete the wrongly linked identity_token.
+			$sql = "DELETE FROM `" . DB_PREFIX . "oasl_identity` WHERE oasl_user_id = " . intval ($oasl_user_id) . "";
+			$query = $this->db->query ($sql);
+		}
+	
+		// No entry found.
+		return false;
+	}
+	
+	/**
+	 * Get the user_token from a user_id
+	 */
+	public function get_user_token_for_customer_id ($customer_id)
+	{
+		// Read the customer_id for this user_token.
+		$sql = "SELECT user_token FROM `" . DB_PREFIX . "oasl_user` WHERE customer_id = " . intval ($customer_id);
+		$result = $this->db->query ($sql)->row;
+	
+		// The user_token exists
+		if (is_array ($result) && !empty ($result ['user_token']))
+		{
+			return $result ['user_token'];
+		}
+	
+		// Not found
+		return false;
 	}
 }
 

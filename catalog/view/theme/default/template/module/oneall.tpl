@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	OneAll Social Login
- * @copyright 	Copyright 2015 http://www.oneall.com - All rights reserved.
+ * @copyright 	Copyright 2016 http://www.oneall.com - All rights reserved.
  * @license   	GNU/GPL 2 or later
  *
  * This program is free software; you can redistribute it and/or
@@ -29,7 +29,6 @@ $oasl_container = 'oneall_social_login_'.mt_rand(99999, 9999999);
 // Do not display for guests
 if ( ! $oasl_user_is_logged  && ! empty ($oasl_subdomain)) 
 {
-
 	if ($oasl_type == 'module')
 	{ 
 		if (OC2)
