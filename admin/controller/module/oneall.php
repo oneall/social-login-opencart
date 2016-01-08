@@ -43,123 +43,48 @@ class ControllerModuleOneall extends Controller
 	
 	private $error = array();
 	
-	// Display Admin
-	public function index ()
-	{
-		// Language
-		$data = $this->load->language ('module/oneall');
+	// Settings Admin
+	private function index_settings ($data)
+	{	
+		// Section
+		$data ['show'] = 'settings';
 		
-		// Page Title		
-		$this->document->setTitle ($this->language->get ('heading_title'));
-		
-		// CSS & JS
-		$this->document->addStyle ('view/stylesheet/oneall/oneall.css');
-		$this->document->addScript ('view/javascript/oneall/oneall.js');
-		
-		// Load Models
-		$this->load->model ('setting/setting');
-		$this->load->model ('design/layout');
-		
+		////////////////////////////////////////////////////////////////////////////////////////
 		// Save Settings
+		////////////////////////////////////////////////////////////////////////////////////////
 		if (($this->request->server ['REQUEST_METHOD'] == 'POST') && $this->validate ())
 		{
-			// OpenCart 2 mimic
+			// Build Social Network List
+			if (isset ($this->request->post['oneall_social_networks']))
+			{
+				if (is_array ($this->request->post['oneall_social_networks']))
+				{
+					$oneall_socials = array();
+						
+					foreach ($this->request->post['oneall_social_networks'] AS $key => $is_enabled)
+					{
+						if ( ! empty ($is_enabled))
+						{
+							$oneall_socials[] = $key;
+						}
+					}
+						
+					$this->request->post['oneall_socials'] = implode (",", $oneall_socials);
+				}
+			}
+							
+			// Save Settings
+			$this->model_setting_setting->editSetting ('oneall', $this->request->post);
+	
+			// Redirect
 			if (OC2)
 			{
-				$data ['layouts'] = $this->model_design_layout->getLayouts ();
-				$this->load->model ('extension/module');
-				
-				$modules = $this->model_extension_module->getModulesByCode ('oneall');
-				$old_modules = array();
-				foreach ($modules as $module)
-					$old_modules [$module ['module_id']] = 1;
-				
-				if (isset ($_POST ['oneall_module']))
-					foreach ($_POST ['oneall_module'] as $module)
-					{
-						
-						foreach ($data ['layouts'] as $layout)
-							if ($layout ['layout_id'] == $module ['layout_id'])
-								$module ['name'] = $layout ['name'];
-						
-						if (!empty ($module ['module_id']))
-						{
-							$module_id = $module ['module_id'];
-							unset ($module ['module_id']);
-							unset ($old_modules [$module_id]);
-							$this->model_extension_module->editModule ($module_id, $module);
-							$this->db->query ("DELETE FROM " . DB_PREFIX . "layout_module WHERE code = 'oneall.$module_id'");
-						}
-						else
-						{
-							$this->model_extension_module->addModule ('oneall', $module);
-							$module_id = $this->db->getLastId ();
-						}
-						$this->db->query ("INSERT INTO " . DB_PREFIX . "layout_module SET layout_id = '" . $module ['layout_id'] . "', position = '" . $module ['position'] . "', sort_order = '" . $module ['sort_order'] . "', code = 'oneall.$module_id'");
-					}
-				
-				foreach ($old_modules as $module_id => $value)
-					$this->model_extension_module->deleteModule ($module_id);
-				
-				unset ($_POST ['oneall_module']);
+				$this->response->redirect ($this->url->link ('module/oneall', ('token=' . $this->session->data ['token'] . '&oa_action=saved'), 'SSL'));
 			}
-			
-			
-			$this->model_setting_setting->editSetting ('oneall', $this->request->post);
-			
-			$this->session->data ['success'] = $data['oa_text_settings_saved'];
-			
-			if (OC2)
-				$this->response->redirect ($this->url->link ('module/oneall', 'token=' . $this->session->data ['token'], 'SSL'));
 			else
-				$this->redirect ($this->url->link ('module/oneall', 'token=' . $this->session->data ['token'], 'SSL'));
-		}
-		
-		if (isset ($this->error ['warning']))
-		{
-			$data ['error_warning'] = $this->error ['warning'];
-		}
-		else
-		{
-			$data ['error_warning'] = '';
-		}
-		
-		// BreadCrumbs
-		$data ['breadcrumbs'] = array(
-			array(
-				'text' => $this->language->get ('text_home'),
-				'href' => $this->url->link ('common/home', 'token=' . $this->session->data ['token'], 'SSL'),
-				'separator' => false 
-			),
-			array(
-				'text' => $this->language->get ('text_module'),
-				'href' => $this->url->link ('extension/module', 'token=' . $this->session->data ['token'], 'SSL'),
-				'separator' => ' :: ' 
-			),
-			array(
-				'text' => $this->language->get ('heading_title'),
-				'href' => $this->url->link ('module/oneall', 'token=' . $this->session->data ['token'], 'SSL'),
-				'separator' => ' :: ' 
-			) 
-		);
-		
-		$data ['action'] = $this->url->link ('module/oneall', 'token=' . $this->session->data ['token'], 'SSL');
-		
-		$data ['cancel'] = $this->url->link ('extension/module', 'token=' . $this->session->data ['token'], 'SSL');
-		
-		$data ['modules'] = array();
-		
-		$data = array_merge ($data, $this->model_setting_setting->getSetting ('oneall'));
-		
-		if (OC2)
-		{
-			$data ['oneall_module'] = array();
-			$this->load->model ('extension/module');
-			$modules = $this->model_extension_module->getModulesByCode ('oneall');
-			foreach ($modules as $module)
-				$data ['oneall_module'] [] = array_merge ($this->model_extension_module->getModule ($module ['module_id']), array(
-					'module_id' => $module ['module_id'] 
-				));
+			{
+				$this->redirect ($this->url->link ('module/oneall', ('token=' . $this->session->data ['token'] . '&oa_action=saved'), 'SSL'));
+			}
 		}
 		
 		////////////////////////////////////////////////////////////////////////////////////////
@@ -233,46 +158,190 @@ class ControllerModuleOneall extends Controller
 		{
 			$data ['oneall_store_lang'] = 0;
 		}
-		
+			
 		// Social Networks
 		if (!isset ($data ['oneall_socials']))
 		{
 			$data ['oneall_socials'] = 'facebook,google,twitter';
 		}
+		
+		// Social Login Status
+		if (!isset ($data ['oneall_status']))
+		{
+			$data ['oneall_status'] = '1';
+		}
+
 
 		////////////////////////////////////////////////////////////////////////////////////////
 		// Other Information
 		////////////////////////////////////////////////////////////////////////////////////////
 		
-
 		// All Social Networks		
 		$data ['oa_social_networks'] = self::get_social_networks ();
+				
+		// Done
+		return $data;	
+	}
+	
+	// Positions Admin
+	private function index_positions ($data)
+	{
+		// Section
+		$data ['show'] = 'positions';
 		
-		if (!isset ($data ['oneall_module']))
-			$data ['oneall_module'] = array(
-				array(
-					'layout_id' => 1,
-					'sort_order' => false,
-					'css' => 'catalog/view/theme/default/stylesheet/oneall/Squares.css',
-					'gridw' => false,
-					'gridh' => false,
-					'type' => 'module',
-					'position' => 'column_right',
-					'x' => 10,
-					'y' => 20,
-					'status' => 1 
-				) 
-			);
-
-
-
+		////////////////////////////////////////////////////////////////////////////////////////
+		// Remove Positon
+		////////////////////////////////////////////////////////////////////////////////////////
+		if (($this->request->server ['REQUEST_METHOD'] == 'GET') && $this->validate ())
+		{
+			// Add Position
+			if (isset ($this->request->get) && is_array ($this->request->get))
+			{
+				// Remove this position
+				if ( ! empty ($this->request->get['remove']))
+				{
+					// Remove
+					$sql = "DELETE FROM `" . DB_PREFIX . "layout_module` WHERE code='oneall' AND layout_module_id='".intval($this->request->get['remove'])."' LIMIT 1";
+					$result = $this->db->query ($sql);
+					
+					// Done
+					$data ['oa_success_message'] = $data['oa_text_position_removed'];
+				}
+			}
+		}
+		////////////////////////////////////////////////////////////////////////////////////////
+		// Save Settings
+		////////////////////////////////////////////////////////////////////////////////////////
+		if (($this->request->server ['REQUEST_METHOD'] == 'POST') && $this->validate ())
+		{					
+			// Add Position
+			if (isset ($this->request->post) && is_array ($this->request->post))
+			{
+				if ( ! empty ($this->request->post['oa_layout_id']) && ! empty ($this->request->post['oa_position']) && ! empty ($this->request->post['oa_sort_order']))
+				{
+					$oa_layout_id = $this->request->post['oa_layout_id'];
+					$oa_position = $this->request->post['oa_position'];
+					$oa_sort_order = $this->request->post['oa_sort_order'];
+					
+					// Remove duplicates
+					$sql = "DELETE FROM `" . DB_PREFIX . "layout_module` WHERE layout_id = '".intval ($oa_layout_id)."' AND code = 'oneall' AND position='".$this->db->escape($oa_position)."'";
+					$result = $this->db->query ($sql);
+					
+					// Add New
+					$sql = "INSERT INTO `" . DB_PREFIX . "layout_module` SET layout_id = '".intval ($oa_layout_id)."', code = 'oneall', position='".$this->db->escape($oa_position)."', sort_order='".intval ($oa_sort_order)."'";
+					$result = $this->db->query ($sql);
+				}
+			}
+	
+			// Redirect
+			if (OC2)
+			{
+				$this->response->redirect ($this->url->link ('module/oneall', ('token=' . $this->session->data ['token'] . '&oa_action=saved&show=positions'), 'SSL'));
+			}
+			else
+			{
+				$this->redirect ($this->url->link ('module/oneall', ('token=' . $this->session->data ['token'] . '&oa_action=saved&show=positions'), 'SSL'));
+			}
+		}
 		
-		$data ['layouts'] = $this->model_design_layout->getLayouts ();
+		////////////////////////////////////////////////////////////////////////////////////////
+		// Default data
+		////////////////////////////////////////////////////////////////////////////////////////
 		
+		// Layouts
+		$data ['oa_oc_layouts'] = $this->model_design_layout->getLayouts ();
+		
+		// Positions
+		$data ['oa_oc_positions'] = array();
+		
+		// Remove duplicates
+		$sql = "SELECT lm.layout_module_id, lm.position, lm.sort_order, l.name FROM `" . DB_PREFIX . "layout_module` AS lm ".
+				"INNER JOIN `" . DB_PREFIX . "layout` AS l ON lm.layout_id = l.layout_id ".
+				"WHERE lm.code = 'oneall' ORDER by l.name DESC";
+		$result = $this->db->query ($sql);
+		if ($result->num_rows > 0)
+		{
+			foreach ($result->rows as $row)
+			{
+				$data ['oa_oc_positions'][] = $row;
+			}
+		}
+				
+		// Done
+		return $data;		
+	}
+	
+	// Display Admin
+	public function index ()
+	{
+		// Language
+		$data = $this->load->language ('module/oneall');
+		
+		// Page Title		
+		$this->document->setTitle ($this->language->get ('heading_title'));
+		
+		// CSS & JS
+		$this->document->addStyle ('view/stylesheet/oneall/oneall.css');
+		$this->document->addScript ('view/javascript/oneall/oneall.js');
+		
+		// Load Models
+		$this->load->model ('setting/setting');
+		$this->load->model ('design/layout');
+				
+		// BreadCrumbs
+		$data ['breadcrumbs'] = array(
+			array(
+				'text' => $this->language->get ('text_home'),
+				'href' => $this->url->link ('common/home', 'token=' . $this->session->data ['token'], 'SSL'),
+				'separator' => false
+			),
+			array(
+				'text' => $this->language->get ('text_module'),
+				'href' => $this->url->link ('extension/module', 'token=' . $this->session->data ['token'], 'SSL'),
+				'separator' => ' :: '
+			),
+			array(
+				'text' => $this->language->get ('heading_title'),
+				'href' => $this->url->link ('module/oneall', 'token=' . $this->session->data ['token'], 'SSL'),
+				'separator' => ' :: '
+			)
+		);
+		
+		// Buttons
+		$data ['action'] = $this->url->link ('module/oneall', 'token=' . $this->session->data ['token'], 'SSL');
+		$data ['cancel'] = $this->url->link ('extension/module', 'token=' . $this->session->data ['token'], 'SSL');
+		
+		// Add Settings
+		$data = array_merge ($data, $this->model_setting_setting->getSetting ('oneall'));
+		
+		// What to show		
+		$show = (( ! empty ($this->request->get['show']) && ($this->request->get['show'] == 'positions')) ? 'positions' : 'settings');
+			
+		// Show Positions
+		if ($show == 'positions')
+		{
+			$data = $this->index_positions($data);
+		}
+		// Show Settings
+		else
+		{
+			$data =  $this->index_settings($data);
+		}
+
+		// Settings Saved
+		if (isset ($this->request->get) && ! empty ($this->request->get['oa_action']) == 'saved')
+		{
+			$data ['oa_success_message'] = $data['oa_text_settings_saved'];
+		}
+			
+		// Error Message
+		if ( ! empty ($this->error ['warning']))
+		{
+			$data ['oa_error_message'] = $this->error ['warning'];
+		}
 		
 		if (OC2)
 		{
-			
 			$data ['header'] = $this->load->controller ('common/header');
 			$data ['column_left'] = $this->load->controller ('common/column_left');
 			$data ['footer'] = $this->load->controller ('common/footer');
@@ -280,15 +349,12 @@ class ControllerModuleOneall extends Controller
 		}
 		else
 		{
-			
 			$this->data = $data;
 			$this->template = 'module/oneall.tpl';
-			$this->children = array(
-				'common/header',
-				'common/footer' 
-			);
+			$this->children = array('common/header', 'common/footer');
 			$this->response->setOutput ($this->render ());
 		}
+	
 	}
 
 	// Validation
@@ -297,11 +363,12 @@ class ControllerModuleOneall extends Controller
 		// Van this user modify the settings?
 		if (!$this->user->hasPermission ('modify', 'module/oneall'))
 		{
-			$this->error ['warning'] = $this->language->get ('error_permission');
+			$this->error ['warning'] = $this->language->get ('oa_text_error_permission');
+			return false;
 		}
 		
 		// Done
-		return  ((!$this->error) ? true : false);
+		return  true;
 	}
 	
 	// Returns the list of available social networks.
@@ -801,10 +868,6 @@ class ControllerModuleOneall extends Controller
 		return $result;
 	}
 	
-	/////////////////////////////////////////////////////////////////////////////////////////////
-	// SETUP
-	/////////////////////////////////////////////////////////////////////////////////////////////
-	
 	// Installation Script
 	public function install ()
 	{
@@ -818,7 +881,7 @@ class ControllerModuleOneall extends Controller
 				KEY `user_id` (`customer_id`),
 				KEY `user_token` (`user_token`));";
 		$this->db->query ($sql);
-		
+	
 		// Identity Token Storage
 		$sql = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "oasl_identity` (
 					`oasl_identity_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -831,6 +894,28 @@ class ControllerModuleOneall extends Controller
 				PRIMARY KEY (`oasl_identity_id`),
 				UNIQUE KEY `oaid` (`oasl_identity_id`));";
 		$this->db->query ($sql);
+		
+		// Add to position
+		$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE name = 'Account'";
+		$result = $this->db->query ($sql)->row;
+		if (is_array ($result) && !empty ($result ['layout_id']))
+		{
+			$sql = "INSERT INTO `" . DB_PREFIX . "layout_module` SET layout_id = '".intval ($result['layout_id'])."', code = 'oneall', position='content_top', sort_order='1'";
+			$result = $this->db->query ($sql);
+		}
 	}
+	
+	// UnInstallation Script
+	public function uninstall()
+	{
+		// User Token Storage
+		$sql = "DROP TABLE IF EXISTS `" . DB_PREFIX . "oasl_user`;";
+		$this->db->query ($sql);
+		
+		// Identity Token Storage
+		$sql = "DROP TABLE IF EXISTS `" . DB_PREFIX . "oasl_identity`;";
+		$this->db->query ($sql);
+	}
+
 }
 ?>

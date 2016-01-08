@@ -4,8 +4,12 @@
     margin-top: 15px;
 }
 
+.oa_social_login_provider_toggle{
+	cursor:pointer;
+}
+
 .oa_social_login_provider_label{
-	line-height:35px;
+	padding-top: 10px;
 	text-align: center;
 	font-weight:bold;
 }

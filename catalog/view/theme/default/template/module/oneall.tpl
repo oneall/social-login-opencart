@@ -29,8 +29,7 @@ $oasl_container = 'oneall_social_login_'.mt_rand(99999, 9999999);
 // Do not display for guests
 if ( ! $oasl_user_is_logged  && ! empty ($oasl_subdomain)) 
 {
-	if ($oasl_type == 'module')
-	{ 
+	
 		if (OC2)
 	    {
 	    	if (! empty ($oasl_heading_title))
@@ -74,15 +73,7 @@ if ( ! $oasl_user_is_logged  && ! empty ($oasl_subdomain))
 				</div>
 			<?php
 		}
-	} 
-	elseif ( ! $oasl_display_modal && $oasl_type == 'floating')
-	{
-		?>
-			<div style="position:relative;">
-	    		<div id="<?php echo $oasl_container; ?>" style="-webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -o-user-select: none; z-index:1000000; width:800px; position:absolute; left: <?php echo $oasl_pos_x ?>px; top: <?php echo $oasl_pos_y ?>px;"></div>
-	    	</div>
-		<?php
-	}
+
 
 	// Plugin
 	$oasl_widget = array();

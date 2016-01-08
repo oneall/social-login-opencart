@@ -1,9 +1,26 @@
 jQuery(document).ready(function($) {
 
+	/* Toggle Provider Selection */
+	$(".oa_social_login_provider_toggle").on("click",function(event)
+	{
+	    var target = $(event.target);	    
+	    if (target.is('input:checkbox')) return;
+
+	    var checkbox = $(this).find("input[type='checkbox']");
+
+	    if( !checkbox.prop("checked"))
+	    {
+	        checkbox.prop("checked",true);
+	    } 
+	    else
+	    {
+	        checkbox.prop("checked",false);
+	    }
+	});
+	
 	/* Autodetect API Connection Handler */
-	$('#oneall_api_autodetect').click(function(){	
-				
-		
+	$('#oneall_api_autodetect').click(function() {	
+						
 		var oneall_api_handler = jQuery("#oneall_api_handler");
 		var oneall_api_port = jQuery("#oneall_api_port");
 		
