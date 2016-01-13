@@ -824,7 +824,7 @@ class ControllerModuleOneall extends Controller
 	public function uninstall()
 	{
 		// Force Remove
-		$force_remove = true;
+		$force_remove = false;
 		
 		// These table should normally not be dropped, otherwise the customers can no longer login if the webmaster re-installs the extension.
 		if ($force_remove === true)
