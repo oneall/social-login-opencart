@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 /**
  * @package   	OneAll Social Login
  * @copyright 	Copyright 2016 http://www.oneall.com - All rights reserved.
@@ -754,7 +751,7 @@ class ControllerModuleOneall extends Controller
 	{
 		// System Versions
 		$social_login = 'SocialLogin/1.0';
-		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '2.x');
+		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '1.5.x');
 	
 		// Build User Agent
 		return ($social_login . ' ' . $opencart . ' (+http://www.oneall.com/)');

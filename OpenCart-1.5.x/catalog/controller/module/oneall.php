@@ -321,8 +321,8 @@ class ControllerModuleOneall extends Controller
 		else
 		{
 			$data['tax_id'] = '';
-		}		
-		
+		}
+				
 		// Postal Code
 		if (isset($this->request->post['postcode']))
 		{
@@ -1148,7 +1148,7 @@ class ControllerModuleOneall extends Controller
 	{
 		// System Versions
 		$social_login = 'SocialLogin/1.0';
-		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '2.x');
+		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '1.5.x');
 	
 		// Build User Agent
 		return ($social_login . ' ' . $opencart . ' (+http://www.oneall.com/)');
