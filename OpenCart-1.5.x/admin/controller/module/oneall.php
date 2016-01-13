@@ -29,10 +29,7 @@
 class ControllerModuleOneall extends Controller
 {		
 	private $error = array();
-	
-
-
-	
+		
 	// Display Admin
 	public function index ()
 	{
@@ -111,8 +108,7 @@ class ControllerModuleOneall extends Controller
 	
 		////////////////////////////////////////////////////////////////////////
 		// Positions
-		////////////////////////////////////////////////////////////////////////
-		
+		////////////////////////////////////////////////////////////////////////		
 		$data ['layouts'] = $this->model_design_layout->getLayouts ();
 		
 		// Modules
@@ -209,14 +205,14 @@ class ControllerModuleOneall extends Controller
 			$data ['oneall_status'] = '1';
 		}
 		
-		////////////////////////////////////////////////////////////////////////////////////////
-		// Other Information
-		////////////////////////////////////////////////////////////////////////////////////////
-		
 		// All Social Networks
 		$data ['oa_social_networks'] = $this->get_social_networks ();
 		
-		// Settings Saved
+		////////////////////////////////////////////////////////////////////////////////////////
+		// Notices
+		////////////////////////////////////////////////////////////////////////////////////////
+	
+		// Success Message
 		if (isset ($this->request->get) && ! empty ($this->request->get['oa_action']) == 'saved')
 		{
 			$data ['oa_success_message'] = $data['oa_text_settings_saved'];
@@ -228,7 +224,7 @@ class ControllerModuleOneall extends Controller
 			$data ['oa_error_message'] = $this->error ['warning'];
 		}
 		
-		
+		// Display Layout		
 		$this->data = $data;
 		$this->template = 'module/oneall.tpl';
 		$this->children = array('common/header', 'common/footer');

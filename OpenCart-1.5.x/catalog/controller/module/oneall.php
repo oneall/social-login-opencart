@@ -511,16 +511,19 @@ class ControllerModuleOneall extends Controller
 			}
 		}
 		
-	
-		// Customer Group
-		if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display')))
+		// Privacy Policy
+		if ($this->config->get('config_account_id'))
 		{
-			$customer_group_id = $this->request->post['customer_group_id'];
-		} 
-		else
-		{
-			$customer_group_id = $this->config->get('config_customer_group_id');
+			$this->load->model('catalog/information');
+		
+			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_account_id'));
+		
+			if ($information_info && !isset($this->request->post['agree']))
+			{
+				$this->error['warning'] = sprintf($this->language->get('error_agree'), $information_info['title']);
+			}
 		}
+		
 	
 		// Done
 		return !$this->error;
