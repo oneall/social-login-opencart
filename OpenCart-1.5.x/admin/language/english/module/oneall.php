@@ -1,8 +1,4 @@
 <?php
-
-error_reporting(E_ALL);
-ini_set("display_errors" , 1);
-
 /**
  * @package   	OneAll Social Login
  * @copyright 	Copyright 2016 http://www.oneall.com - All rights reserved.
