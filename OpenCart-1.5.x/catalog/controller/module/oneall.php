@@ -80,15 +80,14 @@ class ControllerModuleOneall extends Controller
 			if ($this->config->get ('oneall_ask_address') == 0)
 			{
 				$customer_data['company'] = '';
-				$customer_data['companyid'] = ''	;			
+				$customer_data['company_id'] = '';			
 				$customer_data['tax_id'] = '';				
 				$customer_data['address_1'] = '';
 				$customer_data['address_2'] = '';
 				$customer_data['city'] = '';
 				$customer_data['postcode'] = '';
 				$customer_data['country_id'] = 0;
-				$customer_data['zone_id'] = 0;		
-				
+				$customer_data['zone_id'] = 0;						
 			}
 			
 			// Create Customer
@@ -161,9 +160,6 @@ class ControllerModuleOneall extends Controller
 		$data['error_tax_id'] = (isset($this->error['tax_id']) ? $this->error['tax_id'] : '');
 		$data['error_confirm'] = (isset($this->error['confirm']) ? $this->error['confirm'] : '');
 
-		
-		
-	
 		// Form Action	
 		$data['action'] = $this->url->link('module/oneall/register', '', 'SSL');
 		$data['oneall_ask_address'] = $this->config->get ('oneall_ask_address');
