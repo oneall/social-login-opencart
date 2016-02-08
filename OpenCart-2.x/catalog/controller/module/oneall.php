@@ -658,9 +658,9 @@ class ControllerModuleOneall extends Controller
 							{							
 								// Try to retrieve the user
 								$customer = $this->db->query ("SELECT customer_id FROM `" . DB_PREFIX . "customer` WHERE oneall_profile='" . $this->db->escape ($user_key) . "'")->row;
-								if ($customer)
+								if (!empty($customer))
 								{
-									$customer_id = $customer->customer_id;
+									$customer_id = $customer['customer_id'];
 									
 									// Add new data format
 									if ($this->link_tokens_to_customer_id ($customer_id, $user_data ['user_token'], $user_data ['identity_token'], $user_data ['identity_provider']) !== false)
