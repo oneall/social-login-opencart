@@ -41,7 +41,7 @@ class ControllerModuleOneall extends Controller
 		////////////////////////////////////////////////////////////////////////////////////////
 		if (($this->request->server ['REQUEST_METHOD'] == 'POST') && $this->validate ())
 		{
-			// Build Social Network List
+			// Social Networks
 			if (isset ($this->request->post['oneall_social_networks']))
 			{
 				if (is_array ($this->request->post['oneall_social_networks']))
@@ -56,10 +56,38 @@ class ControllerModuleOneall extends Controller
 						}
 					}
 						
+					// In the first versions of the module, the variable was called oneall_socials
 					$this->request->post['oneall_socials'] = implode (",", $oneall_socials);
 				}
 			}
-							
+			
+			// OneAll API Subdomain
+			if (isset ($this->request->post['oneall_subdomain']))
+			{			
+				// Remove Spaces
+				$this->request->post['oneall_subdomain'] = trim ($this->request->post['oneall_subdomain']);
+			
+				// The full domain has been entered.
+				if (preg_match ("/([a-z0-9\-]+)\.api\.oneall\.com/i", $this->request->post['oneall_subdomain'], $matches))
+				{
+					$this->request->post['oneall_subdomain'] = $matches [1];
+				}
+			}
+			
+			// OneAll API Public Key
+			if (isset ($this->request->post['oneall_public']))
+			{
+				// Remove Spaces
+				$this->request->post['oneall_public'] = trim ($this->request->post['oneall_public']);
+			}
+			
+			// OneAll API Private Key
+			if (isset ($this->request->post['oneall_private']))
+			{
+				// Remove Spaces
+				$this->request->post['oneall_private'] = trim ($this->request->post['oneall_private']);
+			}
+			
 			// Save Settings
 			$this->model_setting_setting->editSetting ('oneall', $this->request->post);
 	
@@ -828,7 +856,7 @@ class ControllerModuleOneall extends Controller
 	private function get_user_agent ()
 	{
 		// System Versions
-		$social_login = 'SocialLogin/1.0';
+		$social_login = 'SocialLogin/1.1';
 		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '2.x');
 	
 		// Build User Agent

@@ -31,6 +31,19 @@ class ControllerModuleOneall extends Controller
 	// Errors
 	protected $error;
 	
+	// Logger 
+	protected function add_log ($text)
+	{
+		// Read Logger
+		$log = $this->registry->get('log');
+		
+		// Make sure it can handle our action
+		if ($log instanceof log && method_exists ($log, 'write'))
+		{		
+			$log->write('[OneAll Social Login] '.$text);
+		}
+	} 
+	
 	// Custom Registration Form
 	public function register()
 	{
@@ -532,7 +545,7 @@ class ControllerModuleOneall extends Controller
 		$data ['oasl_custom_css_uri'] = '';
 		
 		// Selected Subdomain
-		$data ['oasl_subdomain'] = $this->config->get ('oneall_subdomain');
+		$data ['oasl_subdomain'] = trim ($this->config->get ('oneall_subdomain'));
 		
 	
 		// Add Library
@@ -605,7 +618,7 @@ class ControllerModuleOneall extends Controller
 			$token = trim ($this->request->post['connection_token']);
 				
 			// OneAll Site Settings
-			$api_subdomain = $this->config->get ('oneall_subdomain');
+			$api_subdomain = trim ($this->config->get ('oneall_subdomain'));
 	
 			// Without the API Credentials it does not work
 			if (!empty ($api_subdomain))
@@ -616,8 +629,8 @@ class ControllerModuleOneall extends Controller
 				
 				// API Credentials.
 				$api_credentials = array();
-				$api_credentials ['api_key'] = $this->config->get ('oneall_public');
-				$api_credentials ['api_secret'] = $this->config->get ('oneall_private');								
+				$api_credentials ['api_key'] = trim ($this->config->get ('oneall_public'));
+				$api_credentials ['api_secret'] = trim ($this->config->get ('oneall_private'));								
 		
 				// Connection Resource
 				// http://docs.oneall.com/api/resources/connections/read-connection-details/
@@ -806,11 +819,15 @@ class ControllerModuleOneall extends Controller
 						}	
 					}
 				}
+				else
+				{
+					$this->add_log ("Could not retrieve user profile, Error ".$result->http_code." for URL: ".$api_connection_url);
+				}
 			}
 		}	
 	}
 	
-	// Create customser
+	// Create customer
 	protected function create_customer($data)
 	{
 		// Load Models
@@ -1125,7 +1142,7 @@ class ControllerModuleOneall extends Controller
 	private function get_user_agent ()
 	{
 		// System Versions
-		$social_login = 'SocialLogin/1.0';
+		$social_login = 'SocialLogin/1.1';
 		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '2.x');
 	
 		// Build User Agent
