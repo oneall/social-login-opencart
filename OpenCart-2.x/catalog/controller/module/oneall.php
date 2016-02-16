@@ -821,7 +821,11 @@ class ControllerModuleOneall extends Controller
 				}
 				else
 				{
+					// Add Log
 					$this->add_log ("Could not retrieve user profile, Error ".$result->http_code." for URL: ".$api_connection_url);
+					
+					// Display Error
+					die ("An error occured during the communication with the OneAll API. Please check the API Credentials in the OneAll Social Login setup.");
 				}
 			}
 		}	
