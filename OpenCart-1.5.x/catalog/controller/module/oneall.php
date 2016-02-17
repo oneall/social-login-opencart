@@ -31,6 +31,19 @@ class ControllerModuleOneall extends Controller
 	// Errors
 	protected $error;
 	
+	// Logger
+	protected function add_log ($text)
+	{
+		// Read Logger
+		$log = $this->registry->get('log');
+	
+		// Make sure it can handle our action
+		if ($log instanceof log && method_exists ($log, 'write'))
+		{
+			$log->write('[OneAll Social Login] '.$text);
+		}
+	}
+	
 	// Custom Registration Form
 	public function register()
 	{
@@ -819,6 +832,14 @@ class ControllerModuleOneall extends Controller
 							}
 						}	
 					}
+				}
+				else
+				{
+					// Add Log
+					$this->add_log ("Could not retrieve user profile, Error ".$result->http_code." for URL: ".$api_connection_url);
+						
+					// Display Error
+					die ("An error occured during the communication with the OneAll API. Please check the API Credentials in the OneAll Social Login setup.");
 				}
 			}
 		}	
