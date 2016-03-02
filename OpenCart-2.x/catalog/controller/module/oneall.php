@@ -839,7 +839,15 @@ class ControllerModuleOneall extends Controller
 		$this->load->model('account/customer_group');
 		
 		// Read Group
-		$customer_group_id = $this->config->get('config_customer_group_id');
+		// If no specific group chosen, or the store's default group chosen, use that:
+		if (empty ($this->config->get ('oneall_customer_group')) or $this->config->get ('oneall_customer_group') == 'store_config')
+		{
+			$customer_group_id = $this->config->get('config_customer_group_id');
+		}
+		else
+		{
+			$customer_group_id = $this->config->get('oneall_customer_group');
+		}
                 
 		// Email Address
 		if (empty ($data ['user_email']) || $this->get_customer_id_by_email ($data ['user_email']) !== false)
@@ -871,6 +879,17 @@ class ControllerModuleOneall extends Controller
 		// Added
 		if (is_numeric ($customer_id))
 		{
+			// addCustomer() will change the group if it is not displayable,
+			// OneAll group might not be displayable (because it is a special group),
+			// so, we force it back:
+			$added_customer = $this->model_account_customer->getCustomer ($customer_id);
+			if ($added_customer ['customer_group_id'] != $customer_group_id) 
+			{
+				$this->db->query(
+					"UPDATE " . DB_PREFIX . "customer SET customer_group_id = '". (int)$customer_group_id .
+					"' WHERE customer_id = '" . (int)$customer_id . "'");
+			}
+			
 			return $customer_id;
 		}
 		
@@ -1146,7 +1165,7 @@ class ControllerModuleOneall extends Controller
 	private function get_user_agent ()
 	{
 		// System Versions
-		$social_login = 'SocialLogin/1.1';
+		$social_login = 'SocialLogin/1.2';
 		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '2.x');
 	
 		// Build User Agent
@@ -1897,5 +1916,4 @@ class ControllerModuleOneall extends Controller
 	}
 	
 }
-
 ?>

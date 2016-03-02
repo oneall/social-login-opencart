@@ -237,7 +237,6 @@ if ($show == 'settings')
 						              </select>		
 						            </div>
 								</div>	
-								
 										
 								<div class="row">	
 									<div class="col-sm-6">
@@ -249,7 +248,28 @@ if ($show == 'settings')
 											<option value="0" <?php if (empty ($oneall_auto_link)) {echo 'selected="selected"';} ?>><?php echo $oa_text_account_link_off; ?></option>											
 						              </select>		
 						            </div>
+								</div>
+								
+								<div class="row">	
+									<div class="col-sm-6">
+										<label for="input-name" class="control-label">
+											<?php echo $oa_text_account_customer_group; ?>				
+										</label> 
+										<select name="oneall_customer_group" class="form-control">
+											<option value="store_config"
+												<?php echo ($oa_customer_group_selected == 'store_config' ? 'selected="selected"' : ''); ?>>
+												<?php echo $oa_text_account_customer_group_default; ?>
+											</option>
+											<?php foreach ($oa_customer_groups AS $key => $customer_group) { ?>
+												<option value="<?php echo $customer_group['customer_group_id']; ?>" 
+													<?php echo ($oa_customer_group_selected == $customer_group['customer_group_id'] ? 'selected="selected"' : ''); ?>>
+													<?php echo $customer_group['name']; ?>
+												</option>
+											<?php } ?>
+						              </select>		
+						            </div>
 								</div>	
+									
 							</div>
 						</div>				
 						
