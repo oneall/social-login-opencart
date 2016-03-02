@@ -179,7 +179,7 @@ class ControllerModuleOneall extends Controller
 		// Customer Groups
 		$data['customer_groups'] = array();
  
-		if (is_default_group_behaviour())
+		if ($this->is_default_group_behaviour())
 		{
 			if (is_array($this->config->get('config_customer_group_display')))
 			{
@@ -507,7 +507,7 @@ class ControllerModuleOneall extends Controller
 		}
 	
 		// Customer Group
-		if (is_default_group_behaviour())
+		if ($this->is_default_group_behaviour())
 		{
 			if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display')))
 			{
@@ -856,7 +856,7 @@ class ControllerModuleOneall extends Controller
 		$this->load->model('account/customer_group');
 		
 		// Read Group
-		if (is_default_group_behaviour())
+		if ($this->is_default_group_behaviour())
 		{
 			$customer_group_id = $this->config->get('config_customer_group_id');
 		}
@@ -961,7 +961,7 @@ class ControllerModuleOneall extends Controller
 	public function on_post_customer_add ($customer_id)
 	{
 		// Should oneall registered users belong to a designated group?
-		if (!is_default_group_behaviour())
+		if (! $this->is_default_group_behaviour())
 		{
 			// The group to add users to
 			$oa_group_id = $this->config->get('oneall_customer_group');
