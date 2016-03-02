@@ -43,6 +43,11 @@ class ControllerModuleOneall extends Controller
 			$log->write('[OneAll Social Login] '.$text);
 		}
 	} 
+
+	protected function is_default_group_behaviour ()
+	{
+		return (empty($this->config->get('oneall_customer_group')) or $this->config->get('oneall_customer_group') == 'store_config');
+	}
 	
 	// Custom Registration Form
 	public function register()
@@ -173,29 +178,35 @@ class ControllerModuleOneall extends Controller
 	
 		// Customer Groups
 		$data['customer_groups'] = array();
-	
-		if (is_array($this->config->get('config_customer_group_display')))
+ 
+		if (is_default_group_behaviour())
 		{
-			$this->load->model('account/customer_group');
-	
-			$customer_groups = $this->model_account_customer_group->getCustomerGroups();
-	
-			foreach ($customer_groups as $customer_group)
+			if (is_array($this->config->get('config_customer_group_display')))
 			{
-				if (in_array($customer_group['customer_group_id'], $this->config->get('config_customer_group_display')))
+				$this->load->model('account/customer_group');
+		
+				$customer_groups = $this->model_account_customer_group->getCustomerGroups();
+		
+				foreach ($customer_groups as $customer_group)
 				{
-					$data['customer_groups'][] = $customer_group;
+					if (in_array($customer_group['customer_group_id'], $this->config->get('config_customer_group_display')))
+					{
+						$data['customer_groups'][] = $customer_group;
+					}
 				}
 			}
+			if (isset($this->request->post['customer_group_id']))
+			{
+				$data['customer_group_id'] = $this->request->post['customer_group_id'];
+			}
+			else 
+			{
+				$data['customer_group_id'] = $this->config->get('config_customer_group_id');
+			}
 		}
-	
-		if (isset($this->request->post['customer_group_id']))
+		else 
 		{
-			$data['customer_group_id'] = $this->request->post['customer_group_id'];
-		} 
-		else
-		{
-			$data['customer_group_id'] = $this->config->get('config_customer_group_id');
+			$data['customer_group_id'] = $this->config->get('oneall_customer_group');
 		}
 	
 		// First Name
@@ -494,16 +505,22 @@ class ControllerModuleOneall extends Controller
 				$this->error['zone'] = $this->language->get('error_zone');
 			}
 		}
-		
 	
 		// Customer Group
-		if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display')))
+		if (is_default_group_behaviour())
 		{
-			$customer_group_id = $this->request->post['customer_group_id'];
-		} 
-		else
+			if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display')))
+			{
+				$customer_group_id = $this->request->post['customer_group_id'];
+			}
+			else
+			{
+				$customer_group_id = $this->config->get('config_customer_group_id');
+			}
+		}
+		else 
 		{
-			$customer_group_id = $this->config->get('config_customer_group_id');
+			$customer_group_id = $this->config->get('oneall_customer_group');
 		}
 	
 		// Custom field validation
@@ -839,8 +856,7 @@ class ControllerModuleOneall extends Controller
 		$this->load->model('account/customer_group');
 		
 		// Read Group
-		// If no specific group chosen, or the store's default group chosen, use that:
-		if (empty ($this->config->get ('oneall_customer_group')) or $this->config->get ('oneall_customer_group') == 'store_config')
+		if (is_default_group_behaviour())
 		{
 			$customer_group_id = $this->config->get('config_customer_group_id');
 		}
@@ -876,25 +892,7 @@ class ControllerModuleOneall extends Controller
 		// Add Customer
 		$customer_id = $this->model_account_customer->addCustomer($customer_data);
 		
-		// Added
-		if (is_numeric ($customer_id))
-		{
-			// addCustomer() will change the group if it is not displayable,
-			// OneAll group might not be displayable (because it is a special group),
-			// so, we force it back:
-			$added_customer = $this->model_account_customer->getCustomer ($customer_id);
-			if ($added_customer ['customer_group_id'] != $customer_group_id) 
-			{
-				$this->db->query(
-					"UPDATE " . DB_PREFIX . "customer SET customer_group_id = '". (int)$customer_group_id .
-					"' WHERE customer_id = '" . (int)$customer_id . "'");
-			}
-			
-			return $customer_id;
-		}
-		
-		// Error
-		return false;		
+		return (is_numeric ($customer_id) ? $customer_id : false);
 	}
 	
 	
@@ -955,7 +953,33 @@ class ControllerModuleOneall extends Controller
 		return $email;
 	}
 	
-
+	/*
+	 * Handler for post.customer.add
+	 * Sets the requested customer group for OneAll customers,
+	 * because addCustomer() will not accept not displayable groups, and sets group to the default.
+	 */
+	public function on_post_customer_add ($customer_id)
+	{
+		// Should oneall registered users belong to a designated group?
+		if (!is_default_group_behaviour())
+		{
+			// The group to add users to
+			$oa_group_id = $this->config->get('oneall_customer_group');
+			
+			// Load Model
+			$this->load->model('account/customer');
+			
+			$added_customer = $this->model_account_customer->getCustomer($customer_id);
+			// Our designated group was overwritten by addCustomer(), let's put it back
+			if ($added_customer['customer_group_id'] != $oa_group_id) 
+			{
+				$this->db->query(
+					"UPDATE " . DB_PREFIX . "customer SET customer_group_id = '". (int)$oa_group_id .
+					"' WHERE customer_id = '" . (int)$customer_id . "'");
+			}
+		}
+	}
+	
 	////////////////////////////////////////////////////////////////////////
 	// Tools
 	////////////////////////////////////////////////////////////////////////

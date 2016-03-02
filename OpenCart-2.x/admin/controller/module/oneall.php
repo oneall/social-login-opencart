@@ -931,6 +931,10 @@ class ControllerModuleOneall extends Controller
 				$this->db->query ("INSERT INTO `" . DB_PREFIX . "layout_module` SET layout_id = '".intval ($row['layout_id'])."', code = 'oneall', position='content_top', sort_order='1'");
 			}	
 		}
+
+		// Register events to fix the customer group saved by addCustomer():
+		$this->load->model('extension/event');
+		$this->model_extension_event->addEvent('oneall', 'post.customer.add', 'module/oneall/on_post_customer_add');
 	}
 	
 	// UnInstallation Script
@@ -950,7 +954,10 @@ class ControllerModuleOneall extends Controller
 			$sql = "DROP TABLE IF EXISTS `" . DB_PREFIX . "oasl_identity`;";
 			$this->db->query ($sql);
 		}
-			
+		
+		// Deregister events to fix the customer group saved by addCustomer():
+		$this->load->model('extension/event');
+		$this->model_extension_event->deleteEvent('oneall');
 	}
 }
 ?>
