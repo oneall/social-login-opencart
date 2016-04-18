@@ -102,5 +102,6 @@ $_ ['oa_text_account_creation_address_yes'] = 'Yes, ask for the address.';
 $_ ['oa_text_account_link_desc'] = 'Try to automatically link Social Network accounts to existing OpenCart accounts?';
 $_ ['oa_text_account_link_on'] = 'Yes, automatically link Social Network accounts to OpenCart accounts that have the same email address.';
 $_ ['oa_text_account_link_off'] = 'No, do no automatically link Social Network accounts to existing OpenCart accounts.';
-
+$_ ['oa_text_account_customer_group'] = 'Customer group for customers registering with Social Login';
+$_ ['oa_text_account_customer_group_default'] = "Use the store's default customer group";
 ?>

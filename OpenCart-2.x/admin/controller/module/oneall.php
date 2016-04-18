@@ -28,7 +28,20 @@
 // ////////////////////////////////////////////////////////////////////
 class ControllerModuleOneall extends Controller
 {		
-	private $error = array();
+	private $error = array ();
+	
+	// Copied over from the account/customer_group file...
+	private function getCustomerGroup ($customer_group_id) {
+		$query = $this->db->query ("SELECT DISTINCT * FROM " . DB_PREFIX . "customer_group cg LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (cg.customer_group_id = cgd.customer_group_id) WHERE cg.customer_group_id = '" . (int)$customer_group_id . "' AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+		return $query->row;
+	}
+
+	private function getCustomerGroups () {
+		$query = $this->db->query ("SELECT * FROM " . DB_PREFIX . "customer_group cg LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (cg.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY cg.sort_order ASC, cgd.name ASC");
+
+		return $query->rows;
+	}
 	
 	// Settings Admin
 	protected function index_settings ($data)
@@ -153,6 +166,17 @@ class ControllerModuleOneall extends Controller
 		if (! isset ($data ['oneall_auto_link']) || ! in_array ($data ['oneall_auto_link'], array (0,1)))
 		{
 			$data ['oneall_auto_link'] = '1';
+		}
+
+		// Customer Groups
+		$data ['oa_customer_groups'] = $this->getCustomerGroups ();
+		if (isset ($data ['oneall_customer_group']))
+		{
+			$data ['oa_customer_group_selected'] = $data ['oneall_customer_group']; 
+		}
+		else
+		{
+			$data ['oa_customer_group_selected'] = 'store_config';
 		}
 		
 		// Library Language		
@@ -344,7 +368,7 @@ class ControllerModuleOneall extends Controller
 	// Validation
 	private function validate ()
 	{
-		// Van this user modify the settings?
+		// Can this user modify the settings?
 		if (!$this->user->hasPermission ('modify', 'module/oneall'))
 		{
 			$this->error ['warning'] = $this->language->get ('oa_text_error_permission');
@@ -856,7 +880,7 @@ class ControllerModuleOneall extends Controller
 	private function get_user_agent ()
 	{
 		// System Versions
-		$social_login = 'SocialLogin/1.1';
+		$social_login = 'SocialLogin/1.2';
 		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '2.x');
 	
 		// Build User Agent
@@ -907,6 +931,10 @@ class ControllerModuleOneall extends Controller
 				$this->db->query ("INSERT INTO `" . DB_PREFIX . "layout_module` SET layout_id = '".intval ($row['layout_id'])."', code = 'oneall', position='content_top', sort_order='1'");
 			}	
 		}
+
+		// Register events to fix the customer group saved by addCustomer():
+		$this->load->model('extension/event');
+		$this->model_extension_event->addEvent('oneall', 'post.customer.add', 'module/oneall/on_post_customer_add');
 	}
 	
 	// UnInstallation Script
@@ -926,7 +954,10 @@ class ControllerModuleOneall extends Controller
 			$sql = "DROP TABLE IF EXISTS `" . DB_PREFIX . "oasl_identity`;";
 			$this->db->query ($sql);
 		}
-			
+		
+		// Deregister events to fix the customer group saved by addCustomer():
+		$this->load->model('extension/event');
+		$this->model_extension_event->deleteEvent('oneall');
 	}
 }
 ?>
