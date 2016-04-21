@@ -629,14 +629,14 @@ class ControllerModuleOneall extends Controller
 	{
 		if (defined ('VERSION') && version_compare (VERSION, '2.2.0', '>='))
 		{
-			$template_file = '/template/'. $template .'tpl';
+			$template_file = '/template/'. $template .'.tpl';
 			$template_folder = $this->config->get ('config_template');
 			$template_folder = (file_exists (DIR_TEMPLATE . $template_folder . $template_file) ? $template_folder : '');
 			$template_v = $template;
 		}
 		else
 		{
-			$template_file = '/template/'. $template .'tpl';
+			$template_file = '/template/'. $template .'.tpl';
 			$template_folder = $this->config->get ('config_template');
 			$template_folder = (file_exists (DIR_TEMPLATE . $template_folder . $template_file) ? $template_folder : 'default');
 			$template_v = $template_file;
