@@ -30,6 +30,17 @@ class ControllerModuleOneall extends Controller
 {		
 	private $error = array ();
 	
+	// Copied over catalog controller, awaiting for some sharing alternative...
+	private function get_ssl_by_version ()
+	{
+		return ((defined ('VERSION') && version_compare (VERSION, '2.2.0', '>=')) ? true : 'SSL');
+	}
+	
+	private function get_template_by_version ($template)
+	{
+		return (defined ('VERSION') && version_compare (VERSION, '2.2.0', '>=') ? $template : $template .'.tpl');
+	}
+	
 	// Copied over from the account/customer_group file...
 	private function getCustomerGroup ($customer_group_id) {
 		$query = $this->db->query ("SELECT DISTINCT * FROM " . DB_PREFIX . "customer_group cg LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (cg.customer_group_id = cgd.customer_group_id) WHERE cg.customer_group_id = '" . (int)$customer_group_id . "' AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
@@ -105,7 +116,7 @@ class ControllerModuleOneall extends Controller
 			$this->model_setting_setting->editSetting ('oneall', $this->request->post);
 	
 			// Redirect
-			$this->response->redirect ($this->url->link ('module/oneall', ('token=' . $this->session->data ['token'] . '&oa_action=saved'), 'SSL'));	
+			$this->response->redirect ($this->url->link ('module/oneall', ('token=' . $this->session->data ['token'] . '&oa_action=saved'), $this->get_ssl_by_version ()));	
 		}
 		
 		////////////////////////////////////////////////////////////////////////////////////////
@@ -263,7 +274,7 @@ class ControllerModuleOneall extends Controller
 			}
 	
 			// Redirect
-			$this->response->redirect ($this->url->link ('module/oneall', ('token=' . $this->session->data ['token'] . '&oa_action=saved&show=positions'), 'SSL'));	
+			$this->response->redirect ($this->url->link ('module/oneall', ('token=' . $this->session->data ['token'] . '&oa_action=saved&show=positions'), $this->get_ssl_by_version ()));	
 		}
 		
 		////////////////////////////////////////////////////////////////////////////////////////
@@ -311,24 +322,24 @@ class ControllerModuleOneall extends Controller
 		$data ['breadcrumbs'] = array(
 			array(
 				'text' => $this->language->get ('text_home'),
-				'href' => $this->url->link ('common/home', 'token=' . $this->session->data ['token'], 'SSL'),
+				'href' => $this->url->link ('common/home', 'token=' . $this->session->data ['token'], $this->get_ssl_by_version ()),
 				'separator' => false
 			),
 			array(
 				'text' => $this->language->get ('text_module'),
-				'href' => $this->url->link ('extension/module', 'token=' . $this->session->data ['token'], 'SSL'),
+				'href' => $this->url->link ('extension/module', 'token=' . $this->session->data ['token'], $this->get_ssl_by_version ()),
 				'separator' => ' :: '
 			),
 			array(
 				'text' => $this->language->get ('heading_title'),
-				'href' => $this->url->link ('module/oneall', 'token=' . $this->session->data ['token'], 'SSL'),
+				'href' => $this->url->link ('module/oneall', 'token=' . $this->session->data ['token'], $this->get_ssl_by_version ()),
 				'separator' => ' :: '
 			)
 		);
 		
 		// Buttons
-		$data ['action'] = $this->url->link ('module/oneall', 'token=' . $this->session->data ['token'], 'SSL');
-		$data ['cancel'] = $this->url->link ('extension/module', 'token=' . $this->session->data ['token'], 'SSL');
+		$data ['action'] = $this->url->link ('module/oneall', 'token=' . $this->session->data ['token'], $this->get_ssl_by_version ());
+		$data ['cancel'] = $this->url->link ('extension/module', 'token=' . $this->session->data ['token'], $this->get_ssl_by_version ());
 		
 		// Add Settings
 		$data = array_merge ($data, $this->model_setting_setting->getSetting ('oneall'));
@@ -362,7 +373,8 @@ class ControllerModuleOneall extends Controller
 		$data ['header'] = $this->load->controller ('common/header');
 		$data ['column_left'] = $this->load->controller ('common/column_left');
 		$data ['footer'] = $this->load->controller ('common/footer');
-		$this->response->setOutput ($this->load->view ('module/oneall.tpl', $data));	
+		$temp = $this->get_template_by_version ('module/oneall');
+		$this->response->setOutput ($this->load->view ($temp, $data));	
 	}
 
 	// Validation
@@ -427,7 +439,7 @@ class ControllerModuleOneall extends Controller
 	{
 		// Load Language
 		$lang = $this->load->language ('module/oneall');
-	
+
 		// Read arguments.
 		$get = (is_array ($this->request->get) ? $this->request->get : array());
 		
@@ -880,7 +892,7 @@ class ControllerModuleOneall extends Controller
 	private function get_user_agent ()
 	{
 		// System Versions
-		$social_login = 'SocialLogin/1.2';
+		$social_login = 'SocialLogin/1.3';
 		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '2.x');
 	
 		// Build User Agent
@@ -934,7 +946,15 @@ class ControllerModuleOneall extends Controller
 
 		// Register events to fix the customer group saved by addCustomer():
 		$this->load->model('extension/event');
-		$this->model_extension_event->addEvent('oneall', 'post.customer.add', 'module/oneall/on_post_customer_add');
+		if (defined ('VERSION') && version_compare (VERSION, '2.2.0', '>='))
+		{
+			// Calls oneall->index()
+			$this->model_extension_event->addEvent('oneall', 'catalog/controller/module/oneall/before', 'module/oneall');
+		}
+		else 
+		{
+			$this->model_extension_event->addEvent('oneall', 'post.customer.add', 'module/oneall/on_post_customer_add');
+		}
 	}
 	
 	// UnInstallation Script

@@ -55,7 +55,7 @@ class ControllerModuleOneall extends Controller
 		// User is already logged in
 		if ($this->customer->isLogged())
 		{
-			$this->response->redirect($this->url->link('account/account', '', 'SSL'));
+			$this->response->redirect($this->url->link('account/account', '', $this->get_ssl_by_version ()));
 		}
 		
 		// Retrieve User Data
@@ -64,7 +64,7 @@ class ControllerModuleOneall extends Controller
 		// Make sure we have the correct data
 		if ( ! is_array ($user_data) || empty ($user_data['user_token']))
 		{
-			$this->response->redirect($this->url->link('common/home', '', 'SSL'));
+			$this->response->redirect($this->url->link('common/home', '', $this->get_ssl_by_version ()));
 		}	
 		
 		// Load Language
@@ -133,7 +133,7 @@ class ControllerModuleOneall extends Controller
 					}
 					
 					// Redirect User
-					$this->response->redirect($this->url->link($redirect_to, '', 'SSL'));
+					$this->response->redirect($this->url->link($redirect_to, '', $this->get_ssl_by_version ()));
 				}
 			}
 		}
@@ -150,11 +150,11 @@ class ControllerModuleOneall extends Controller
 			), 
 			array(
 				'text' => $this->language->get('text_account'),
-				'href' => $this->url->link('account/account', '', 'SSL')
+				'href' => $this->url->link('account/account', '', $this->get_ssl_by_version ())
 			),
 			array(
 				'text' => $this->language->get('oa_social_login'),
-				'href' => $this->url->link('module/oneall/register', '', 'SSL')
+				'href' => $this->url->link('module/oneall/register', '', $this->get_ssl_by_version ())
 			)
 		);
 	
@@ -173,7 +173,7 @@ class ControllerModuleOneall extends Controller
 
 	
 		// Form Action	
-		$data['action'] = $this->url->link('module/oneall/register', '', 'SSL');
+		$data['action'] = $this->url->link('module/oneall/register', '', $this->get_ssl_by_version ());
 		$data['oneall_ask_address'] = $this->config->get ('oneall_ask_address');
 	
 		// Customer Groups
@@ -426,14 +426,6 @@ class ControllerModuleOneall extends Controller
 		{
 			$data['newsletter'] = '';
 		}
-	
-		
-		// Display Template
-		$template = '/template/module/oneall_register.tpl';
-		$template_folder = $this->config->get ('config_template');
-		
-		// Get Template Folder
-		$template_folder = (file_exists (DIR_TEMPLATE . $template_folder . $template) ? $template_folder : 'default');
 		
 		// Display
 		$data['column_left'] = $this->load->controller('common/column_left');
@@ -442,7 +434,10 @@ class ControllerModuleOneall extends Controller
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
-		$this->response->setOutput ($this->load->view ($template_folder.$template, $data));
+		
+		// Display Template
+		$temp = $this->get_template_by_version ('module/oneall_register');
+		$this->response->setOutput ($this->load->view ($temp, $data));
 	}
 	
 	// Validate Account Creation	
@@ -568,7 +563,9 @@ class ControllerModuleOneall extends Controller
 		// Add Library
 		if (!empty ($data ['oasl_subdomain']))
 		{
-			$this->document->addScript ($this->get_request_protocol () . '://' . $data ['oasl_subdomain'] . '.api.oneall.com/socialize/library.js' . ($data ['oasl_store_lang'] ? ('?lang=' . $data ['oasl_lib_lang']) : ''));
+			$this->document->addScript ('catalog/view/javascript/oneall/oneall.js'.
+					'?domain='.	$data['oasl_subdomain']. 
+					($data ['oasl_store_lang'] ? ('&lang=' . $data ['oasl_lib_lang']) : ''));
 		}
 		
 		// Selected Providers
@@ -593,7 +590,22 @@ class ControllerModuleOneall extends Controller
 		{
 			if (stripos ($this->request->get['route'], 'account') === false)
 			{
-				$oasl_callback_uri .= '&oa_redirect='.$this->request->get['route'];
+				// Assemble the callback_uri with current page URI (with arguments, ex: product/product&path=...).
+				// Extract the route argument:
+				$route_arg = $this->request->get['route'];
+				// Copy the other possible arguments into another array:
+				$rest_arg = array ();
+				foreach ($this->request->get as $arg => $val) 
+				{
+					// maybe a '_route_' key in there:
+					if (stripos ($arg, 'route') === false) 
+					{
+						$rest_arg[$arg] = $val;
+					}
+				}
+				// Make the opencart current page URI (without 'route='):
+				$curr_page = $route_arg . (empty ($rest_arg) ? '' : '&' . urldecode (http_build_query ($rest_arg)));
+				$oasl_callback_uri .= '&oa_redirect='. urlencode ($curr_page);
 			}
 		}
 		
@@ -602,22 +614,41 @@ class ControllerModuleOneall extends Controller
 		// Display Wiget
 		return $this->display_widget_template ($data);
 	}
-	
+
 	// Display Widget
 	private function display_widget_template ($data)
 	{
 		// Widget Template
-		$template = '/template/module/oneall.tpl';
-		$template_folder = $this->config->get ('config_template');
-
-		// Get Template Folder
-		$template_folder = (file_exists (DIR_TEMPLATE . $template_folder . $template) ? $template_folder : 'default');
+		$temp = $this->get_template_by_version ('module/oneall');
 		
 		// Load
-		return $this->load->view (($template_folder .$template) , $data);		
+		return $this->load->view ($temp , $data);		
 	}
 	
-
+	private function get_template_by_version ($template)
+	{
+		if (defined ('VERSION') && version_compare (VERSION, '2.2.0', '>='))
+		{
+			$template_file = '/template/'. $template .'.tpl';
+			$template_folder = $this->config->get ('config_template');
+			$template_folder = (file_exists (DIR_TEMPLATE . $template_folder . $template_file) ? $template_folder : '');
+			$template_v = $template;
+		}
+		else
+		{
+			$template_file = '/template/'. $template .'.tpl';
+			$template_folder = $this->config->get ('config_template');
+			$template_folder = (file_exists (DIR_TEMPLATE . $template_folder . $template_file) ? $template_folder : 'default');
+			$template_v = $template_file;
+		}
+		return ($template_folder . $template_v);
+	}
+	
+	private function get_ssl_by_version ()
+	{
+		return ((defined ('VERSION') && version_compare (VERSION, '2.2.0', '>=')) ? true : 'SSL');
+	}
+	
 	////////////////////////////////////////////////////////////////////////
 	// Tools
 	////////////////////////////////////////////////////////////////////////
@@ -744,7 +775,7 @@ class ControllerModuleOneall extends Controller
 							}
 						}
 								
-								// Create Customer
+						// Create Customer
 						if (!is_numeric ($customer_id))
 						{
 							// Automatic Account Creation
@@ -776,16 +807,18 @@ class ControllerModuleOneall extends Controller
 								// Custom Redirection
 								if (isset ($this->request->get['oa_redirect']))
 								{
-									$redirect_to = '&oa_redirect=' . $this->request->get['oa_redirect'];
+									// $this->request->get() does htmlspecialchars($_GET), so we need to undo that to encode properly:
+									$redirect_to = '&oa_redirect=' . urlencode (htmlspecialchars_decode ($this->request->get['oa_redirect']));
 								}
 								// Default Redirection
 								else
 								{
 									$redirect_to = '';
 								}
-													
+
+								
 								// Redirect
-								$this->response->redirect($this->url->link('module/oneall/register' . $redirect_to, '', 'SSL'));
+								$this->response->redirect ($this->url->link('module/oneall/register', $redirect_to, $this->get_ssl_by_version ()));
 							}
 							// Create Customer
 							else
@@ -803,7 +836,7 @@ class ControllerModuleOneall extends Controller
 										$this->count_login_identity_token ($user_data ['identity_token']);
 										
 										// Redirect to Account
-										$this->response->redirect($this->url->link('account/account', '', 'SSL'));
+										$this->response->redirect($this->url->link('account/account', '', $this->get_ssl_by_version ()));
 									}
 								}
 							}					
@@ -831,7 +864,7 @@ class ControllerModuleOneall extends Controller
 								}
 								
 								// Redirect
-								$this->response->redirect($this->url->link($redirect_to, '', 'SSL'));
+								$this->response->redirect($this->url->link($redirect_to, '', $this->get_ssl_by_version ()));
 							}
 						}	
 					}
@@ -1189,7 +1222,7 @@ class ControllerModuleOneall extends Controller
 	private function get_user_agent ()
 	{
 		// System Versions
-		$social_login = 'SocialLogin/1.2';
+		$social_login = 'SocialLogin/1.3';
 		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '2.x');
 	
 		// Build User Agent
