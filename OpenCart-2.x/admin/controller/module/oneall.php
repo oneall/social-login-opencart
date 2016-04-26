@@ -944,17 +944,13 @@ class ControllerModuleOneall extends Controller
 			}	
 		}
 
-		// Register events to fix the customer group saved by addCustomer():
-		$this->load->model('extension/event');
+		// Callback Handler
 		if (defined ('VERSION') && version_compare (VERSION, '2.2.0', '>='))
 		{
-			// Calls oneall->index()
+			$this->load->model('extension/event');
 			$this->model_extension_event->addEvent('oneall', 'catalog/controller/module/oneall/before', 'module/oneall');
 		}
-		else 
-		{
-			$this->model_extension_event->addEvent('oneall', 'post.customer.add', 'module/oneall/on_post_customer_add');
-		}
+
 	}
 	
 	// UnInstallation Script
@@ -975,9 +971,11 @@ class ControllerModuleOneall extends Controller
 			$this->db->query ($sql);
 		}
 		
-		// Deregister events to fix the customer group saved by addCustomer():
-		$this->load->model('extension/event');
-		$this->model_extension_event->deleteEvent('oneall');
+		// Callback Handler
+		if (defined ('VERSION') && version_compare (VERSION, '2.2.0', '>='))
+		{
+			$this->load->model('extension/event');
+			$this->model_extension_event->deleteEvent('oneall');
+		}
 	}
 }
-?>
