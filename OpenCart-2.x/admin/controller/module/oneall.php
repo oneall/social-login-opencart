@@ -949,17 +949,21 @@ class ControllerModuleOneall extends Controller
 		if (defined ('VERSION') && version_compare (VERSION, '2.2.0', '>='))
 		{
 			$this->load->model('extension/event');
-			// Calls oneall->index()
+			// Calls oneall->index(), necessary for Social Login:
 			$this->model_extension_event->addEvent('oneall', 'catalog/controller/module/oneall/before', 'module/oneall');
+			// Custom group settings:
+			$this->model_extension_event->addEvent('oneall_group', 'catalog/model/account/customer/addCustomer/after', 'module/oneall/on_post_customer_add_v22');
 		}
 		else if (defined ('VERSION') && version_compare (VERSION, '2.0.0.0', '='))
 		{
 			$this->load->model('tool/event');
+			// Custom group settings:
 			$this->model_tool_event->addEvent('oneall', 'post.customer.add', 'module/oneall/on_post_customer_add');
 		}
 		else 
 		{
 			$this->load->model('extension/event');
+			// Custom group settings:
 			$this->model_extension_event->addEvent('oneall', 'post.customer.add', 'module/oneall/on_post_customer_add');
 		}
 	}
@@ -987,6 +991,12 @@ class ControllerModuleOneall extends Controller
 		{
 			$this->load->model('tool/event');
 			$this->model_tool_event->deleteEvent('oneall');
+		}
+		else if (defined ('VERSION') && version_compare (VERSION, '2.2.0', '>='))
+		{
+			$this->load->model('extension/event');
+			$this->model_extension_event->deleteEvent('oneall');
+			$this->model_extension_event->deleteEvent('oneall_group');
 		}
 		else 
 		{
