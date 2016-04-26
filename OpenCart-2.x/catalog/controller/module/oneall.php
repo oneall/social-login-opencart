@@ -190,6 +190,7 @@ class ControllerModuleOneall extends Controller
 		// Customer Groups
 		$data['customer_groups'] = array();
  
+		// Default Group
 		if ($this->is_default_group_behaviour())
 		{
 			if (is_array($this->config->get('config_customer_group_display')))
@@ -215,6 +216,7 @@ class ControllerModuleOneall extends Controller
 				$data['customer_group_id'] = $this->config->get('config_customer_group_id');
 			}
 		}
+		// Custom Group
 		else 
 		{
 			$data['customer_group_id'] = $this->config->get('oneall_customer_group');
@@ -512,7 +514,7 @@ class ControllerModuleOneall extends Controller
 			}
 		}
 	
-		// Customer Group
+		// Default Group
 		if ($this->is_default_group_behaviour())
 		{
 			if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display')))
@@ -524,6 +526,7 @@ class ControllerModuleOneall extends Controller
 				$customer_group_id = $this->config->get('config_customer_group_id');
 			}
 		}
+		// Custom Group
 		else 
 		{
 			$customer_group_id = $this->config->get('oneall_customer_group');
@@ -594,7 +597,7 @@ class ControllerModuleOneall extends Controller
 		}
 				
 		// Callback URI
-		$oasl_callback_uri = HTTPS_SERVER . 'index.php?route=module/oneall';
+		$oasl_callback_uri = rtrim (HTTPS_SERVER, ' /') . '/index.php?route=module/oneall';
 		
 		// Redirection
 		if ( ! empty ($this->request->get['route']))
