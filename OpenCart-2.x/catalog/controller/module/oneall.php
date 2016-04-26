@@ -120,7 +120,20 @@ class ControllerModuleOneall extends Controller
 			
 			// Create Customer
 			$customer_id = $this->model_account_customer->addCustomer($customer_data);
-	
+
+			// Custom Group Set
+			if ( ! $this->is_default_group_behaviour())
+			{
+				// Custom Group			
+				$customer_group_id = $this->config->get('oneall_customer_group');
+					
+				// Force the group, as addCustomer only sets it if groups are displayed on the frontend
+				if (is_numeric ($customer_group_id))
+				{
+					$result = $this->db->query("UPDATE " . DB_PREFIX . "customer SET customer_group_id='" . intval ($customer_group_id) . "' WHERE customer_id='" . intval ($customer_id) . "'");
+				}
+			}	
+			
 			// Link the customer to this social network.
 			if ($this->link_tokens_to_customer_id ($customer_id, $user_data ['user_token'], $user_data ['identity_token'], $user_data ['identity_provider']) !== false)
 			{
@@ -639,6 +652,7 @@ class ControllerModuleOneall extends Controller
 		return $this->load->view ($temp , $data);		
 	}
 	
+	// Return a template based on the OpenCart version
 	private function get_template_by_version ($template)
 	{
 		if (defined ('VERSION') && version_compare (VERSION, '2.2.0', '>='))
@@ -658,6 +672,7 @@ class ControllerModuleOneall extends Controller
 		return ($template_folder . $template_v);
 	}
 	
+	// Return the SSL parameter based on the OpenCart version
 	private function get_ssl_by_version ()
 	{
 		return ((defined ('VERSION') && version_compare (VERSION, '2.2.0', '>=')) ? true : 'SSL');
@@ -829,7 +844,6 @@ class ControllerModuleOneall extends Controller
 								{
 									$redirect_to = '';
 								}
-
 								
 								// Redirect
 								$this->response->redirect ($this->url->link('module/oneall/register', $redirect_to, $this->get_ssl_by_version ()));
@@ -902,16 +916,6 @@ class ControllerModuleOneall extends Controller
 		$this->load->model('account/customer');
 		$this->load->model('account/customer_group');
 		
-		// Read Group
-		if ($this->is_default_group_behaviour())
-		{
-			$customer_group_id = $this->config->get('config_customer_group_id');
-		}
-		else
-		{
-			$customer_group_id = $this->config->get('oneall_customer_group');
-		}
-                
 		// Email Address
 		if (empty ($data ['user_email']) || $this->get_customer_id_by_email ($data ['user_email']) !== false)
 		{
@@ -920,7 +924,7 @@ class ControllerModuleOneall extends Controller
 		
 		// Customer Data
 		$customer_data = array(
-			'customer_group_id' => (int) $customer_group_id,
+			'customer_group_id' => $this->config->get('config_customer_group_id'),
 			'firstname' => $data ['user_first_name'],
 			'lastname' => $data ['user_last_name'],
 			'email' => $data ['user_email'],
@@ -935,11 +939,32 @@ class ControllerModuleOneall extends Controller
 			'country_id' => 0,
 			'zone_id' => 0
 		);
-		
+	
 		// Add Customer
 		$customer_id = $this->model_account_customer->addCustomer($customer_data);
 		
-		return (is_numeric ($customer_id) ? $customer_id : false);
+		// Customer Added
+		if (is_numeric ($customer_id))
+		{
+			// Custom Group Set
+			if ( ! $this->is_default_group_behaviour())
+			{
+				// Custom Group			
+				$customer_group_id = $this->config->get('oneall_customer_group');
+				
+				// Force the group, as addCustomer only sets it if groups are displayed on the frontend
+				if (is_numeric ($customer_group_id))
+				{
+					$result = $this->db->query("UPDATE " . DB_PREFIX . "customer SET customer_group_id='" . intval ($customer_group_id) . "' WHERE customer_id='" . intval ($customer_id) . "'");
+				}
+			}
+
+			// Done
+			return $customer_id;
+		}					
+		  
+		// Error
+		return false;
 	}
 	
 	
@@ -999,34 +1024,7 @@ class ControllerModuleOneall extends Controller
 		// Done
 		return $email;
 	}
-	
-	/*
-	 * Handler for post.customer.add
-	 * Sets the requested customer group for OneAll customers,
-	 * because addCustomer() will not accept not displayable groups, and sets group to the default.
-	 */
-	public function on_post_customer_add ($customer_id)
-	{
-		// Should oneall registered users belong to a designated group?
-		if (! $this->is_default_group_behaviour())
-		{
-			// The group to add users to
-			$oa_group_id = $this->config->get('oneall_customer_group');
-			
-			// Load Model
-			$this->load->model('account/customer');
-			
-			$added_customer = $this->model_account_customer->getCustomer($customer_id);
-			// Our designated group was overwritten by addCustomer(), let's put it back
-			if ($added_customer['customer_group_id'] != $oa_group_id) 
-			{
-				$this->db->query(
-					"UPDATE " . DB_PREFIX . "customer SET customer_group_id = '". (int)$oa_group_id .
-					"' WHERE customer_id = '" . (int)$customer_id . "'");
-			}
-		}
-	}
-	
+		
 	////////////////////////////////////////////////////////////////////////
 	// Tools
 	////////////////////////////////////////////////////////////////////////
