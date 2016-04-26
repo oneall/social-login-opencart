@@ -46,7 +46,7 @@ class ControllerModuleOneall extends Controller
 
 	protected function is_default_group_behaviour ()
 	{
-		return (empty($this->config->get('oneall_customer_group')) or $this->config->get('oneall_customer_group') == 'store_config');
+		return (trim ($this->config->get('oneall_customer_group')) == '' or $this->config->get('oneall_customer_group') == 'store_config');
 	}
 	
 	// Custom Registration Form
@@ -1011,6 +1011,17 @@ class ControllerModuleOneall extends Controller
 					"' WHERE customer_id = '" . (int)$customer_id . "'");
 			}
 		}
+	}
+	
+	/*
+	 * Handler for catalog/model/account/customer/addCustomer/after
+	 * Sets the requested customer group for OneAll customers,
+	 * because addCustomer() will not accept not displayable groups, and sets group to the default.
+	 */
+	public function on_post_customer_add_v22 ($route, $output, $data)
+	{
+		// Output of model/account/customer->addCustomer() is customer_id:
+		$this->on_post_customer_add ($output);
 	}
 	
 	////////////////////////////////////////////////////////////////////////
