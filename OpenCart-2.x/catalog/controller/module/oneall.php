@@ -44,9 +44,20 @@ class ControllerModuleOneall extends Controller
 		}
 	} 
 
+	// Do we have a custom group ?
 	protected function is_default_group_behaviour ()
 	{
-		return (empty($this->config->get('oneall_customer_group')) or $this->config->get('oneall_customer_group') == 'store_config');
+		// Read Group
+		$oneall_customer_group = trim (strval ($this->config->get('oneall_customer_group')));
+		
+		// Default Group
+		if (empty ($oneall_customer_group) || strtolower ($oneall_customer_group) == 'store_config')
+		{
+			return true;
+		}
+		
+		// Custom Group
+		return false;
 	}
 	
 	// Custom Registration Form
