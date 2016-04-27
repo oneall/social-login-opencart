@@ -563,7 +563,9 @@ class ControllerModuleOneall extends Controller
 		// Add Library
 		if (!empty ($data ['oasl_subdomain']))
 		{
-			$this->document->addScript ($this->get_request_protocol () . '://' . $data ['oasl_subdomain'] . '.api.oneall.com/socialize/library.js' . ($data ['oasl_store_lang'] ? ('?lang=' . $data ['oasl_lib_lang']) : ''));
+			$this->document->addScript ('catalog/view/javascript/oneall/oneall.js'.
+					'?domain='.	$data['oasl_subdomain']. 
+					($data ['oasl_store_lang'] ? ('&lang=' . $data ['oasl_lib_lang']) : ''));
 		}
 		
 		// Selected Providers
@@ -581,14 +583,29 @@ class ControllerModuleOneall extends Controller
 		}
 				
 		// Callback URI
-		$oasl_callback_uri = HTTPS_SERVER . 'index.php?route=module/oneall';
+		$oasl_callback_uri = rtrim (HTTPS_SERVER, ' /') . '/index.php?route=module/oneall';
 		
 		// Redirection
 		if ( ! empty ($this->request->get['route']))
 		{
 			if (stripos ($this->request->get['route'], 'account') === false)
 			{
-				$oasl_callback_uri .= '&oa_redirect='.$this->request->get['route'];
+				// Assemble the callback_uri with current page URI (with arguments, ex: product/product&path=...).
+				// Extract the route argument:
+				$route_arg = $this->request->get['route'];
+				// Copy the other possible arguments into another array:
+				$rest_arg = array ();
+				foreach ($this->request->get as $arg => $val) 
+				{
+					// maybe a '_route_' key in there:
+					if (stripos ($arg, 'route') === false) 
+					{
+						$rest_arg[$arg] = $val;
+					}
+				}
+				// Make the opencart current page URI (without 'route='):
+				$curr_page = $route_arg . (empty ($rest_arg) ? '' : '&' . urldecode (http_build_query ($rest_arg)));
+				$oasl_callback_uri .= '&oa_redirect='. urlencode ($curr_page);
 			}
 		}
 		
@@ -773,14 +790,15 @@ class ControllerModuleOneall extends Controller
 								// Custom Redirection
 								if (isset ($this->request->get['oa_redirect']))
 								{
-									$redirect_to = '&oa_redirect=' . $this->request->get['oa_redirect'];
+									// $this->request->get() does htmlspecialchars($_GET), so we need to undo that to encode properly:
+									$redirect_to = '&oa_redirect=' . urlencode (htmlspecialchars_decode ($this->request->get['oa_redirect']));
 								}
 								// Default Redirection
 								else
 								{
 									$redirect_to = '';
 								}
-													
+								
 								// Redirect
 								$this->redirect($this->url->link('module/oneall/register' . $redirect_to, '', 'SSL'));
 							}
@@ -1163,7 +1181,7 @@ class ControllerModuleOneall extends Controller
 	private function get_user_agent ()
 	{
 		// System Versions
-		$social_login = 'SocialLogin/1.0';
+		$social_login = 'SocialLogin/1.3';
 		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '1.5.x');
 	
 		// Build User Agent
