@@ -583,7 +583,7 @@ class ControllerModuleOneall extends Controller
 		}
 				
 		// Callback URI
-		$oasl_callback_uri = HTTPS_SERVER . 'index.php?route=module/oneall';
+		$oasl_callback_uri = rtrim (HTTPS_SERVER, ' /') . '/index.php?route=module/oneall';
 		
 		// Redirection
 		if ( ! empty ($this->request->get['route']))
