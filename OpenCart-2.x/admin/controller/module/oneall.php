@@ -311,8 +311,8 @@ class ControllerModuleOneall extends Controller
 		$this->document->setTitle ($this->language->get ('heading_title'));
 		
 		// CSS & JS
-		$this->document->addStyle ('view/stylesheet/oneall/oneall.css');
-		$this->document->addScript ('view/javascript/oneall/oneall.js');
+		$this->document->addStyle ('view/stylesheet/oneall/backend.css');
+		$this->document->addScript ('view/javascript/oneall/backend.js');
 		
 		// Load Models
 		$this->load->model ('setting/setting');
@@ -892,7 +892,7 @@ class ControllerModuleOneall extends Controller
 	private function get_user_agent ()
 	{
 		// System Versions
-		$social_login = 'SocialLogin/1.4';
+		$social_login = 'SocialLogin/1.5';
 		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '2.x');
 	
 		// Build User Agent
