@@ -563,9 +563,7 @@ class ControllerModuleOneall extends Controller
 		// Add Library
 		if (!empty ($data ['oasl_subdomain']))
 		{
-			$this->document->addScript ('catalog/view/javascript/oneall/oneall.js'.
-					'?domain='.	$data['oasl_subdomain']. 
-					($data ['oasl_store_lang'] ? ('&lang=' . $data ['oasl_lib_lang']) : ''));
+			$this->document->addScript ('catalog/view/javascript/oneall/frontend.js?subdomain='. $data['oasl_subdomain']. (! empty ($data ['oasl_store_lang']) ? ('&amp;lang=' . $data ['oasl_lib_lang']) : ''));
 		}
 		
 		// Selected Providers
@@ -1181,7 +1179,7 @@ class ControllerModuleOneall extends Controller
 	private function get_user_agent ()
 	{
 		// System Versions
-		$social_login = 'SocialLogin/1.3';
+		$social_login = 'SocialLogin/1.4';
 		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '1.5.x');
 	
 		// Build User Agent
