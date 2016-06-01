@@ -683,8 +683,8 @@ class ControllerModuleOneall extends Controller
 	// Callback Handler
 	public function callback_handler ()
 	{
-		// OneAll Callback handler
-		$error = '';
+		// default message for an eventual error:
+		$error = 'no error';
 
 		// Check if we have received a connection_token
 		if ( isset ($this->request->post) && ! empty ($this->request->post['connection_token']))
@@ -713,7 +713,7 @@ class ControllerModuleOneall extends Controller
 	
 				// Make Request.
 				$result = $this->do_api_request ($api_connection_handler, $api_connection_url, $api_credentials);
-					
+
 				// Parse result
 				if (is_object ($result) && property_exists ($result, 'http_code') && $result->http_code == 200)
 				{
@@ -868,7 +868,6 @@ class ControllerModuleOneall extends Controller
 							}					
 						}
 						
-						
 						// User Found
 						if (is_numeric ($customer_id))
 						{
@@ -888,23 +887,36 @@ class ControllerModuleOneall extends Controller
 								{
 									$redirect_to = 'account/account';
 								}
-								
 								// Redirect
 								$this->response->redirect($this->url->link($redirect_to, '', $this->get_ssl_by_version ()));
 							}
-						}	
+							else
+							{
+								$error = 'login_customer';
+							}
+						}
+						else 
+						{
+							$error = 'could not create or find customer id';
+						}
+					}
+					else
+					{
+						$error = 'social profile '. print_r($result, true);
 					}
 				}
 				else
 				{
-					// Add Log
-					$this->add_log ("Could not retrieve user profile, Error ".$result->http_code." for URL: ".$api_connection_url);
-					
-					// Display Error
-					die ("An error occured during the communication with the OneAll API. Please check the API Credentials in the OneAll Social Login setup.");
+					$error = 'api request '. print_r($result, true);
 				}
 			}
-		}	
+			else
+			{
+				$error = 'empty subdomain, review the module settings';
+			}
+			$this->add_log ("Error login/registration: $error");
+			$this->response->redirect($this->url->link('account/login', '', $this->get_ssl_by_version ()));
+		}
 	}
 	
 	// Create customer
