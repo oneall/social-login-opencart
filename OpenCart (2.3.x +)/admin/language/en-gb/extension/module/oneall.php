@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package   	OneAll Social Login
  * @copyright 	Copyright 2016 http://www.oneall.com - All rights reserved.
@@ -29,6 +30,7 @@
 $_ ['heading_title'] = 'OneAll Social Login';
 $_ ['heading_title2'] = 'Social Login';
 $_ ['text_module'] = 'Modules';
+$_ ['text_extension'] = 'Extensions';
 $_ ['oa_text_settings_saved'] = 'Your settings have been saved';
 $_ ['oa_text_api_communication'] = 'API Communication';
 $_ ['oa_text_api_handler'] = 'API Communication Handler';
@@ -80,12 +82,9 @@ $_ ['oa_text_ajax_autodetect_error'] = 'Autodetection Error - our <a href="%s" t
 $_ ['oa_text_add_to_a_position'] = 'Add Social Login to a position in your shop';
 $_ ['oa_text_layout'] = 'Layout';
 $_ ['oa_text_position'] = 'Position';
-$_ ['oa_text_status'] = 'Status';
 $_ ['oa_text_sort_order'] = 'Sort Order';
 $_ ['oa_text_add'] = 'Add';
-$_ ['oa_text_add_new_position'] = 'Add new position';
 $_ ['oa_text_add_position'] = 'Add to this position';		
-$_ ['oa_text_save_positions'] = 'Save these positions';
 $_ ['oa_text_remove_position'] = 'Remove from this position';
 $_ ['oa_text_current_positions'] = 'Current Positions';
 $_ ['oa_text_position_removed'] = 'Social Login has bene removed from that position';
@@ -101,5 +100,5 @@ $_ ['oa_text_account_creation_address_yes'] = 'Yes, ask for the address.';
 $_ ['oa_text_account_link_desc'] = 'Try to automatically link Social Network accounts to existing OpenCart accounts?';
 $_ ['oa_text_account_link_on'] = 'Yes, automatically link Social Network accounts to OpenCart accounts that have the same email address.';
 $_ ['oa_text_account_link_off'] = 'No, do no automatically link Social Network accounts to existing OpenCart accounts.';
-
-?>
+$_ ['oa_text_account_customer_group'] = 'Customer group for customers registering with Social Login';
+$_ ['oa_text_account_customer_group_default'] = "Use the store's default customer group";
