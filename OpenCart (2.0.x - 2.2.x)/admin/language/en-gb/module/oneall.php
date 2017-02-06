@@ -1,11 +1,7 @@
 <?php
-
-error_reporting(E_ALL);
-ini_set("display_errors" , 1);
-
 /**
  * @package   	OneAll Social Login
- * @copyright 	Copyright 2016 http://www.oneall.com - All rights reserved.
+ * @copyright 	Copyright 2011-2017 http://www.oneall.com
  * @license   	GNU/GPL 2 or later
  *
  * This program is free software; you can redistribute it and/or
