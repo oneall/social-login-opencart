@@ -608,6 +608,9 @@ class ControllerModuleOneall extends Controller
 				$data ['oasl_providers'] = implode ("','", $providers_list);
 			}
 		}
+		
+		// Server
+		$base_uri = ((defined ('HTTPS_SERVER') &&  strlen (trim (HTTPS_SERVER)) > 0) ? HTTPS_SERVER : HTTP_SERVER);
 				
 		// Callback URI
 		$oasl_callback_uri = rtrim (HTTPS_SERVER, ' /') . '/index.php?route=module/oneall';
