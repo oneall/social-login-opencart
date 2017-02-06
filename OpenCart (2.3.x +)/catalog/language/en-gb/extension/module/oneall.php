@@ -28,4 +28,4 @@
 //////////////////////////////////////////////////////////////////////
 $_ ['oa_social_login'] = 'Social Login';
 $_ ['oa_heading_title'] = 'You have logged in with %s';
-$_ ['oa_heading_desc'] = 'Please take a minute to verify and/or complete your account information below.'; 
+$_ ['oa_heading_desc'] = 'Please take a minute to verify and/or complete your account information below.';

@@ -184,9 +184,23 @@ class ControllerExtensionModuleOneall extends Controller
 		{
 			$data ['oneall_store_lang'] = 1;
 		}
-		else
+		
+		// Library Loading
+		if ( ! isset ($data ['oneall_deferred_loading']) || ! in_array ($data ['oneall_deferred_loading'], array (0,1)))
 		{
-			$data ['oneall_store_lang'] = 0;
+			// Check if Journal is installed
+			$query = $this->db->query ("SELECT COUNT(*) AS tot FROM " . DB_PREFIX . "extension WHERE type='module' AND code LIKE 'journal%'");
+				
+			// Enable deferred loading by default if it's enabled
+			if ( ! empty ($query->rows[0]['tot']))
+			{
+				$data ['oneall_deferred_loading'] = 1;
+			}
+			// Otherwise disable deferred loading
+			else
+			{
+				$data ['oneall_deferred_loading'] = 0;
+			}
 		}
 			
 		// Social Networks
@@ -890,7 +904,7 @@ class ControllerExtensionModuleOneall extends Controller
 	private function get_user_agent ()
 	{
 		// System Versions
-		$social_login = 'SocialLogin/1.0';
+		$social_login = 'SocialLogin/2.0';
 		$opencart = 'OpenCart' . (defined ('VERSION') ? ('/' . substr (VERSION, 0, 3)) : '2.3.x');
 	
 		// Build User Agent
