@@ -183,7 +183,7 @@ if ($show == 'settings')
 						<div class="panel-body">
 							<div class="well">	
 								<div class="row">	
-									<div class="col-sm-3">
+									<div class="col-sm-2">
 										<label for="input-name" class="control-label">
 											<?php echo $oa_text_plugin_status; ?>									
 										</label> 																					
@@ -191,9 +191,8 @@ if ($show == 'settings')
 											<option value="1" <?php if ( ! empty ($oneall_status)) {echo 'selected="selected"';} ?>><?php echo $oa_text_plugin_enabled; ?></option>
 											<option value="0" <?php if (empty ($oneall_status)) {echo 'selected="selected"';} ?>><?php echo $oa_text_plugin_disabled; ?></option>
 						              </select>		
-						            </div>
-													
-									<div class="col-sm-3">
+						            </div>				
+									<div class="col-sm-4">
 										<label for="input-name" class="control-label">
 											<?php echo $oa_text_plugin_language; ?>									
 										</label> 																					
@@ -202,6 +201,18 @@ if ($show == 'settings')
 											<option value="1" <?php if ( ! empty ($oneall_store_lang)) {echo 'selected="selected"';} ?>><?php echo $oa_text_plugin_language_opc; ?></option>
 						              </select>	
 						            </div>
+						         </div>
+						         <div class="row">
+						         	<div class="col-sm-6">
+										<label for="input-name" class="control-label">
+											<?php echo $oa_text_loading; ?>									
+										</label> 																					
+										<select name="oneall_deferred_loading" class="form-control">
+											<option value="0" <?php if (empty ($oneall_deferred_loading)) {echo 'selected="selected"';} ?>><?php echo $oa_text_loading_head; ?></option>
+											<option value="1" <?php if ( ! empty ($oneall_deferred_loading)) {echo 'selected="selected"';} ?>><?php echo $oa_text_loading_deferred; ?></option>
+						              </select>		
+						              <small class="form-text text-muted"><?php echo $oa_text_loading_help; ?></small>
+						            </div>						         
 						         </div>
 							</div>
 						</div>

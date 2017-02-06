@@ -576,21 +576,23 @@ class ControllerModuleOneall extends Controller
 		
 		// Plugin Settings
 		$data ['oasl_heading_title'] = trim ($this->language->get ('oa_social_login'));
-		$data ['oasl_lib_lang'] = $this->config->get ('config_language');
-		$data ['oasl_store_lang'] = $this->config->get ('oneall_store_lang');
+		$data ['oasl_lib_lang'] = (! empty ($this->config->get ('oneall_store_lang')) ? $this->config->get ('config_language') : '');
 		$data ['oasl_display_modal'] = 0;
 		$data ['oasl_grid_size_x'] = 99;
 		$data ['oasl_grid_size_y'] = 99;
 		$data ['oasl_custom_css_uri'] = '';
+		$data ['oasl_deferred_loading'] = $this->config->get ('oneall_deferred_loading');
 		
 		// Selected Subdomain
 		$data ['oasl_subdomain'] = trim ($this->config->get ('oneall_subdomain'));
-		
-	
+			
 		// Add Library
 		if (!empty ($data ['oasl_subdomain']))
 		{
-			$this->document->addScript ('catalog/view/javascript/oneall/frontend.js?subdomain='. $data['oasl_subdomain']. (! empty ($data ['oasl_store_lang']) ? ('&amp;lang=' . $data ['oasl_lib_lang']) : ''));
+			if (empty ($data ['oasl_deferred_loading']))
+			{
+				$this->document->addScript ('catalog/view/javascript/oneall/frontend.js?subdomain='. $data['oasl_subdomain']. (! empty ($data ['oasl_lib_lang']) ? ('&amp;lang=' . $data ['oasl_lib_lang']) : ''));
+			}
 		}
 		
 		// Selected Providers

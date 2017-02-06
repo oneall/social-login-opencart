@@ -195,11 +195,13 @@ class ControllerModuleOneall extends Controller
 		{
 			$data ['oneall_store_lang'] = 1;
 		}
-		else
+
+		// Library Loading
+		if ( ! isset ($data ['oneall_deferred_loading']) || ! in_array ($data ['oneall_deferred_loading'], array (0,1)))
 		{
-			$data ['oneall_store_lang'] = 0;
-		}
-			
+			$data ['oneall_deferred_loading'] = 0;
+		}		
+		
 		// Social Networks
 		if ( ! isset ($data ['oneall_socials']))
 		{
