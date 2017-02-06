@@ -603,8 +603,11 @@ class ControllerExtensionModuleOneall extends Controller
 			}
 		}
 				
+		// Base URI of the shop
+		$base_uri = ((defined ('HTTPS_SERVER') &&  strlen (trim (HTTPS_SERVER)) > 0) ? HTTPS_SERVER : HTTP_SERVER);
+		
 		// Callback URI
-		$oasl_callback_uri = rtrim (HTTPS_SERVER, ' /') . '/index.php?route=extension/module/oneall/callback';
+		$oasl_callback_uri = rtrim ($base_uri, ' /') . '/index.php?route=extension/module/oneall/callback';
 		
 		// Redirection
 		if ( ! empty ($this->request->get['route']))
