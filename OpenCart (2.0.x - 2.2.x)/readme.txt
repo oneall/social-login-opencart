@@ -1,4 +1,4 @@
-OneAll Social Login for OpenCart 2.0.x - 2.2.x
+OneAll Social Login 2.0 for OpenCart 2.0.x - 2.2.x
 ---------------------------------------------
 Social Login allows your customers to connect with one click to OpenCart by
 using their social network accounts. Over 30 different social networks such
