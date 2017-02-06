@@ -42,15 +42,15 @@ class ControllerModuleOneall extends Controller
 	}
 	
 	// Copied over from the account/customer_group file...
-	private function getCustomerGroup ($customer_group_id) {
+	private function getCustomerGroup ($customer_group_id)
+	{
 		$query = $this->db->query ("SELECT DISTINCT * FROM " . DB_PREFIX . "customer_group cg LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (cg.customer_group_id = cgd.customer_group_id) WHERE cg.customer_group_id = '" . (int)$customer_group_id . "' AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
-
 		return $query->row;
 	}
 
-	private function getCustomerGroups () {
+	private function getCustomerGroups ()
+	{
 		$query = $this->db->query ("SELECT * FROM " . DB_PREFIX . "customer_group cg LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (cg.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY cg.sort_order ASC, cgd.name ASC");
-
 		return $query->rows;
 	}
 	
@@ -199,7 +199,19 @@ class ControllerModuleOneall extends Controller
 		// Library Loading
 		if ( ! isset ($data ['oneall_deferred_loading']) || ! in_array ($data ['oneall_deferred_loading'], array (0,1)))
 		{
-			$data ['oneall_deferred_loading'] = 0;
+			// Check if Journal is installed
+			$query = $this->db->query ("SELECT COUNT(*) AS tot FROM " . DB_PREFIX . "extension WHERE type='module' AND code LIKE 'journal%'");
+			
+			// Enable deferred loading by default if it's enabled
+			if ( ! empty ($query->rows[0]['tot']))
+			{
+				$data ['oneall_deferred_loading'] = 1;
+			}
+			// Otherwise disable deferred loading
+			else
+			{			
+				$data ['oneall_deferred_loading'] = 0;
+			}
 		}		
 		
 		// Social Networks

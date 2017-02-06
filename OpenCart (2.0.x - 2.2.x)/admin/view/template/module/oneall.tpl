@@ -219,7 +219,7 @@ if ($show == 'settings')
 					
 						<div class="panel-heading">
 							<h3 class="panel-title">
-								<i class="fa fa-cog"></i>
+								<i class="fa fa-user"></i>
 								<?php echo $oa_text_account_creation; ?>
 							</h3>
 						</div>
