@@ -609,11 +609,11 @@ class ControllerModuleOneall extends Controller
 			}
 		}
 		
-		// Server
+		// Base URI of the shop
 		$base_uri = ((defined ('HTTPS_SERVER') &&  strlen (trim (HTTPS_SERVER)) > 0) ? HTTPS_SERVER : HTTP_SERVER);
 				
 		// Callback URI
-		$oasl_callback_uri = rtrim (HTTPS_SERVER, ' /') . '/index.php?route=module/oneall';
+		$oasl_callback_uri = rtrim ($base_uri, ' /') . '/index.php?route=module/oneall';
 		
 		// Redirection
 		if ( ! empty ($this->request->get['route']))
@@ -621,8 +621,10 @@ class ControllerModuleOneall extends Controller
 			if (stripos ($this->request->get['route'], 'account') === false)
 			{
 				// Assemble the callback_uri with current page URI (with arguments, ex: product/product&path=...).
+				
 				// Extract the route argument:
 				$route_arg = $this->request->get['route'];
+				
 				// Copy the other possible arguments into another array:
 				$rest_arg = array ();
 				foreach ($this->request->get as $arg => $val) 
@@ -633,6 +635,7 @@ class ControllerModuleOneall extends Controller
 						$rest_arg[$arg] = $val;
 					}
 				}
+				
 				// Make the opencart current page URI (without 'route='):
 				$curr_page = $route_arg . (empty ($rest_arg) ? '' : '&' . urldecode (http_build_query ($rest_arg)));
 				$oasl_callback_uri .= '&oa_redirect='. urlencode ($curr_page);
