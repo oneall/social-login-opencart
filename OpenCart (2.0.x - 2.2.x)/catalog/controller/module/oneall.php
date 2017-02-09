@@ -576,7 +576,7 @@ class ControllerModuleOneall extends Controller
 		
 		// Plugin Settings
 		$data ['oasl_heading_title'] = trim ($this->language->get ('oa_social_login'));
-		$data ['oasl_lib_lang'] = (! empty ($this->config->get ('oneall_store_lang')) ? $this->config->get ('config_language') : '');
+		$data ['oasl_lib_lang'] = ((strval ($this->config->get ('oneall_store_lang')) == 1) ? $this->config->get ('config_language') : '');
 		$data ['oasl_display_modal'] = 0;
 		$data ['oasl_grid_size_x'] = 99;
 		$data ['oasl_grid_size_y'] = 99;
