@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	OneAll Social Login
- * @copyright 	Copyright 2016 http://www.oneall.com - All rights reserved.
+ * @copyright 	Copyright 2011-2017 http://www.oneall.com
  * @license   	GNU/GPL 2 or later
  *
  * This program is free software; you can redistribute it and/or
@@ -61,6 +61,10 @@ $_ ['oa_text_layout'] = 'Layout';
 $_ ['oa_text_plugin_status'] = 'Social Login Status';
 $_ ['oa_text_plugin_enabled'] = 'Enabled';
 $_ ['oa_text_plugin_disabled'] = 'Disabled';
+$_ ['oa_text_loading'] = 'Social Login Loading';
+$_ ['oa_text_loading_head'] = 'Header - Load the OneAll library in the &lt;head&gt;...&lt;/head&gt; section';
+$_ ['oa_text_loading_deferred'] = 'Inline - Load the OneAll library when the icons are displayed';
+$_ ['oa_text_loading_help'] = 'Try inline loading if Social Login is not displayed correctly, e.g., due to JavaScript compression and/or minification tools or plugins.';
 $_ ['oa_text_ajax_working'] = 'Connecting. Please wait ...';
 $_ ['oa_text_ajax_wait'] = 'Contacting API - please wait this may take a few minutes ...';
 $_ ['oa_text_ajax_settings_ok'] = 'The settings are correct - do not forget to save your changes!';
@@ -102,5 +106,3 @@ $_ ['oa_text_account_creation_address_yes'] = 'Yes, ask for the address.';
 $_ ['oa_text_account_link_desc'] = 'Try to automatically link Social Network accounts to existing OpenCart accounts?';
 $_ ['oa_text_account_link_on'] = 'Yes, automatically link Social Network accounts to OpenCart accounts that have the same email address.';
 $_ ['oa_text_account_link_off'] = 'No, do no automatically link Social Network accounts to existing OpenCart accounts.';
-
-?>

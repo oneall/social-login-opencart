@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	OneAll Social Login
- * @copyright 	Copyright 2016 http://www.oneall.com - All rights reserved.
+ * @copyright 	Copyright 2011-2017 http://www.oneall.com
  * @license   	GNU/GPL 2 or later
  *
  * This program is free software; you can redistribute it and/or
@@ -29,5 +29,3 @@
 $_ ['oa_social_login'] = 'Social Login';
 $_ ['oa_heading_title'] = 'You have logged in with %s';
 $_ ['oa_heading_desc'] = 'Please take a minute to verify and/or complete your account information below.'; 
-
-?>

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   	OneAll Social Login
- * @copyright 	Copyright 2016 http://www.oneall.com - All rights reserved.
+ * @copyright 	Copyright 2011-2017 http://www.oneall.com
  * @license   	GNU/GPL 2 or later
  *
  * This program is free software; you can redistribute it and/or
@@ -549,21 +549,23 @@ class ControllerModuleOneall extends Controller
 		
 		// Plugin Settings
 		$data ['oasl_heading_title'] = trim ($this->language->get ('oa_social_login'));
-		$data ['oasl_lib_lang'] = $this->config->get ('config_language');
-		$data ['oasl_store_lang'] = $this->config->get ('oneall_store_lang');
+		$data ['oasl_lib_lang'] = ((strval ($this->config->get ('oneall_store_lang')) == 1) ? $this->config->get ('config_language') : '');
 		$data ['oasl_display_modal'] = 0;
 		$data ['oasl_grid_size_x'] = 99;
 		$data ['oasl_grid_size_y'] = 99;
 		$data ['oasl_custom_css_uri'] = '';
+		$data ['oasl_deferred_loading'] = $this->config->get ('oneall_deferred_loading');
 		
 		// Selected Subdomain
-		$data ['oasl_subdomain'] = trim ($this->config->get ('oneall_subdomain'));
-		
+		$data ['oasl_subdomain'] = trim ($this->config->get ('oneall_subdomain'));		
 	
 		// Add Library
 		if (!empty ($data ['oasl_subdomain']))
 		{
-			$this->document->addScript ('catalog/view/javascript/oneall/frontend.js?subdomain='. $data['oasl_subdomain']. (! empty ($data ['oasl_store_lang']) ? ('&amp;lang=' . $data ['oasl_lib_lang']) : ''));
+			if (empty ($data ['oasl_deferred_loading']))
+			{
+				$this->document->addScript ('catalog/view/javascript/oneall/frontend.js?subdomain='. $data['oasl_subdomain']. (! empty ($data ['oasl_lib_lang']) ? ('&amp;lang=' . $data ['oasl_lib_lang']) : ''));
+			}
 		}
 		
 		// Selected Providers
@@ -580,8 +582,11 @@ class ControllerModuleOneall extends Controller
 			}
 		}
 				
+		// Base URI of the shop
+		$base_uri = ((defined ('HTTPS_SERVER') &&  strlen (trim (HTTPS_SERVER)) > 0) ? HTTPS_SERVER : HTTP_SERVER);
+		
 		// Callback URI
-		$oasl_callback_uri = rtrim (HTTPS_SERVER, ' /') . '/index.php?route=module/oneall';
+		$oasl_callback_uri = rtrim ($base_uri, ' /') . '/index.php?route=module/oneall';
 		
 		// Redirection
 		if ( ! empty ($this->request->get['route']))
@@ -589,8 +594,10 @@ class ControllerModuleOneall extends Controller
 			if (stripos ($this->request->get['route'], 'account') === false)
 			{
 				// Assemble the callback_uri with current page URI (with arguments, ex: product/product&path=...).
+				
 				// Extract the route argument:
 				$route_arg = $this->request->get['route'];
+				
 				// Copy the other possible arguments into another array:
 				$rest_arg = array ();
 				foreach ($this->request->get as $arg => $val) 
@@ -1930,4 +1937,3 @@ class ControllerModuleOneall extends Controller
 	}
 	
 }
-?>
