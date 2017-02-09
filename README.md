@@ -4,15 +4,15 @@ It increases your OpenCart user registration rate by simplifying the registratio
 new users and provides permission-based social data retrieved from the social network profiles.
 
 
-** OpenCart 2.x Installation guide **
+#####OpenCart 2.x Installation guide
 http://docs.oneall.com/plugins/guide/social-login-opencart/2/
 
 
-** OpenCart 1.5.x Installation guide **
+#####OpenCart 1.5.x Installation guide
 http://docs.oneall.com/plugins/guide/social-login-opencart/1.5/
 
 
-** Official OpenCart Extension **
+#####Official OpenCart Extension**
 https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=24825
 
 
