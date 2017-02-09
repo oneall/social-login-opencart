@@ -42,7 +42,7 @@ new users and provides permission-based social data retrieved from the social ne
 
 
 ## About Us
-Social Login is maintained by [OneAll](http://www.oneall.com/). OneAll, a technology company offering a set of 
+Social Login has been created and is maintained by [OneAll](http://www.oneall.com/), a technology company offering a set of 
 web-delivered tools and services for establishing and optimizing a site's connection with social networks.
 
 **Fork us on Github!**
