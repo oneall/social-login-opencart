@@ -12,7 +12,7 @@ http://docs.oneall.com/plugins/guide/social-login-opencart/2/
 http://docs.oneall.com/plugins/guide/social-login-opencart/1.5/
 
 
-#####Official OpenCart Extension**
+#####Official OpenCart Extension
 https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=24825
 
 
