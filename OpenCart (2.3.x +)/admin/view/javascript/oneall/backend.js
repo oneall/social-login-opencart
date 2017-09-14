@@ -1,26 +1,41 @@
 jQuery(document).ready(function($) {
 
 	/* Toggle Provider Selection */
-	$(".oa_social_login_provider_toggle").on("click",function(event)
+	$(".oa_social_login_provider_toggle").on("click",function(event)	
 	{
-	    var target = $(event.target);	    
-	    if (target.is('input:checkbox')) return;
-
 	    var checkbox = $(this).find("input[type='checkbox']");
-
-	    if( !checkbox.prop("checked"))
+	    var target = $(event.target);
+	    
+	    $(this).removeClass('disabled');
+	    $(this).removeClass('enabled');     
+	        
+	    // Trigger the underlying checkbox
+	    if ( ! target.is('input:checkbox'))
 	    {
-	        checkbox.prop("checked",true);
-	    } 
+	        if( !checkbox.prop("checked"))
+	        {
+	            checkbox.prop("checked",true);
+	        } 
+	        else
+	        {
+	            checkbox.prop("checked",false);
+	        }
+	    }
+	    
+	    // Set appropriate class	    
+	    if(checkbox.prop("checked"))
+	    {
+            $(this).addClass('enabled');
+	    }
 	    else
 	    {
-	        checkbox.prop("checked",false);
+	        $(this).addClass('disabled');
 	    }
 	});
 	
 	/* Autodetect API Connection Handler */
-	$('#oneall_api_autodetect').click(function() {	
-						
+	$('#oneall_api_autodetect').click(function()
+	{							
 		var oneall_api_handler = jQuery("#oneall_api_handler");
 		var oneall_api_port = jQuery("#oneall_api_port");
 		
@@ -34,8 +49,8 @@ jQuery(document).ready(function($) {
 			'token': oaL10n.token,
 		};		
 		
-		jQuery.get('index.php',data, function(response_string) {				
-	
+		jQuery.get('index.php',data, function(response_string)
+		{		
 			var response_parts = response_string.split('|');
 			var response_status = response_parts[0];
 			var response_flag = response_parts[1];
@@ -80,8 +95,8 @@ jQuery(document).ready(function($) {
 	});
 	
 	/* Test API Settings */
-	$('#oneall_api_verify').click(function(){
-		
+	$('#oneall_api_verify').click(function()
+	{		
 		var oneall_api_handler = jQuery("#oneall_api_handler").val();
 		var oneall_api_port = jQuery("#oneall_api_port").val();
 		var oneall_subdomain = jQuery("#oneall_subdomain").val();

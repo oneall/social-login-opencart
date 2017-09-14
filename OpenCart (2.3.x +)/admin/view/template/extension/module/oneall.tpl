@@ -304,7 +304,7 @@ if ($do == 'settings')
 										{
 											$oa_social_network_enabled = (in_array ($oa_key, $oa_enabled_social_networks) ? true : false);
 											?>
-												<div class="col-sm-3 oa_social_login_provider_toggle">
+												<div class="col-sm-3 oa_social_login_provider_toggle <?php echo ($oa_social_network_enabled ? 'enabled' : 'disabled');?>">
 													<div class="well">
 														<div class="row">
 															<div class="col-sm-3">												
