@@ -1,0 +1,70 @@
+{# Display widget in this container #}
+{% set oasl_container = 'oneall_social_login_' ~ random(99999, 9999999) %}
+
+
+{# oasl_user_is_logged : {{ dump(oasl_user_is_logged) }} **
+oasl_container : {{ dump(oasl_container) }} **
+oasl_display_modal : {{ dump(oasl_display_modal) }} ==
+oasl_deferred_loading : {{ dump(oasl_deferred_loading) }} ==
+
+
+oasl_providers : {{ dump(oasl_providers) }} ==
+oasl_callback_uri : {{ dump(oasl_callback_uri) }} ==
+oasl_container : {{ dump(oasl_container) }} ==
+oasl_grid_size_x : {{ dump(oasl_grid_size_x) }} ==
+oasl_grid_size_y : {{ dump(oasl_grid_size_y) }} ==
+oasl_custom_css_uri : {{ dump(oasl_custom_css_uri) }} ==
+oasl_container : {{ dump(oasl_container) }} ==
+ #}
+
+{# Do not display for guests #}
+{% if oasl_user_is_logged is empty and oasl_subdomain is not empty %}
+	
+	{% if oasl_heading_title is not empty %}
+		<h3> {{ oasl_heading_title }} </h3>
+	{% endif %}                   
+	 
+
+	{% if oasl_display_modal != "0" %}
+		<a id="{{ oasl_container }}" class="button">{{ oasl_login_button }}</a>
+	{% else %}  
+		<div id="{{ oasl_container }}"></div>
+	{% endif %}  
+
+	{# Plugin #}
+	<script type='text/javascript'>
+		/* OneAll Social Login - http://www.oneall.com/ */
+		var _oneall = _oneall || [];
+		_oneall.push(['social_login', 'set_providers', ['{{ oasl_providers }}']]);
+		_oneall.push(['social_login', 'set_callback_uri', '{{ oasl_callback_uri }}']);
+		
+		
+		{% if oasl_display_modal != "0" %}
+			/* Modal Popup */
+			_oneall.push(['social_login', 'attach_onclick_popup_ui', '{{ oasl_container }}']);		
+		{% else %}  
+			/* Inline Display */
+			_oneall.push(['social_login', 'set_grid_size', 'x', '{{ oasl_grid_size_x }}']);
+			_oneall.push(['social_login', 'set_grid_size', 'y', '{{ oasl_grid_size_y }}']);
+			_oneall.push(['social_login', 'set_custom_css_uri', '{{ oasl_custom_css_uri }}']);
+			_oneall.push(['social_login', 'do_render_ui', '{{ oasl_container }}']);
+		{% endif %}
+
+		
+		{% if oasl_deferred_loading != "0" %}
+			/* Library Loader */
+			var have_oa_lib = (have_oa_lib || false);
+			(function(){
+				if (!have_oa_lib){
+					var lib = document.createElement('script');
+					lib.type = 'text/javascript'; lib.async = true;
+					lib.src = '//{{ oasl_subdomain }}.api.oneall.com/socialize/library.js';
+					var node = document.getElementsByTagName('script')[0];
+					node.parentNode.insertBefore(lib, node); have_oa_lib = true;
+				}
+			})();
+		{% endif %}
+
+	</script>
+
+{% endif %}
