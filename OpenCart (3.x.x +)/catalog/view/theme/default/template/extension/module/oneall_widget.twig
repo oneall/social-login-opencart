@@ -1,22 +1,6 @@
 {# Display widget in this container #}
 {% set oasl_container = 'oneall_social_login_' ~ random(99999, 9999999) %}
 
-
-{# oasl_user_is_logged : {{ dump(oasl_user_is_logged) }} **
-oasl_container : {{ dump(oasl_container) }} **
-oasl_display_modal : {{ dump(oasl_display_modal) }} ==
-oasl_deferred_loading : {{ dump(oasl_deferred_loading) }} ==
-
-
-oasl_providers : {{ dump(oasl_providers) }} ==
-oasl_callback_uri : {{ dump(oasl_callback_uri) }} ==
-oasl_container : {{ dump(oasl_container) }} ==
-oasl_grid_size_x : {{ dump(oasl_grid_size_x) }} ==
-oasl_grid_size_y : {{ dump(oasl_grid_size_y) }} ==
-oasl_custom_css_uri : {{ dump(oasl_custom_css_uri) }} ==
-oasl_container : {{ dump(oasl_container) }} ==
- #}
-
 {# Do not display for guests #}
 {% if oasl_user_is_logged is empty and oasl_subdomain is not empty %}
 	
