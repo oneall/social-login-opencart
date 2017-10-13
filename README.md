@@ -1,4 +1,5 @@
-# Social Login
+# Social Login 1.4 for OpenCart 1.5+
+
 Social Login for OpenCart allows your users to login and register with 30+ social networks. 
 It increases your OpenCart user registration rate by simplifying the registration process for 
 new users and provides permission-based social data retrieved from the social network profiles.
