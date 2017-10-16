@@ -1,8 +1,8 @@
-## Other Versions : 
+## Available Versions
 * [Social Login for OpenCart 1.5+](https://github.com/oneall/social-login-opencart/tree/opencart/1.5+)
 * [Social Login for OpenCart 2.0+](https://github.com/oneall/social-login-opencart/tree/opencart/2.0+)
 * [Social Login for OpenCart 2.3+](https://github.com/oneall/social-login-opencart/tree/opencart/2.3+)
-* Social Login for OpenCart 3.0+
+* **Social Login for OpenCart 3.0+**
 
 
 # Social Login 2.3 for OpenCart 3.0+
