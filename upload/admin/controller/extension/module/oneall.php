@@ -922,7 +922,7 @@ class ControllerExtensionModuleOneall extends Controller
     private function get_user_agent()
     {
         // System Versions
-        $social_login = 'SocialLogin/2.3';
+        $social_login = 'SocialLogin/4.2.3';
         $opencart = 'OpenCart' . (defined('VERSION') ? ('/' . substr(VERSION, 0, 3)) : '3.x.x');
 
         // Build User Agent
