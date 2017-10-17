@@ -1,37 +1,28 @@
 @CHARSET "UTF-8";
 
-.row+.row {
+.row + .row {
     margin-top: 15px;
 }
 
-.oa_social_login_provider_toggle {
-    cursor: pointer;
+.oa_social_login_provider_toggle{
+	cursor:pointer;
 }
 
-.oa_social_login_provider_toggle > .well{
-    padding: 10px;
+.oa_social_login_provider_label{
+	padding-top: 10px;
+	text-align: center;
+	font-weight:bold;
 }
 
-.oa_social_login_provider_toggle.enabled > .well{
-    background-color: #d6e9c6;
-    border-color: #c0d3b0;
-    color: #3a4d2a;
-}
-
-.oa_social_login_provider_label {
-    padding-top: 10px;
-    text-align: center;
-    font-weight: bold;
-}
 
 .oa_social_login_provider {
-    background-image: url("../../image/oneall/sprite_35_35.png");
-    text-indent: -9999px;
-    height: 35px;
-    width: 35px;
-    display: inline-block;
-    float: left;
-    margin: 0 10px 0 0;
+	background-image: url("../../image/oneall/sprite_35_35.png");
+	text-indent: -9999px;
+	height: 35px;
+	width: 35px;
+	display: inline-block;
+	float: left;
+	margin: 0 10px 0 0;
 }
 
 .oa_social_login_provider_amazon {
@@ -176,4 +167,8 @@
 
 .oa_social_login_provider_weibo {
     background-position: -1556px -1px;
+}
+
+.oa_social_login_provider_tumblr {
+    background-position: -1593px -1px;
 }
