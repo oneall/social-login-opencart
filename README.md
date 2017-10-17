@@ -5,15 +5,14 @@
 * [Social Login for OpenCart 3.0+](https://github.com/oneall/social-login-opencart/tree/opencart/3.0+)
 
 
-# Social Login 1.4 for OpenCart 1.5+
+# Social Login 1.4 for OpenCart 1.5
 
-Social Login for OpenCart allows your users to login and register with 30+ social networks. 
+Social Login for OpenCart allows your users to login and register with 35+ social networks. 
 It increases your OpenCart user registration rate by simplifying the registration process for 
 new users and provides permission-based social data retrieved from the social network profiles.
 
 
-* [OpenCart 2.x Installation guide](http://docs.oneall.com/plugins/guide/social-login-opencart/2/)
-* [OpenCart 1.5.x Installation guide](http://docs.oneall.com/plugins/guide/social-login-opencart/1.5/)
+* [Installation guide](http://docs.oneall.com/plugins/guide/social-login-opencart/1.5/)
 * [Official OpenCart Extension](https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=24825)
 
 
@@ -31,7 +30,7 @@ new users and provides permission-based social data retrieved from the social ne
 * Google
 * Instagram
 * Line
-* LinkedIn'
+* LinkedIn
 * LiveJournal
 * Mail.ru
 * Meetup
