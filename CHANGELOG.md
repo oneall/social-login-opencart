@@ -6,6 +6,6 @@ All notable changes to this project will be documented in this file. This projec
 ## [Unreleased]
 
 
-## [1.5.0] - 2017-10-17
+## [1.2.0] - 2017-10-17
 ### Added
 - Tumblr added as new provider
