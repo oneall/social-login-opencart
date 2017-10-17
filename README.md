@@ -5,7 +5,7 @@
 * [Social Login for OpenCart 3.0+](https://github.com/oneall/social-login-opencart/tree/opencart/3.0+)
 
 
-# Social Login 2.0 for OpenCart 2.0 - 2.2 
+# Social Login 2.0 for OpenCart 2.0.x - 2.2.x 
 
 Social Login for OpenCart allows your users to login and register with 35+ social networks. 
 It increases your OpenCart user registration rate by simplifying the registration process for 
