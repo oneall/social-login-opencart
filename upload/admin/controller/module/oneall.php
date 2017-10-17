@@ -802,7 +802,7 @@ class ControllerModuleOneall extends Controller
     private function get_user_agent()
     {
         // System Versions
-        $social_login = 'SocialLogin/1.4';
+        $social_login = 'SocialLogin/1.4.0';
         $opencart = 'OpenCart' . (defined('VERSION') ? ('/' . substr(VERSION, 0, 3)) : '1.5.x');
 
         // Build User Agent
