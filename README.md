@@ -60,4 +60,10 @@ new users and provides permission-based social data retrieved from the social ne
 Social Login has been created and is maintained by [OneAll](http://www.oneall.com/), a technology company offering a set of 
 web-delivered tools and services for establishing and optimizing a site's connection with social networks.
 
+
+## License
+The **GNU General Public License** (GPL) is available at http://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
+
+
+
 **Fork us on Github!**
