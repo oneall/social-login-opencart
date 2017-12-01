@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file. This projec
 ## [Unreleased]
 
 
+## [4.3.1] - 2017-10-17
+### Added
+- Fix Template file path can crash with some cache system
+
 ## [4.3.0] - 2017-10-17
 ### Added
 - Tumblr added as new provider

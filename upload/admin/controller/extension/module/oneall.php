@@ -394,7 +394,7 @@ class ControllerExtensionModuleOneall extends Controller
         $data['user_token'] = $this->session->data['user_token'];
 
         // Display Page
-        $this->response->setOutput($this->load->view('extension/module/oneall.tpl', $data));
+        $this->response->setOutput($this->load->view('extension/module/onealltpl', $data));
     }
 
     // Validation
@@ -923,7 +923,7 @@ class ControllerExtensionModuleOneall extends Controller
     private function get_user_agent()
     {
         // System Versions
-        $social_login = 'SocialLogin/4.3.0';
+        $social_login = 'SocialLogin/4.3.1';
         $opencart = 'OpenCart' . (defined('VERSION') ? ('/' . substr(VERSION, 0, 3)) : '3.x.x');
 
         // Build User Agent
