@@ -83,7 +83,8 @@ class ControllerExtensionModuleOneall extends Controller
                 $this->request->post['module_oneall_subdomain'] = trim($this->request->post['module_oneall_subdomain']);
 
                 // The full domain has been entered.
-                if (preg_match("/([a-z0-9\-]+)\.api\.oneall\.com/i", $this->request->post['module_oneall_subdomain'], $matches))
+                if (preg_match("/([a-z0-9\-]+)\.api\.oneall\.com/i", $this->request->post['module_oneall_subdomain'],
+                               $matches))
                 {
                     $this->request->post['module_oneall_subdomain'] = $matches[1];
                 }
@@ -107,7 +108,8 @@ class ControllerExtensionModuleOneall extends Controller
             $this->model_setting_setting->editSetting('module_oneall', $this->request->post);
 
             // Redirect
-            $this->response->redirect($this->url->link('extension/module/oneall', ('user_token=' . $this->session->data['user_token'] . '&oa_action=saved'), true));
+            $this->response->redirect($this->url->link('extension/module/oneall',
+                ('user_token=' . $this->session->data['user_token'] . '&oa_action=saved'), true));
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -188,7 +190,8 @@ class ControllerExtensionModuleOneall extends Controller
         }
 
         // Library Loading
-        if (!isset($data['module_oneall_deferred_loading']) || !in_array($data['module_oneall_deferred_loading'], array(0, 1)))
+        if (!isset($data['module_oneall_deferred_loading']) || !in_array($data['module_oneall_deferred_loading'],
+                                                                         array(0, 1)))
         {
             // Check if Journal is installed
             $query = $this->db->query("SELECT COUNT(*) AS tot FROM " . DB_PREFIX . "extension WHERE type='module' AND code LIKE 'journal%'");
@@ -277,7 +280,8 @@ class ControllerExtensionModuleOneall extends Controller
             }
 
             // Redirect
-            $this->response->redirect($this->url->link('extension/module/oneall', ('user_token=' . $this->session->data['user_token'] . '&oa_action=saved&do=positions'), true));
+            $this->response->redirect($this->url->link('extension/module/oneall',
+                ('user_token=' . $this->session->data['user_token'] . '&oa_action=saved&do=positions'), true));
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -340,24 +344,29 @@ class ControllerExtensionModuleOneall extends Controller
         $data['breadcrumbs'] = array(
             array(
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true),
+                'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'],
+                                           true),
                 'separator' => false
             ),
             array(
                 'text' => $this->language->get('text_extension'),
-                'href' => $this->url->link('extension/extension', 'user_token=' . $this->session->data['user_token'], true),
+                'href' => $this->url->link('extension/extension', 'user_token=' . $this->session->data['user_token'],
+                                           true),
                 'separator' => ' :: '
             ),
             array(
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('extension/module/oneall', 'user_token=' . $this->session->data['user_token'], true),
+                'href' => $this->url->link('extension/module/oneall',
+                                           'user_token=' . $this->session->data['user_token'], true),
                 'separator' => ' :: '
             )
         );
 
         // Buttons
-        $data['action'] = $this->url->link('extension/module/oneall', 'user_token=' . $this->session->data['user_token'], true);
-        $data['cancel'] = $this->url->link('extension/module/oneall', 'user_token=' . $this->session->data['user_token'], true);
+        $data['action'] = $this->url->link('extension/module/oneall',
+                                           'user_token=' . $this->session->data['user_token'], true);
+        $data['cancel'] = $this->url->link('extension/module/oneall',
+                                           'user_token=' . $this->session->data['user_token'], true);
 
         // Add Settings
         $data = array_merge($data, $this->model_setting_setting->getSetting('module_oneall'));
@@ -534,10 +543,12 @@ class ControllerExtensionModuleOneall extends Controller
                     $oneall_api_credentials['api_secret'] = $oneall_private;
 
                     // Try to establish a connection.
-                    $result = $this->do_api_request($oneall_api_handler, $oneall_api_resource_url, $oneall_api_credentials);
+                    $result = $this->do_api_request($oneall_api_handler, $oneall_api_resource_url,
+                                                    $oneall_api_credentials);
 
                     // Parse result.
-                    if (is_object($result) && property_exists($result, 'http_code') && property_exists($result, 'http_data'))
+                    if (is_object($result) && property_exists($result, 'http_code') && property_exists($result,
+                                                                                                       'http_data'))
                     {
                         switch ($result->http_code)
                         {
@@ -642,7 +653,8 @@ class ControllerExtensionModuleOneall extends Controller
     // Checks if CURL can be used.
     protected function check_curl($secure = true)
     {
-        if (in_array('curl', get_loaded_extensions()) && function_exists('curl_exec') && !in_array('curl_exec', $this->get_php_disabled_functions()))
+        if (in_array('curl', get_loaded_extensions()) && function_exists('curl_exec') && !in_array('curl_exec',
+                                                                                                   $this->get_php_disabled_functions()))
         {
             $result = $this->curl_request(($secure ? 'https' : 'http') . '://www.oneall.com/ping.html');
             if (is_object($result) && property_exists($result, 'http_code') && $result->http_code == 200)
@@ -875,7 +887,8 @@ class ControllerExtensionModuleOneall extends Controller
 
         // Parse header
         $response_header = preg_split("/\r\n|\n|\r/", $response_header);
-        list($header_protocol, $header_code, $header_status_message) = explode(' ', trim(array_shift($response_header)), 3);
+        list($header_protocol, $header_code, $header_status_message) = explode(' ', trim(array_shift($response_header)),
+                                                                               3);
 
         // Set result
         $result->http_code = $header_code;
@@ -975,6 +988,14 @@ class ControllerExtensionModuleOneall extends Controller
                 $this->db->query("INSERT INTO `" . DB_PREFIX . "layout_module` SET layout_id = '" . intval($row['layout_id']) . "', code = 'oneall', position='content_top', sort_order='1'");
             }
         }
+
+        foreach ($this->getEvents() as $code => $event)
+        {
+            if (!$this->model_setting_event->getEvent($code, $event ['trigger'], $event ['action']))
+            {
+                $this->model_setting_event->addEvent($code, $event ['trigger'], $event ['action']);
+            }
+        }
     }
 
     // UnInstallation Script
@@ -994,5 +1015,28 @@ class ControllerExtensionModuleOneall extends Controller
             $sql = "DROP TABLE IF EXISTS `" . DB_PREFIX . "oasl_identity`;";
             $this->db->query($sql);
         }
+
+        foreach ($this->getEvents() as $code => $event)
+        {
+            $this->model_setting_event->deleteEvent($code);
+        }
+    }
+
+    /**
+     * Returns events configuration list used by the module
+     *
+     * @return array
+     */
+    private function getEvents()
+    {
+        $events = [
+            // update data
+            'oneall_view_before' => [
+                'trigger' => 'catalog/view/*/before',
+                'action' => 'extension/module/oneall/twig'
+            ]
+        ];
+
+        return $events;
     }
 }

@@ -37,8 +37,8 @@
 		          	</a>
 		          </li>
 		        </ul>
-		        
-				
+
+
 				{# Success #}
 				{% if oa_success_message is not empty %}
 					<div class="alert alert-success">
@@ -46,7 +46,7 @@
 						<button type="button" class="close" data-dismiss="alert">&times;</button>
 					</div>
 				{% endif %}
-		
+
 				{# Error #}
 				{% if oa_error_message is not empty %}
 					<div class="alert alert-danger">
@@ -55,7 +55,7 @@
 					</div>
 				{% endif %}
 
-				{% if module_oneall_subdomain is  empty %}						
+				{% if module_oneall_subdomain is  empty %}
 					<div role="alert" class="alert alert-success">{{ oa_text_api_setup_welcome }}</div>
 				{% endif %}
 
@@ -66,41 +66,41 @@
 							<i class="fa fa-plug"></i>
 							{{ oa_text_api_communication }}
 						</h3>
-					</div>				
+					</div>
 					<div class="panel-body">
-						
-						{% if module_oneall_subdomain is  empty %}						
+
+						{% if module_oneall_subdomain is  empty %}
 							<div role="alert" class="alert alert-info">{{ oa_text_api_setup }}</div>
-						{% endif %}	
-						
+						{% endif %}
+
 						<div class="well">
 							<div class="row">
 								<div class="col-sm-2">
 									<label for="input-name" class="control-label">
 										{{ oa_text_api_handler }}
 									</label>
-									<select name="module_oneall_api_handler" id="module_oneall_api_handler" class="form-control">								
+									<select name="module_oneall_api_handler" id="module_oneall_api_handler" class="form-control">
 										<option value="crl" {% if module_oneall_api_handler != "fso" %}selected="selected"{% endif %}>{{ oa_text_api_curl }}</option>
 										<option value="fso" {% if module_oneall_api_handler == "fso" %}selected="selected"{% endif %}>{{ oa_text_api_fsockopen }}</option>
-					              </select>								
+					              </select>
 								</div>
 								<div class="col-sm-2">
 									<label for="input-model" class="control-label">
 										{{ oa_text_api_protocol }}
 									</label>
-									<select name="module_oneall_api_port" id="module_oneall_api_port" class="form-control">					
+									<select name="module_oneall_api_port" id="module_oneall_api_port" class="form-control">
 										<option value="443" {% if module_oneall_api_port != "80" %}selected="selected"{% endif %}>{{ oa_text_api_port_443 }}</option>
 										<option value="80" {% if module_oneall_api_port == "80" %}selected="selected"{% endif %}>{{ oa_text_api_port_80 }}</option>
-					              </select>	
-								</div>				
-							</div>					
+					              </select>
+								</div>
+							</div>
 							 <div class="row">
 							 	<div class="col-sm-4">
 							 		<div id="module_oneall_api_autodetect_result"></div>
-							 	</div>						
+							 	</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-2">								
+								<div class="col-sm-2">
 							 		<button type="button" class="btn btn-success" id="module_oneall_api_autodetect">{{ oa_text_api_autodetect }}</button>
 							 	</div>
 							 </div>
@@ -112,7 +112,7 @@
 									<a href="https://app.oneall.com/" target="_blank">{{ oa_text_api_create_view }}</a>
 								</div>
 							</div>
-							
+
 							<div class="row">
 								<div class="col-sm-4">
 									<label for="input-name" class="control-label">
@@ -137,60 +137,60 @@
 							 <div class="row">
 							 	<div class="col-sm-4">
 							 		<div id="module_oneall_api_verify_result"></div>
-							 	</div>						
+							 	</div>
 							</div>
 							<div class="row">
 								<div class="col-sm-2">
-									<button type="button" class="btn btn-success" id="module_oneall_api_verify">{{ oa_text_api_verify }}</button>						 
-							 	</div>										
-							</div>					
+									<button type="button" class="btn btn-success" id="module_oneall_api_verify">{{ oa_text_api_verify }}</button>
+							 	</div>
+							</div>
 						</div>
 					</div>
-				
+
 						<div class="panel-heading">
 						<h3 class="panel-title">
 							<i class="fa fa-cog"></i>
 							{{ oa_text_settings }}
 						</h3>
-					</div>			
+					</div>
 
 					<div class="panel-body">
-						<div class="well">	
-							<div class="row">	
+						<div class="well">
+							<div class="row">
 								<div class="col-sm-2">
 									<label for="input-name" class="control-label">
-										{{ oa_text_plugin_status }}									
-									</label> 																					
+										{{ oa_text_plugin_status }}
+									</label>
 									<select name="module_oneall_status" class="form-control">
 										<option value="1" {% if module_oneall_status == "1" %}selected="selected"{% endif %}>{{ oa_text_plugin_enabled }}</option>
 										<option value="0" {% if module_oneall_status == "0" %}selected="selected"{% endif %}>{{ oa_text_plugin_disabled }}</option>
-					              </select>		
-					            </div>													
+					              </select>
+					            </div>
 								<div class="col-sm-4">
 									<label for="input-name" class="control-label">
-										{{ oa_text_plugin_language }}									
-									</label> 																					
+										{{ oa_text_plugin_language }}
+									</label>
 									<select name="module_oneall_store_lang" class="form-control">
 										<option value="0" {% if module_oneall_store_lang == "0" %}selected="selected"{% endif %}>{{ oa_text_plugin_language_app }}</option>
 										<option value="1" {% if module_oneall_store_lang == "1" %}selected="selected"{% endif %}>{{ oa_text_plugin_language_opc }}</option>
-					              </select>	
+					              </select>
 					            </div>
 					         </div>
 					         <div class="row">
 					         	<div class="col-sm-6">
 									<label for="input-name" class="control-label">
-										{{ oa_text_loading }}									
-									</label> 																					
+										{{ oa_text_loading }}
+									</label>
 									<select name="module_oneall_deferred_loading" class="form-control">
 										<option value="0" {% if module_oneall_deferred_loading == "0" %}selected="selected"{% endif %}>{{ oa_text_loading_head }}</option>
 										<option value="1" {% if module_oneall_deferred_loading == "1" %}selected="selected"{% endif %}>{{ oa_text_loading_deferred }}</option>
-					              </select>		
+					              </select>
 					              <small class="form-text text-muted">{{ oa_text_loading_help }}</small>
-					            </div>						         
+					            </div>
 					         </div>
 						</div>
 					</div>
-				
+
 					<div class="panel-heading">
 						<h3 class="panel-title">
 							<i class="fa fa-user"></i>
@@ -198,48 +198,48 @@
 						</h3>
 					</div>
 					<div class="panel-body">
-						<div class="well">									
-							<div class="row">	
+						<div class="well">
+							<div class="row">
 								<div class="col-sm-6">
 									<label for="input-name" class="control-label">
-										{{ oa_text_account_creation_desc }}				
-									</label> 																					
+										{{ oa_text_account_creation_desc }}
+									</label>
 									<select name="module_oneall_auto_account" class="form-control">
 										<option value="0" {% if module_oneall_auto_account == "0" %}selected="selected"{% endif %}>{{ oa_text_account_creation_form }}</option>
 										<option value="1" {% if module_oneall_auto_account == "1" %}selected="selected"{% endif %}>{{ oa_text_account_creation_auto }}</option>
-					              </select>		
+					              </select>
 					            </div>
-							</div>							
-							
-							<div class="row">	
+							</div>
+
+							<div class="row">
 								<div class="col-sm-6">
 									<label for="input-name" class="control-label">
-										{{ oa_text_account_creation_address }}				
-									</label> 																					
+										{{ oa_text_account_creation_address }}
+									</label>
 									<select name="module_oneall_ask_address" class="form-control">
 										<option value="0" {% if module_oneall_ask_address == "0" %}selected="selected"{% endif %}>{{ oa_text_account_creation_address_no }}</option>
 										<option value="1" {% if module_oneall_ask_address == "1" %}selected="selected"{% endif %}>{{ oa_text_account_creation_address_yes }}</option>
-					              </select>		
-					            </div>
-							</div>	
-									
-							<div class="row">	
-								<div class="col-sm-6">
-									<label for="input-name" class="control-label">
-										{{ oa_text_account_link_desc }}				
-									</label> 																					
-									<select name="module_oneall_auto_link" class="form-control">
-										<option value="1" {% if module_oneall_auto_link == "1" %}selected="selected"{% endif %}>{{ oa_text_account_link_on }}</option>
-										<option value="0" {% if module_oneall_auto_link == "0" %}selected="selected"{% endif %}>{{ oa_text_account_link_off }}</option>											
-					              </select>		
+					              </select>
 					            </div>
 							</div>
-							
-							<div class="row">	
+
+							<div class="row">
 								<div class="col-sm-6">
 									<label for="input-name" class="control-label">
-										{{ oa_text_account_customer_group }}				
-									</label> 
+										{{ oa_text_account_link_desc }}
+									</label>
+									<select name="module_oneall_auto_link" class="form-control">
+										<option value="1" {% if module_oneall_auto_link == "1" %}selected="selected"{% endif %}>{{ oa_text_account_link_on }}</option>
+										<option value="0" {% if module_oneall_auto_link == "0" %}selected="selected"{% endif %}>{{ oa_text_account_link_off }}</option>
+					              </select>
+					            </div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-6">
+									<label for="input-name" class="control-label">
+										{{ oa_text_account_customer_group }}
+									</label>
 									<select name="module_oneall_customer_group" class="form-control">
 										<option value="store_config" {% if oa_customer_group_selected == "store_config" %}selected="selected"{% endif %}>
 											{{ oa_text_account_customer_group_default }}
@@ -249,64 +249,64 @@
 												{{ customer_group.name }}
 											</option>
 										{% endfor %}
-					              </select>		
+					              </select>
 					            </div>
-							</div>	
-								
+							</div>
+
 						</div>
-					</div>				
-					
+					</div>
+
 					<div class="panel-heading">
 						<h3 class="panel-title">
 							<i class="fa fa-users"></i>
 							{{ oa_text_social_networks }}
 						</h3>
-					</div>	
+					</div>
 					<div class="panel-body">
 						<div role="alert" class="alert alert-info">{{ oa_text_social_network_icons }}</div>
-						
+
 							<div class="row">
-		
-								{% set oa_enabled_social_networks = module_oneall_socials|split(',') %} 	
-					 			
+
+								{% set oa_enabled_social_networks = module_oneall_socials|split(',') %}
+
 
 					 			{# Display #}
 					 			{% for oa_key,oa_name in oa_social_networks %}
-									
+
 									{% set oa_social_network_enabled = oa_key in oa_enabled_social_networks ? true : false %}
 
 									<div class="col-sm-3 oa_social_login_provider_toggle {% if oa_social_network_enabled %}enabled{% else %}disabled{% endif %}">
 										<div class="well">
 											<div class="row">
-												<div class="col-sm-3">												
+												<div class="col-sm-3">
 													<span class="oa_social_login_provider oa_social_login_provider_{{ oa_key }}"></span>
 												</div>
 												<div class="col-sm-6">
 													<div class="oa_social_login_provider_label">{{ oa_name }}</div>
-												</div>													
-												<div class="col-sm-3">	
+												</div>
+												<div class="col-sm-3">
 													<div class="oa_social_login_provider_label">
 														<input type="checkbox" value="1" name="module_oneall_social_networks[{{ oa_key }}]" class="form-control" {% if oa_social_network_enabled %}checked="checked"{% endif %}>
 													</div>
 												</div>
-											</div>									
+											</div>
 										</div>
 									</div>
 
-								{% endfor %}	
-							</div>				
-						
-					</div>				
+								{% endfor %}
+							</div>
+
+					</div>
 				</div>
 				<div class="text-center">
 					<input type="hidden" name="area" value="settings">
 					<button type="submit" form="form-account" class="btn btn-primary">
 						<i class="fa fa-save"></i> {{ oa_text_save }}
 					</button>
-				</div>		
+				</div>
 			</div>
-		</form>		
-				
+		</form>
+
 	{% else %}
 			<div class="page-header">
 				<div class="container-fluid">
@@ -343,7 +343,7 @@
 						<i class="fa fa-exclamation-circle"></i> {{ oa_error_message }}
 					</div>
 				{% endif %}
-					
+
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title">
@@ -371,8 +371,8 @@
 
 														{% set oa_i = 1 %}
 														{% for oa_oc_layout in oa_oc_layouts %}
-															
-															<option value="{{ oa_oc_layout.layout_id }}" {% if oa == "1" %}selected="selected"{% endif %}> {{ oa_oc_layout.name }}</option>													
+
+															<option value="{{ oa_oc_layout.layout_id }}" {% if oa == "1" %}selected="selected"{% endif %}> {{ oa_oc_layout.name }}</option>
 	 													{% endfor %}
 													</select>
 												</td>
@@ -391,7 +391,7 @@
 														{% endfor %}
 													</select>
 												</td>
-												<td class="text-center col-sm-3">										
+												<td class="text-center col-sm-3">
 													<button class="btn btn-info" type="submit">
 														<i class="fa fa-plus-circle"></i> {{ oa_text_add_position }}
 													</button>
@@ -403,14 +403,15 @@
 							</div>
 						</form>
 					</div>
-					
+				</div>
+				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title">
 							<i class="fa fa-check-square"></i>
 							{{ oa_text_current_positions }}
 						</h3>
 					</div>
-					<div class="panel-body">					
+					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-12">
 								<table class="table table-striped">
@@ -421,21 +422,21 @@
 											<td class="text-center col-sm-3">{{ oa_text_sort_order }}</td>
 											<td class="text-center col-sm-3">&nbsp;</td>
 										</tr>
-									</thead>								
+									</thead>
 									<tbody>
 										{% if oa_oc_positions is not empty and oa_oc_positions is iterable and oa_oc_positions|length > 0 %}
 											{% for oa_oc_position in oa_oc_positions %}
 												<tr>
 													<td class="text-center col-sm-3">
 														{{ oa_oc_position.name }}
-													</td>																	
+													</td>
 													<td class="text-center col-sm-3">
 														{{ oa_oc_position.position|replace({'_': " "})|capitalize }}
 													</td>
 													<td class="text-center col-sm-3">
 														{{ oa_oc_position.sort_order }}
-													</td>										
-													<td class="text-center col-sm-3">										
+													</td>
+													<td class="text-center col-sm-3">
 														<a href="{{ action }}&amp;do=positions&remove={{ oa_oc_position.layout_module_id}}" class="btn btn-danger" type="button">
 															<i class="fa fa-plus-circle"></i> {{ oa_text_remove_position }}
 														</a>
@@ -446,18 +447,49 @@
 									</tbody>
 								</table>
 							</div>
-						</div>					
+						</div>
 					</div>
 				</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">
+								<i class="fa fa-code"></i>
+								{{ oa_text_position_manual }}
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="well">
+										<label class="control-label">{{ oa_text_position_add_widget }}</label><br/>
+
+										{{ oa_text_position_add_widget_example }}<br>
+
+									</div>
+
+									<div class="well">
+										<label class="control-label">{{ oa_text_position_add_button }}</label><br/>
+
+										{{ oa_text_position_add_button_example }}<br>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+
+				</div>
 			</div>
-	{% endif %}	
+	{% endif %}
 </div>
 
 
 <script type="text/javascript">
 	var oaL10n = {};
 	oaL10n.token =  '{{ user_token }}';
-	oaL10n.working = '{{ oa_text_ajax_working }}';	
+	oaL10n.working = '{{ oa_text_ajax_working }}';
 </script>
 
 
