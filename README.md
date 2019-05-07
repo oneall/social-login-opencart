@@ -12,8 +12,8 @@ It increases your OpenCart user registration rate by simplifying the registratio
 new users and provides permission-based social data retrieved from the social network profiles.
 
 
-* [Social Login Installation guide](http://docs.oneall.com/plugins/guide/social-login-opencart/2/)
-* [Official OpenCart Extension](https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=24825)
+* [Social Login Installation Guide](http://docs.oneall.com/plugins/guide/social-login-opencart/2/)
+* [Social Login OpenCart Extension](https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=24825)
 
 
 ## Supported Social Networks
@@ -57,7 +57,7 @@ new users and provides permission-based social data retrieved from the social ne
 
 
 ## About Us
-Social Login has been created and is maintained by [OneAll](http://www.oneall.com/), a technology company offering a set of 
+Social Login has been created and is maintained by [OneAll](https://www.oneall.com/), a technology company offering a set of 
 web-delivered tools and services for establishing and optimizing a site's connection with social networks.
 
 
