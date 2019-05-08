@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file. This projec
 ## [Unreleased]
 
 
+## [2.4.0] - 2019-05-08
+### Added
+- Mixer added as new provider
+
 ## [2.3.0] - 2017-10-17
 ### Added
 - Tumblr added as new provider

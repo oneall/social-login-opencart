@@ -431,6 +431,7 @@ class ControllerModuleOneall extends Controller
             'linkedin' => 'LinkedIn',
             'livejournal' => 'LiveJournal',
             'mailru' => 'Mail.ru',
+            'mixer' => 'Mixer',
             'meetup' => 'Meetup',
             'odnoklassniki' => 'Odnoklassniki',
             'openid' => 'OpenID',
