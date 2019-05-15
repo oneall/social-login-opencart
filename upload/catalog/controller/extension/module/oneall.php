@@ -31,7 +31,48 @@ class ControllerExtensionModuleOneall extends Controller
     // Errors
     protected $error;
 
-    // Logger
+    /**
+     * OneAll widget template file
+     *
+     * @var string
+     */
+    protected $widget_template = 'extension/module/oneall_widget';
+
+    /**
+     * @param string $event
+     * @param array  $args
+     *
+     * @return null
+     */
+    public function twig($event, array &$args)
+    {
+        if ($this->customer->isLogged())
+        {
+            return null;
+        }
+
+        // créer le bon trigger en base de donnée
+        if ($event != 'common/header')
+        {
+            return null;
+        }
+
+        $data = $this->configure_widget();
+
+        // adding all our date into the template's vars
+        $args = array_merge($args, $data);
+
+        // crate a tag in order to integrate our whole plugin
+        $args['oasl_widget'] = $this->display_widget($data);
+
+        return null;
+    }
+
+    /**
+     * Logger
+     *
+     * @param string $text
+     */
     protected function add_log($text)
     {
         // Read Logger
@@ -81,7 +122,8 @@ class ControllerExtensionModuleOneall extends Controller
         }
 
         // Load Language
-        $data = array_merge($this->load->language('account/register'), $this->load->language('extension/module/oneall'), $this->load->language('account/address'));
+        $data = array_merge($this->load->language('account/register'), $this->load->language('extension/module/oneall'),
+            $this->load->language('account/address'));
 
         // Replace Custom Variables
         $data['oa_heading_title'] = sprintf($data['oa_heading_title'], $user_data['identity_provider']);
@@ -141,7 +183,8 @@ class ControllerExtensionModuleOneall extends Controller
             }
 
             // Link the customer to this social network.
-            if ($this->link_tokens_to_customer_id($customer_id, $user_data['user_token'], $user_data['identity_token'], $user_data['identity_provider']) !== false)
+            if ($this->link_tokens_to_customer_id($customer_id, $user_data['user_token'], $user_data['identity_token'],
+                $user_data['identity_provider']) !== false)
             {
                 // Login
                 if ($this->login_customer($customer_id))
@@ -219,7 +262,8 @@ class ControllerExtensionModuleOneall extends Controller
 
                 foreach ($customer_groups as $customer_group)
                 {
-                    if (in_array($customer_group['customer_group_id'], $this->config->get('config_customer_group_display')))
+                    if (in_array($customer_group['customer_group_id'],
+                        $this->config->get('config_customer_group_display')))
                     {
                         $data['customer_groups'][] = $customer_group;
                     }
@@ -483,7 +527,8 @@ class ControllerExtensionModuleOneall extends Controller
             $this->error['lastname'] = $this->language->get('error_lastname');
         }
 
-        if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email']))
+        if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i',
+            $this->request->post['email']))
         {
             $this->error['email'] = $this->language->get('error_email');
         }
@@ -534,7 +579,8 @@ class ControllerExtensionModuleOneall extends Controller
         // Default Group
         if ($this->is_default_group_behaviour())
         {
-            if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display')))
+            if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'],
+                $this->config->get('config_customer_group_display')))
             {
                 $customer_group_id = $this->request->post['customer_group_id'];
             }
@@ -557,7 +603,8 @@ class ControllerExtensionModuleOneall extends Controller
         {
             if ($custom_field['required'] && empty($this->request->post['custom_field'][$custom_field['location']][$custom_field['custom_field_id']]))
             {
-                $this->error['custom_field'][$custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'), $custom_field['name']);
+                $this->error['custom_field'][$custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'),
+                    $custom_field['name']);
             }
         }
 
@@ -566,8 +613,7 @@ class ControllerExtensionModuleOneall extends Controller
         return !$this->error;
     }
 
-    // Social Login Widget
-    public function index($setting)
+    protected function configure_widget()
     {
         // Load Language
         $this->load->language('extension/module/oneall');
@@ -609,7 +655,6 @@ class ControllerExtensionModuleOneall extends Controller
                 $data['oasl_providers'] = implode("','", $providers_list);
             }
         }
-
         // Base URI of the shop
         $base_uri = ((defined('HTTPS_SERVER') && strlen(trim(HTTPS_SERVER)) > 0) ? HTTPS_SERVER : HTTP_SERVER);
 
@@ -642,6 +687,14 @@ class ControllerExtensionModuleOneall extends Controller
 
         $data['oasl_callback_uri'] = $oasl_callback_uri;
 
+        return $data;
+    }
+
+    // Social Login Widget
+    public function index($setting)
+    {
+        $data = $this->configure_widget();
+
         // Display Wiget
 
         return $this->display_widget($data);
@@ -650,7 +703,7 @@ class ControllerExtensionModuleOneall extends Controller
     // Display Widget
     private function display_widget($data)
     {
-        return $this->load->view('extension/module/oneall_widget', $data);
+        return $this->load->view($this->widget_template, $data);
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -729,7 +782,9 @@ class ControllerExtensionModuleOneall extends Controller
                                     $customer_id = $customer['customer_id'];
 
                                     // Add new data format
-                                    if ($this->link_tokens_to_customer_id($customer_id, $user_data['user_token'], $user_data['identity_token'], $user_data['identity_provider']) !== false)
+                                    if ($this->link_tokens_to_customer_id($customer_id, $user_data['user_token'],
+                                        $user_data['identity_token'],
+                                        $user_data['identity_provider']) !== false)
                                     {
                                         // Remove old data
                                         $this->db->query("UPDATE `" . DB_PREFIX . "customer` SET oneall_profile='' WHERE customer_id='" . intval($customer_id) . "' LIMIT 1");
@@ -771,7 +826,10 @@ class ControllerExtensionModuleOneall extends Controller
                                     if (is_numeric($customer_id_tmp))
                                     {
                                         // Link the customer to this social network.
-                                        if ($this->link_tokens_to_customer_id($customer_id_tmp, $user_data['user_token'], $user_data['identity_token'], $user_data['identity_provider']) !== false)
+                                        if ($this->link_tokens_to_customer_id($customer_id_tmp,
+                                            $user_data['user_token'],
+                                            $user_data['identity_token'],
+                                            $user_data['identity_provider']) !== false)
                                         {
                                             $customer_id = $customer_id_tmp;
                                         }
@@ -822,7 +880,8 @@ class ControllerExtensionModuleOneall extends Controller
                                 }
 
                                 // Redirect
-                                $this->response->redirect($this->url->link('extension/module/oneall/register', $redirect_to, true));
+                                $this->response->redirect($this->url->link('extension/module/oneall/register',
+                                    $redirect_to, true));
                             }
                             // Create Customer
                             else
@@ -831,7 +890,9 @@ class ControllerExtensionModuleOneall extends Controller
                                 if (($customer_id = $this->create_customer($user_data)) !== false)
                                 {
                                     // Link the customer to his social network account.
-                                    $this->link_tokens_to_customer_id($customer_id, $user_data['user_token'], $user_data['identity_token'], $user_data['identity_provider']);
+                                    $this->link_tokens_to_customer_id($customer_id, $user_data['user_token'],
+                                        $user_data['identity_token'],
+                                        $user_data['identity_provider']);
 
                                     // Login Customer
                                     if ($this->login_customer($customer_id))
@@ -1465,7 +1526,8 @@ class ControllerExtensionModuleOneall extends Controller
 
         // Parse header
         $response_header = preg_split("/\r\n|\n|\r/", $response_header);
-        list($header_protocol, $header_code, $header_status_message) = explode(' ', trim(array_shift($response_header)), 3);
+        list($header_protocol, $header_code, $header_status_message) = explode(' ', trim(array_shift($response_header)),
+            3);
 
         // Set result
         $result->http_code = $header_code;
@@ -1520,7 +1582,9 @@ class ControllerExtensionModuleOneall extends Controller
     public function extract_social_network_profile($reply)
     {
         // Check API result.
-        if (is_object($reply) && property_exists($reply, 'http_code') && $reply->http_code == 200 && property_exists($reply, 'http_data'))
+        if (is_object($reply) && property_exists($reply,
+            'http_code') && $reply->http_code == 200 && property_exists($reply,
+            'http_data'))
         {
             // Decode the social network profile Data.
             $social_data = json_decode($reply->http_data);
@@ -1583,7 +1647,8 @@ class ControllerExtensionModuleOneall extends Controller
                         $data['user_note'] = !empty($identity->note) ? $identity->note : '';
 
                         // Birthdate - MM/DD/YYYY
-                        if (!empty($identity->birthday) && preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $identity->birthday, $matches))
+                        if (!empty($identity->birthday) && preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/',
+                            $identity->birthday, $matches))
                         {
                             $data['user_birthdate'] = str_pad($matches[2], 2, '0', STR_PAD_LEFT);
                             $data['user_birthdate'] .= '/' . str_pad($matches[1], 2, '0', STR_PAD_LEFT);
@@ -1699,9 +1764,7 @@ class ControllerExtensionModuleOneall extends Controller
                                 $data['user_addresses_simple'][] = $address->formatted;
 
                                 // Add to list.
-                                $data['user_addresses'][] = array(
-                                    'formatted' => $address->formatted
-                                );
+                                $data['user_addresses'][] = array('formatted' => $address->formatted);
                             }
                         }
 
@@ -1819,7 +1882,8 @@ class ControllerExtensionModuleOneall extends Controller
                                 );
 
                                 // Add recommender
-                                if (property_exists($recommendation, 'recommender') && is_object($recommendation->recommender))
+                                if (property_exists($recommendation,
+                                    'recommender') && is_object($recommendation->recommender))
                                 {
                                     $data_entry['recommender'] = array();
 
