@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+## [4.4.0] - 2019-05-15
+### Added
+- Mixer added
 
 ## [4.3.1] - 2017-10-17
 ### Added

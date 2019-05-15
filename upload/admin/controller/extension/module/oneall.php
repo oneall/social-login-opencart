@@ -433,6 +433,7 @@ class ControllerExtensionModuleOneall extends Controller
             'linkedin' => 'LinkedIn',
             'livejournal' => 'LiveJournal',
             'mailru' => 'Mail.ru',
+            'mixer' => 'Mixer',
             'meetup' => 'Meetup',
             'odnoklassniki' => 'Odnoklassniki',
             'openid' => 'OpenID',
@@ -923,7 +924,7 @@ class ControllerExtensionModuleOneall extends Controller
     private function get_user_agent()
     {
         // System Versions
-        $social_login = 'SocialLogin/4.3.1';
+        $social_login = 'SocialLogin/4.4.0';
         $opencart = 'OpenCart' . (defined('VERSION') ? ('/' . substr(VERSION, 0, 3)) : '3.x.x');
 
         // Build User Agent
