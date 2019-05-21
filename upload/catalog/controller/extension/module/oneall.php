@@ -52,7 +52,7 @@ class ControllerExtensionModuleOneall extends Controller
         }
 
         // créer le bon trigger en base de donnée
-        if ($event != 'common/header')
+        if ($event == 'extension/module/oneall_widget')
         {
             return null;
         }
