@@ -562,6 +562,13 @@ class ControllerExtensionModuleOneall extends Controller
         return !$this->error;
     }
 
+    // Social Login Widget Ajax
+    public function loadWidget()
+    {
+        $setting['oasl_deferred_loading'] = true;
+        echo $this->index($setting);
+    }
+
     // Social Login Widget
     public function index($setting)
     {
@@ -582,6 +589,12 @@ class ControllerExtensionModuleOneall extends Controller
 
         // Selected Subdomain
         $data['oasl_subdomain'] = trim($this->config->get('oneall_subdomain'));
+
+        // Ajax loading
+        if (!empty($setting['oasl_deferred_loading']))
+        {
+            $data['oasl_deferred_loading'] = '1';
+        }
 
         // Add Library
         if (!empty($data['oasl_subdomain']))
@@ -637,8 +650,6 @@ class ControllerExtensionModuleOneall extends Controller
         }
 
         $data['oasl_callback_uri'] = $oasl_callback_uri;
-
-        // Display Wiget
 
         return $this->display_widget($data);
     }
@@ -1222,7 +1233,7 @@ class ControllerExtensionModuleOneall extends Controller
     private function get_user_agent()
     {
         // System Versions
-        $social_login = 'SocialLogin/3.4.0';
+        $social_login = 'SocialLogin/3.4.1';
         $opencart = 'OpenCart' . (defined('VERSION') ? ('/' . substr(VERSION, 0, 3)) : '2.3.x');
 
         // Build User Agent
