@@ -1382,7 +1382,7 @@ class ControllerExtensionModuleOneall extends Controller
     }
 
     // Sends a CURL request.
-    public function curl_request($url, $options = array(), $timeout = 30, $num_redirects = 0)
+    public function curl_request($url, $options = array(), $timeout = 30, $num_redirects = 0, $method = 'GET')
     {
         // Store the result
         $result = new \stdClass();
