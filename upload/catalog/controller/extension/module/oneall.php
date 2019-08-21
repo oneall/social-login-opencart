@@ -1204,20 +1204,55 @@ class ControllerExtensionModuleOneall extends Controller
             $oasl_user_id = null;
             $oasl_identity_id = null;
 
+            // XXXXXXXXXXXXXXX
+            $old_identity_token_need_link = null;
+            // XXXXXXXXXXXXXXX
+
             // Delete superfluous user_token.
-            $sql = "SELECT oasl_user_id	FROM `" . DB_PREFIX . "oasl_user` WHERE customer_id = '" . intval($customer_id) . "' AND user_token <> '" . $this->db->escape($user_token) . "'";
+            $sql = "SELECT oasl_user_id FROM `" . DB_PREFIX . "oasl_user` WHERE customer_id = '" . intval($customer_id) . "' AND user_token <> '" . $this->db->escape($user_token) . "'";
             $query = $this->db->query($sql);
             if ($query->num_rows > 0)
             {
                 foreach ($query->rows as $row)
                 {
-                    // Delete the wrongly linked user_token.
-                    $sql = "DELETE FROM `" . DB_PREFIX . "oasl_user` WHERE oasl_user_id = '" . $this->db->escape($row['oasl_user_id']) . "'";
-                    $this->db->query($sql);
+                    // XXXXXXXXXXXXXXX
+                    // *********************************
+                    // LINK IDENTITY
+                    // *********************************
 
-                    // Delete the wrongly linked identity_token.
-                    $sql = "DELETE FROM `" . DB_PREFIX . "oasl_identity` WHERE oasl_user_id = '" . $this->db->escape($row['oasl_user_id']) . "'";
-                    $this->db->query($sql);
+                    // Link old identity to new user_token
+                    $sql = "SELECT * FROM `" . DB_PREFIX . "oasl_identity` WHERE oasl_user_id = '" . $this->db->escape($row['oasl_user_id']) . "'";
+                    $result_identity = $this->db->query($sql)->row;
+
+                    $old_identity_token_need_link = $result_identity['identity_token'];
+
+                    // OneAll Site Settings
+                    $api_subdomain = trim($this->config->get('module_oneall_subdomain'));
+
+                    // API Connection Settings.
+                    $api_connection_handler = ($this->config->get('module_oneall_api_handler') == 'fso' ? 'fsockopen' : 'curl');
+                    $api_connection_protocol = ($this->config->get('module_oneall_api_port') == '80' ? 'http' : 'https');
+
+                    // API Credentials.
+                    $api_options = array();
+                    $api_options['api_key'] = trim($this->config->get('module_oneall_public'));
+                    $api_options['api_secret'] = trim($this->config->get('module_oneall_private'));
+
+                    $api_connection_url = $api_connection_protocol . '://' . $api_subdomain . '.api.oneall.com/identities/' . $old_identity_token_need_link . '/link.json';
+
+                    $api_options['api_data'] = array('request' => array('user' => array('user_token' => $this->db->escape($user_token))));
+
+                    // Make Request.
+                    $result = $this->do_api_request($api_connection_handler, $api_connection_url, $api_options, 30, 'PUT');
+
+                    // Parse result
+                    if (is_object($result) && property_exists($result, 'http_code') && $result->http_code == 200)
+                    {
+                        // Delete the wrongly linked user_token.
+                        $sql = "DELETE FROM `" . DB_PREFIX . "oasl_user` WHERE oasl_user_id = '" . $this->db->escape($row['oasl_user_id']) . "'";
+                        $this->db->query($sql);
+                    }
+                    // XXXXXXXXXXXXXXX
                 }
             }
 
@@ -1240,6 +1275,16 @@ class ControllerExtensionModuleOneall extends Controller
                 // Identifier of the newly created user_token entry.
                 $oasl_user_id = $this->db->getLastId();
             }
+
+            // XXXXXXXXXXXXXXX
+            // link new oasl user id to old identity
+            if (!empty($old_identity_token_need_link))
+            {
+                // Delete the wrongly linked identity_token.
+                $sql = "UPDATE `" . DB_PREFIX . "oasl_identity` SET oasl_user_id = '" . intval($oasl_user_id) . "' WHERE identity_token =  '" . $this->db->escape($old_identity_token_need_link) . "'";
+                $this->db->query($sql);
+            }
+            // XXXXXXXXXXXXXXX
 
             // Read the entry for the given identity_token.
             $sql = "SELECT oasl_identity_id, oasl_user_id, identity_token FROM `" . DB_PREFIX . "oasl_identity` WHERE identity_token = '" . $this->db->escape($identity_token) . "'";
@@ -1319,8 +1364,9 @@ class ControllerExtensionModuleOneall extends Controller
     // API
     /////////////////////////////////////////////////////////////////////////////////////////////
 
+    // XXXXXXXXXXXXXXX
     // Sends an API request by using the given handler.
-    public function do_api_request($handler, $url, $options = array(), $timeout = 30)
+    public function do_api_request($handler, $url, $options = array(), $timeout = 30, $method = 'GET')
     {
         // FSOCKOPEN
         if ($handler == 'fsockopen')
@@ -1330,7 +1376,8 @@ class ControllerExtensionModuleOneall extends Controller
         // CURL
         else
         {
-            return $this->curl_request($url, $options, $timeout);
+            // XXXXXXXXXXXXXXX
+            return $this->curl_request($url, $options, $timeout, 0, $method);
         }
     }
 
@@ -1354,6 +1401,45 @@ class ControllerExtensionModuleOneall extends Controller
 
         // Does not work in PHP Safe Mode, we manually follow the locations if necessary.
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 0);
+
+        // XXXXXXXXXXXXXXX
+        $data = !empty($options['api_data']) ? $options['api_data'] : null;
+        $data = is_array($data) ? json_encode($data) : $data;
+
+        switch ($method)
+        {
+            case "POST":
+                curl_setopt($curl, CURLOPT_POST, 1);
+                if ($data)
+                {
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                }
+
+                break;
+            case "PUT":
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+                if ($data)
+                {
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                }
+
+                break;
+            case "DELETE":
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                if ($data)
+                {
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                }
+
+                break;
+            default:
+                if ($data)
+                {
+                    $url = sprintf("%s?%s", $url, http_build_query($data));
+                }
+        }
+        // XXXXXXXXXXXXXXX
 
         // BASIC AUTH?
         if (isset($options['api_key']) && isset($options['api_secret']))
