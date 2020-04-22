@@ -446,6 +446,7 @@ class ControllerExtensionModuleOneall extends Controller
             'meetup' => 'Meetup',
             'odnoklassniki' => 'Odnoklassniki',
             'openid' => 'OpenID',
+            'patreon' => 'Patreon',
             'paypal' => 'PayPal',
             'pinterest' => 'Pinterest',
             'pixelpin' => 'PixelPin',
@@ -462,6 +463,7 @@ class ControllerExtensionModuleOneall extends Controller
             'weibo' => 'Weibo',
             'windowslive' => 'Windows Live',
             'wordpress' => 'WordPress.com',
+            'xing' => 'Xing',
             'yahoo' => 'Yahoo',
             'youtube' => 'YouTube',
             'battlenet' => 'BattleNet'
@@ -937,7 +939,7 @@ class ControllerExtensionModuleOneall extends Controller
     private function get_user_agent()
     {
         // System Versions
-        $social_login = 'SocialLogin/4.4.0';
+        $social_login = 'SocialLogin/4.5.0';
         $opencart = 'OpenCart' . (defined('VERSION') ? ('/' . substr(VERSION, 0, 3)) : '3.x.x');
 
         // Build User Agent

@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+## [4.5.0] - 2020-04-22
+### Added
+- Patreon added
+- Xing added
+
 ## [4.4.0] - 2019-05-15
 ### Added
 - Mixer added
