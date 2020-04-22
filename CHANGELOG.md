@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+## [3.5.0] - 2020-04-22
+### Fix
+- Patreon added as new provider
+- Xing added as new provider
 
 ## [3.4.1] - 2019-05-24
 ### Fix
