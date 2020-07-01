@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+## [3.5.1] - 2020-07-01
+### Fix
+- Plugin shown twice
+
 ## [3.5.0] - 2020-04-22
 ### Fix
 - Patreon added as new provider
