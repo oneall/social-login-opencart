@@ -567,6 +567,7 @@ class ControllerExtensionModuleOneall extends Controller
     {
         $setting['oasl_deferred_loading'] = true;
         echo $this->index($setting);
+        die;
     }
 
     // Social Login Widget
