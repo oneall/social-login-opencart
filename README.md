@@ -5,7 +5,7 @@
 * **Social Login for OpenCart 3.0+**
 
 
-# Social Login 4.5.0 for OpenCart 3.x
+# Social Login 4.6.0 for OpenCart 3.x
 
 Social Login for OpenCart allows your users to login and register with 40+ social networks. 
 It increases your OpenCart user registration rate by simplifying the registration process for 

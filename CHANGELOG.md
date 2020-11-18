@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+## [4.6.0] - 2020-11-18
+### Added
+- Apple added
+
 ## [4.5.0] - 2020-04-22
 ### Added
 - Patreon added

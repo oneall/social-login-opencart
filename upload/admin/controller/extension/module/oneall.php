@@ -427,6 +427,7 @@ class ControllerExtensionModuleOneall extends Controller
     {
         $providers = array(
             'amazon' => 'Amazon',
+            'apple' => 'Apple',
             'battlenet' => 'Battle.net',
             'blogger' => 'Blogger',
             'discord' => 'Discord',
@@ -939,7 +940,7 @@ class ControllerExtensionModuleOneall extends Controller
     private function get_user_agent()
     {
         // System Versions
-        $social_login = 'SocialLogin/4.5.0';
+        $social_login = 'SocialLogin/4.6.0';
         $opencart = 'OpenCart' . (defined('VERSION') ? ('/' . substr(VERSION, 0, 3)) : '3.x.x');
 
         // Build User Agent
