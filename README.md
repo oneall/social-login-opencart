@@ -18,6 +18,7 @@ new users and provides permission-based social data retrieved from the social ne
 
 ## Supported Social Networks
 * Amazon
+* Apple
 * BattleNet
 * Blogger
 * Draugiem
