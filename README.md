@@ -5,7 +5,7 @@
 * [Social Login for OpenCart 3.0+](https://github.com/oneall/social-login-opencart/tree/opencart/3.0+)
 
 
-# Social Login 3.5.1 for OpenCart 2.3 - 2.9.x
+# Social Login 3.6.0 for OpenCart 2.3 - 2.9.x
 
 Social Login for OpenCart allows your users to login and register with 35+ social networks. 
 It increases your OpenCart user registration rate by simplifying the registration process for 
@@ -18,6 +18,7 @@ new users and provides permission-based social data retrieved from the social ne
 
 ## Supported Social Networks
 * Amazon
+* Apple
 * BattleNet
 * Blogger
 * Draugiem
