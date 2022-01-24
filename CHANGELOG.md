@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+## [4.7.0] - 2022-01-24
+### Added
+- Epic Games added
+- Spotify added
+- Strava added
+- Yandex added
+
 ## [4.6.0] - 2020-11-18
 ### Added
 - Apple added
