@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+## [3.7.0] - 2020-11-18
+### Added
+- Epic Games, Spotify, Strava & Yandex added as new providers
+
 ## [3.6.0] - 2020-11-18
 ### Added
 - Apple added as new provider

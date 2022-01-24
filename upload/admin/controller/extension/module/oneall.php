@@ -427,6 +427,7 @@ class ControllerExtensionModuleOneall extends Controller
             'disqus' => 'Disqus',
             'draugiem' => 'Draugiem',
             'dribbble' => 'Dribbble',
+            'epicgames' => 'Epic Games',
             'facebook' => 'Facebook',
             'foursquare' => 'Foursquare',
             'github' => 'Github.com',
@@ -447,8 +448,10 @@ class ControllerExtensionModuleOneall extends Controller
             'reddit' => 'Reddit',
             'skyrock' => 'Skyrock.com',
             'soundcloud' => 'SoundCloud',
+            'spotify' => 'Spotify',
             'stackexchange' => 'StackExchange',
             'steam' => 'Steam',
+            'strava' => 'Strava',
             'tumblr' => 'Tumblr',
             'twitch' => 'Twitch.tv',
             'twitter' => 'Twitter',
@@ -459,6 +462,7 @@ class ControllerExtensionModuleOneall extends Controller
             'wordpress' => 'WordPress.com',
             'xing' => 'Xing',
             'yahoo' => 'Yahoo',
+            'yandex' => 'Yandex',
             'youtube' => 'YouTube',
             'battlenet' => 'BattleNet'
         );
@@ -929,7 +933,7 @@ class ControllerExtensionModuleOneall extends Controller
     private function get_user_agent()
     {
         // System Versions
-        $social_login = 'SocialLogin/3.6.0';
+        $social_login = 'SocialLogin/3.7.0';
         $opencart = 'OpenCart' . (defined('VERSION') ? ('/' . substr(VERSION, 0, 3)) : '2.3.x');
 
         // Build User Agent
