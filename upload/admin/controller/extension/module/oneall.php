@@ -28,7 +28,7 @@ namespace Opencart\Admin\Controller\Extension\OneAll\Module;
 // ////////////////////////////////////////////////////////////////////
 // Admin Panel
 // ////////////////////////////////////////////////////////////////////
-class ControllerExtensionModuleOneall extends Controller
+class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
 {
     private $error = array();
 
