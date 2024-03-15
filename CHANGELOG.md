@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+## [5.0.0] - 2024-03-15
+### Added
+Opencart 4 Support
+
 ## [4.7.0] - 2022-01-24
 ### Added
 - Epic Games added
