@@ -23,12 +23,12 @@
  *
  */
 
-namespace Opencart\Admin\Controller\Extension\OneAll\Module;
+namespace Opencart\Admin\Controller\Extension\OneAllSocialLogin\Module;
 
 // ////////////////////////////////////////////////////////////////////
 // Admin Panel
 // ////////////////////////////////////////////////////////////////////
-class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
+class OneAll extends \Opencart\System\Engine\Controller
 {
     private $error = array();
 
@@ -110,7 +110,7 @@ class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
             $this->model_setting_setting->editSetting('module_oneall', $this->request->post);
 
             // Redirect
-            $this->response->redirect($this->url->link('extension/module/oneall',
+            $this->response->redirect($this->url->link('extension/oneall_social_login/module/oneall',
                 ('user_token=' . $this->session->data['user_token'] . '&oa_action=saved'), true));
         }
 
@@ -282,7 +282,7 @@ class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
             }
 
             // Redirect
-            $this->response->redirect($this->url->link('extension/module/oneall',
+            $this->response->redirect($this->url->link('extension/oneall_social_login/module/oneall',
                 ('user_token=' . $this->session->data['user_token'] . '&oa_action=saved&do=positions'), true));
         }
 
@@ -315,7 +315,7 @@ class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
     public function index()
     {
         // Language
-        $data = $this->load->language('extension/module/oneall');
+        $data = $this->load->language('extension/oneall_social_login/module/oneall');
 
         // What do we need to do?
         $do = (!empty($this->request->get['do']) ? $this->request->get['do'] : 'settings');
@@ -335,8 +335,8 @@ class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
         $this->document->setTitle($this->language->get('heading_title'));
 
         // CSS & JS
-        $this->document->addStyle('view/stylesheet/oneall/backend.css');
-        $this->document->addScript('view/javascript/oneall/backend.js');
+        $this->document->addStyle('/extension/oneall_social_login/admin/view/stylesheet/oneall/backend.css');
+        $this->document->addScript('/extension/oneall_social_login/admin/view/javascript/oneall/backend.js');
 
         // Load Models
         $this->load->model('setting/setting');
@@ -358,16 +358,16 @@ class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
             ),
             array(
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('extension/module/oneall',
+                'href' => $this->url->link('extension/oneall_social_login/module/oneall',
                     'user_token=' . $this->session->data['user_token'], true),
                 'separator' => ' :: '
             )
         );
 
         // Buttons
-        $data['action'] = $this->url->link('extension/module/oneall',
+        $data['action'] = $this->url->link('extension/oneall_social_login/module/oneall',
             'user_token=' . $this->session->data['user_token'], true);
-        $data['cancel'] = $this->url->link('extension/module/oneall',
+        $data['cancel'] = $this->url->link('extension/oneall_social_login/module/oneall',
             'user_token=' . $this->session->data['user_token'], true);
 
         // Add Settings
@@ -386,6 +386,10 @@ class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
         {
             $data = $this->index_settings($data);
         }
+        
+        
+        // Force cookie option to lax for redirection
+        $this->model_setting_setting->editSetting('config', ['config_session_samesite' => 'Lax']);
 
         // Settings Saved
         if (isset($this->request->get) && !empty($this->request->get['oa_action']) == 'saved')
@@ -405,14 +409,14 @@ class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
         $data['user_token'] = $this->session->data['user_token'];
 
         // Display Page
-        $this->response->setOutput($this->load->view('extension/module/onealltpl', $data));
+        $this->response->setOutput($this->load->view('extension/oneall_social_login/module/onealltpl', $data));
     }
 
     // Validation
     private function validate()
     {
         // Can this user modify the settings?
-        if (!$this->user->hasPermission('modify', 'extension/module/oneall'))
+        if (!$this->user->hasPermission('modify', 'extension/oneall_social_login/module/oneall'))
         {
             $this->error['warning'] = $this->language->get('oa_text_error_permission');
 
@@ -984,6 +988,17 @@ class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
 				PRIMARY KEY (`oasl_identity_id`),
 				UNIQUE KEY `oaid` (`oasl_identity_id`));";
         $this->db->query($sql);
+        
+        
+        // Session Storage
+        $sql = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "oasl_session` (
+                    `id` int unsigned NOT NULL AUTO_INCREMENT,
+                    `session_token` char(36) CHARACTER SET utf8mb3 COLLATE utf8_bin NOT NULL DEFAULT '',
+                    `user_data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+                    `expires` timestamp NOT NULL,
+                    PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3";
+        $this->db->query($sql);
 
         // Add to default positions
         $result = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE name IN ('Account', 'Checkout')");
@@ -999,12 +1014,23 @@ class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
             }
         }
 
+        $this->load->model('setting/event');
+
         foreach ($this->getEvents() as $code => $event)
         {
-            if (!$this->model_setting_event->getEvent($code, $event['trigger'], $event['action']))
-            {
-                $this->model_setting_event->addEvent($code, $event['trigger'], $event['action']);
-            }
+//            if (!$this->model_setting_event->getEvent($code))
+            //            {
+            $data = [
+                'code' => 'oneall_view_before',
+                'trigger' => $event['trigger'],
+                'action' => $event['action'],
+                'description' => '',
+                'status' => 1,
+                'sort_order' => 0
+            ];
+
+            $this->model_setting_event->addEvent($data);
+//            }
         }
     }
 
@@ -1039,13 +1065,12 @@ class ControllerExtensionModuleOneall extends \Opencart\System\Engine\Controller
      */
     private function getEvents()
     {
-        $events = [
-            // update data
-            'oneall_view_before' => [
+        $events = array(
+            array(
                 'trigger' => 'catalog/view/*/before',
-                'action' => 'extension/module/oneall/twig'
-            ]
-        ];
+                'action' => 'extension/oneall_social_login/module/oneall'
+            )
+        );
 
         return $events;
     }

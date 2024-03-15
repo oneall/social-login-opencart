@@ -1,38 +1,5 @@
 jQuery(document).ready(function($) {
 
-	/* Toggle Provider Selection */
-	$(".oa_social_login_provider_toggle").on("click",function(event)	
-	{
-	    var checkbox = $(this).find("input[type='checkbox']");
-	    var target = $(event.target);
-	    
-	    $(this).removeClass('disabled');
-	    $(this).removeClass('enabled');     
-	        
-	    // Trigger the underlying checkbox
-	    if ( ! target.is('input:checkbox'))
-	    {
-	        if( !checkbox.prop("checked"))
-	        {
-	            checkbox.prop("checked",true);
-	        } 
-	        else
-	        {
-	            checkbox.prop("checked",false);
-	        }
-	    }
-	    
-	    // Set appropriate class	    
-	    if(checkbox.prop("checked"))
-	    {
-            $(this).addClass('enabled');
-	    }
-	    else
-	    {
-	        $(this).addClass('disabled');
-	    }
-	});
-	
 	/* Autodetect API Connection Handler */
 	$('#module_oneall_api_autodetect').click(function()
 	{							
@@ -44,7 +11,7 @@ jQuery(document).ready(function($) {
 		message_container.html(oaL10n.working);
 		
 		var data = {
-			'route': 'extension/module/oneall',
+			'route': 'extension/oneall_social_login/module/oneall',
 			'do': 'autodetect_api_connection',
 			'user_token': oaL10n.token,
 		};		
@@ -108,7 +75,7 @@ jQuery(document).ready(function($) {
 		message_container.html(oaL10n.working);
 		
 		var data = {
-			'route': 'extension/module/oneall',
+			'route': 'extension/oneall_social_login/module/oneall',
 			'user_token': oaL10n.token,
 			'do': 'verify_api_settings',
 			'module_oneall_api_handler': module_oneall_api_handler,
@@ -135,4 +102,6 @@ jQuery(document).ready(function($) {
 		});
 		return false;
 	});
+  
+  
 });

@@ -5,7 +5,7 @@
 
     <ul class="breadcrumb">
         {% for breadcrumb in breadcrumbs %}
-            <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+            <li class="me-2"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
         {% endfor %}
     </ul>
 
@@ -64,7 +64,7 @@
                             {% endif %}
                         </div>
                     </div>
-                    
+
                     <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-email">{{ entry_email }}</label>
                         <div class="col-sm-10">
@@ -82,13 +82,6 @@
                             {% if error_telephone is not empty %}
                                 <div class="text-danger">{{ error_telephone }}</div>
                             {% endif %}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-fax">{{ entry_fax }}</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="fax" value="{{ fax }}" placeholder="{{ entry_fax }}" id="input-fax" class="form-control" />
                         </div>
                     </div>
 
@@ -572,6 +565,7 @@
 
                 <div class="buttons">
                     <div class="pull-right">
+                        <input type="hidden" name="oa_session_token" value="{{ oa_session_token }}"  />
                         <input type="submit" value="{{ button_continue }}" class="btn btn-primary" />
                     </div>
                 </div>
@@ -620,7 +614,7 @@
 
     $('input[name=\'customer_group_id\']').on('change', function() {
         $.ajax({
-            url: 'index.php?route=account/register/customfield&customer_group_id=' + this.value,
+            url: 'index.php?route=account/custom_field&customer_group_id=' + this.value,
             dataType: 'json',
             success: function(json) {
                 $('.custom-field').hide();
@@ -688,8 +682,6 @@
                         }
 
                         if (json['success']) {
-                            alert(json['success']);
-
                             $(node).parent().find('input').attr('value', json['code']);
                         }
                     },
@@ -705,15 +697,15 @@
 
 
 <script type="text/javascript">
-    $('.date').datetimepicker({
+    $('.date').daterangepicker({
         pickTime: false
     });
 
-    $('.time').datetimepicker({
+    $('.time').daterangepicker({
         pickDate: false
     });
 
-    $('.datetime').datetimepicker({
+    $('.datetime').daterangepicker({
         pickDate: true,
         pickTime: true
     });

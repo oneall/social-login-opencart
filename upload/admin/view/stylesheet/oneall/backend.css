@@ -1,9 +1,5 @@
 @CHARSET "UTF-8";
 
-.row + .row {
-    margin-top: 15px;
-}
-
 .oa_social_login_provider_toggle{
 	cursor:pointer;
 }
@@ -24,6 +20,28 @@
 	float: left;
 	margin: 0 10px 0 0;
 }
+
+.panel-heading{
+  margin-top: 30px;
+  border-top: 1px solid #E9E9E9;
+}
+
+.well{
+  margin-bottom: 15px;
+}
+
+.menu-top{
+  margin-right: 15px;
+}
+
+.form-check-input{
+  float:right !important;
+}
+
+.form-switch {
+  padding-left: 0.5em;
+  padding-top: 0.5em;
+} 
 
 .oa_social_login_provider_amazon {
     background-position: -1149px -1px;
