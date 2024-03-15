@@ -28,7 +28,6 @@ namespace Opencart\Catalog\Controller\Extension\OneAllSocialLogin\Module;
 //////////////////////////////////////////////////////////////////////
 // Widget Display
 //////////////////////////////////////////////////////////////////////
-use Http\Client\Exception;
 
 class Oneall extends \Opencart\System\Engine\Controller
 {
@@ -141,7 +140,6 @@ class Oneall extends \Opencart\System\Engine\Controller
         // Load Model
         $this->load->model('account/customer');
         
-        
         //////////////////////////////////////////////////////////////////////////////////
         // Post Form
         //////////////////////////////////////////////////////////////////////////////////
@@ -172,7 +170,6 @@ class Oneall extends \Opencart\System\Engine\Controller
             $this->load->model('account/address');
             $address_id = $this->model_account_address->addAddress($customer_id, $customer_data);
             
-            
             // Custom Group Set
             if (!$this->is_default_group_behaviour())
             {
@@ -185,7 +182,6 @@ class Oneall extends \Opencart\System\Engine\Controller
                     $result = $this->db->query("UPDATE " . DB_PREFIX . "customer SET customer_group_id='" . intval($customer_group_id) . "' WHERE customer_id='" . intval($customer_id) . "'");
                 }
             }
-            
             
             // Link the customer to this social network.
             if (
@@ -255,10 +251,8 @@ class Oneall extends \Opencart\System\Engine\Controller
         $data['action'] = $this->url->link('extension/oneall_social_login/module/oneall.register', '', true);
         $data['oneall_ask_address'] = $this->config->get('module_oneall_ask_address');
         
-        
         // Customer Groups
         $data['customer_groups'] = array();
-        
         
         // Default Group
         if ($this->is_default_group_behaviour())
@@ -511,7 +505,6 @@ class Oneall extends \Opencart\System\Engine\Controller
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header');
         
-        
         // Display Template
         $this->response->setOutput($this->load->view('extension/oneall_social_login/module/oneall_register', $data));
     }
@@ -719,7 +712,6 @@ class Oneall extends \Opencart\System\Engine\Controller
         // OneAll Callback handler
         $error = '';
         
-        
         // Check if we have received a connection_token
         if (isset($this->request->post) && !empty($this->request->post['connection_token']))
         {
@@ -728,7 +720,6 @@ class Oneall extends \Opencart\System\Engine\Controller
             
             // OneAll Site Settings
             $api_subdomain = trim($this->config->get('module_oneall_subdomain'));
-            
             
             // Without the API Credentials it does not work
             if (!empty($api_subdomain))
@@ -748,7 +739,6 @@ class Oneall extends \Opencart\System\Engine\Controller
                 
                 // Make Request.
                 $result = $this->do_api_request($api_connection_handler, $api_connection_url, $api_credentials);
-                
                 
                 // Parse result
                 if (is_object($result) && property_exists($result, 'http_code') && $result->http_code == 200)
@@ -891,7 +881,6 @@ class Oneall extends \Opencart\System\Engine\Controller
                                     $redirect_to = "";
                                 }
                                 
-                                
                                 // Redirect
                                 $this->response->redirect($this->url->link('extension/oneall_social_login/module/oneall.register',
                                     $redirect_to, true));
@@ -914,18 +903,11 @@ class Oneall extends \Opencart\System\Engine\Controller
                                         // Update statistics
                                         $this->count_login_identity_token($user_data['identity_token']);
                                         
-                                        $this->session->data['test2'] = 'okbbzadzddzzab';
-                                        
-                                        // Redirect
-                                        $this->response->redirect($this->url->link('extension/oneall_social_login/module/oneall.aaa',
-                                            'language=' . $this->config->get('config_language') . (isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : ''), true));
-                                        
                                         // Redirect to Account
                                         $this->response->redirect($this->url->link('account/account', 'language=' . $this->config->get('config_language') . (isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : ''), true));
                                     }
                                     
                                     die('oooo');
-                                    
                                 }
                                 
                                 die('oooo');
@@ -985,7 +967,6 @@ class Oneall extends \Opencart\System\Engine\Controller
             $this->response->redirect($this->url->link('common/home', '', true));
         }
     }
-    
     
     // Create customer
     protected function create_customer($data)
@@ -1098,7 +1079,7 @@ class Oneall extends \Opencart\System\Engine\Controller
                     'lastname'          => '',
                     'email'             => '',
                     'telephone'         => '',
-                    'password'          => '',
+                    'password'          => ''
                 );
                 
                 // Save user data
@@ -1381,8 +1362,6 @@ class Oneall extends \Opencart\System\Engine\Controller
         
         return $hash;
     }
-    
-    
     
     /////////////////////////////////////////////////////////////////////////////////////////////
     // API
