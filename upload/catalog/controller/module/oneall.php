@@ -115,11 +115,7 @@ class Oneall extends \Opencart\System\Engine\Controller
         }
         
         // Retrieve User Data
-        $user_data = '';
-        if (!empty($_REQUEST['oa_session_token']))
-        {
-            $user_data = @unserialize($this->get_session_data($_REQUEST['oa_session_token']));
-        }
+        $user_data = (isset($this->session->data['oneall_user_data']) ? @unserialize($this->session->data['oneall_user_data']) : array());
         
         // Make sure we have the correct data
         if (!is_array($user_data) || empty($user_data['user_token']))
@@ -144,6 +140,7 @@ class Oneall extends \Opencart\System\Engine\Controller
         
         // Load Model
         $this->load->model('account/customer');
+        
         
         //////////////////////////////////////////////////////////////////////////////////
         // Post Form
@@ -203,8 +200,7 @@ class Oneall extends \Opencart\System\Engine\Controller
                     $this->count_login_identity_token($user_data['identity_token']);
                     
                     // Remove Session Data
-                    //                    unset($this->session->data['oneall_user_data']);
-                    $this->delete_session_data($_REQUEST['oa_session_token']);
+                    unset($this->session->data['oneall_user_data']);
                     
                     // Redirect Target
                     if (isset($this->request->post['oa_redirect']) && strlen(trim($this->request->post['oa_redirect'])) > 0)
@@ -238,7 +234,7 @@ class Oneall extends \Opencart\System\Engine\Controller
             ),
             array(
                 'text' => $this->language->get('oa_social_login'),
-                'href' => $this->url->link('extension/oneall_social_login/module/oneall.register', 'oa_session_token=' . $_REQUEST['oa_session_token'] ?? '', true)
+                'href' => $this->url->link('extension/oneall_social_login/module/oneall.register', '', true)
             )
         );
         
@@ -263,8 +259,6 @@ class Oneall extends \Opencart\System\Engine\Controller
         // Customer Groups
         $data['customer_groups'] = array();
         
-        // Data
-        $data['oa_session_token'] = $_REQUEST['oa_session_token'] ?? '';
         
         // Default Group
         if ($this->is_default_group_behaviour())
@@ -517,6 +511,7 @@ class Oneall extends \Opencart\System\Engine\Controller
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header');
         
+        
         // Display Template
         $this->response->setOutput($this->load->view('extension/oneall_social_login/module/oneall_register', $data));
     }
@@ -735,7 +730,6 @@ class Oneall extends \Opencart\System\Engine\Controller
             $api_subdomain = trim($this->config->get('module_oneall_subdomain'));
             
             
-            
             // Without the API Credentials it does not work
             if (!empty($api_subdomain))
             {
@@ -754,6 +748,7 @@ class Oneall extends \Opencart\System\Engine\Controller
                 
                 // Make Request.
                 $result = $this->do_api_request($api_connection_handler, $api_connection_url, $api_credentials);
+                
                 
                 // Parse result
                 if (is_object($result) && property_exists($result, 'http_code') && $result->http_code == 200)
@@ -882,23 +877,20 @@ class Oneall extends \Opencart\System\Engine\Controller
                             // Display Form?
                             if ($display_registration_form)
                             {
-                                //                                // Add Data
-                                //                                $this->session->data['oneall_user_data'] = serialize($user_data);
-                                
                                 // Add Data
-                                $this->save_session_data($user_data['identity_token'], serialize($user_data));
+                                $this->session->data['oneall_user_data'] = serialize($user_data);
                                 
                                 // Custom Redirection
                                 if (isset($this->request->get['oa_redirect']))
                                 {
-                                    // $this->request->get() does htmlspecialchars($_GET), so we need to undo that to encode properly:
-                                    $redirect_to = '&oa_redirect=' . urlencode(htmlspecialchars_decode($this->request->get['oa_redirect'])) . "&oa_session_token=" . urlencode($user_data['identity_token']);
+                                    $redirect_to = '&oa_redirect=' . urlencode(htmlspecialchars_decode($this->request->get['oa_redirect']));
                                 }
                                 // Default Redirection
                                 else
                                 {
-                                    $redirect_to = "?oa_session_token=" . urlencode($user_data['identity_token']);
+                                    $redirect_to = "";
                                 }
+                                
                                 
                                 // Redirect
                                 $this->response->redirect($this->url->link('extension/oneall_social_login/module/oneall.register',
@@ -926,10 +918,10 @@ class Oneall extends \Opencart\System\Engine\Controller
                                         
                                         // Redirect
                                         $this->response->redirect($this->url->link('extension/oneall_social_login/module/oneall.aaa',
-                                            'language=' . $this->config->get('config_language') .(isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : ''), true));
+                                            'language=' . $this->config->get('config_language') . (isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : ''), true));
                                         
                                         // Redirect to Account
-                                        $this->response->redirect($this->url->link('account/account', 'language=' . $this->config->get('config_language') .(isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : ''), true));
+                                        $this->response->redirect($this->url->link('account/account', 'language=' . $this->config->get('config_language') . (isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : ''), true));
                                     }
                                     
                                     die('oooo');
@@ -961,13 +953,13 @@ class Oneall extends \Opencart\System\Engine\Controller
                                 }
                                 
                                 // Save data session
-//                                $this->session->data['customer'] = $user_data;
-//
-//                                // Create customer token
-//                                $this->session->data['customer_token'] = oc_token(26);
+                                //                                $this->session->data['customer'] = $user_data;
+                                //
+                                //                                // Create customer token
+                                //                                $this->session->data['customer_token'] = oc_token(26);
                                 
                                 // Redirect
-                                $this->response->redirect($this->url->link($redirect_to, 'language=' . $this->config->get('config_language') .(isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : ''), true));
+                                $this->response->redirect($this->url->link($redirect_to, 'language=' . $this->config->get('config_language') . (isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : ''), true));
                             }
                         }
                     }
@@ -994,24 +986,6 @@ class Oneall extends \Opencart\System\Engine\Controller
         }
     }
     
-    public function aaa(){
-        
-        $this->session->data['test'] = 'okbbxxxb';
-        
-        // Redirect
-        $this->response->redirect($this->url->link('extension/oneall_social_login/module/oneall.test', '', true));
-        
-    }
-    
-    
-    public function test(){
-        
-        var_dump('<pre>');
-        var_dump($this->session->getId());
-        var_dump($this->session->data);
-        var_dump('</pre>');
-        die('ok');
-    }
     
     // Create customer
     protected function create_customer($data)
@@ -1406,53 +1380,6 @@ class Oneall extends \Opencart\System\Engine\Controller
         // Done
         
         return $hash;
-    }
-    
-    
-    /**
-     * Save user session data
-     * @param $token
-     * @param $user_data
-     * @return void
-     */
-    public function save_session_data($token, $user_data, $expire_min = 5): void
-    {
-        // Add new link.
-        $sql = "INSERT INTO `" . DB_PREFIX . "oasl_session` SET session_token='" . $this->db->escape($token) . "', user_data = '" . $this->db->escape($user_data) . "', expires = (NOW() + INTERVAL $expire_min MINUTE)";
-        $this->db->query($sql);
-    }
-    
-    
-    /**
-     * Save user session data
-     * @param $token
-     * @return string
-     */
-    protected function get_session_data($token): string
-    {
-        // Read the customer_id for this email address.
-        $sql = "SELECT user_data FROM `" . DB_PREFIX . "oasl_session` WHERE session_token  = '" . $this->db->escape($token) . "' AND expires >= FROM_UNIXTIME(" . time() . ")";
-        $result = $this->db->query($sql)->row;
-        
-        // We have found a user_data.
-        if (is_array($result) && !empty($result['user_data']))
-        {
-            return $result['user_data'];
-        }
-        
-        return false;
-    }
-    
-    /**
-     * Remove user session data
-     * @param $token
-     * @param $user_data
-     * @return void
-     */
-    public function delete_session_data($token): void
-    {
-        $sql = "DELETE FROM `" . DB_PREFIX . "oasl_session` WHERE session_token = '" . $this->db->escape($token) . "'";
-        $query = $this->db->query($sql);
     }
     
     
